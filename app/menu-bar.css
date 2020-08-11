@@ -1,0 +1,49 @@
+.menu-bar {
+	flex-direction: row;
+	flex-wrap: wrap;
+	display: flex;
+	align-self: flex-start;
+}
+
+.menu-bar > * {
+	margin: 0.25em;
+	margin-left: 0.5em;
+	position: relative;
+}
+
+.menu-bar * > ul {
+	display: none;
+	position: absolute;
+	left: -2px;
+	top: 100%;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+
+.menu-bar *:focus > ul,
+.menu-bar *:focus-within > ul{
+	display: block;
+}
+
+.menu-bar ul li {
+	position: relative;
+	min-width: 128px;
+	padding-left: 1.5em;
+	padding-top: 0.125em;
+	padding-bottom: 0.125em;
+}
+
+.menu-bar ul li ul {
+	top: -2px;
+	left: calc(100% + 1px);
+}
+
+.menu-bar ul [tabindex] {
+	color: black;
+}
+
+.menu-bar ul [tabindex]:hover {
+	background-color: #000082;
+	color: white;
+}

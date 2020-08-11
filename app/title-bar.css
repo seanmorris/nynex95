@@ -1,0 +1,74 @@
+.title-bar {
+	background-color: #000082;
+	color: white;
+	justify-content: space-between;
+	margin-top: 1px;
+	margin-left: 2px;
+	margin-right: 2px;
+	padding: 1px;
+	padding-left: 2px;
+	padding-right: 2px;
+	font-size: initial;
+	display: flex;
+	flex: 1;
+	flex-direction: row;
+}
+
+.title-bar img {
+	width: 16px;
+	padding-bottom: 1px;
+	padding-left: 4px;
+	padding-right: 6px;
+}
+
+.title-bar span {
+	display: flex;
+	align-items: center;
+}
+
+.title-bar span.title {
+	flex: 1;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.title-bar button {
+	min-width: initial;
+	text-align: center;
+	margin: 0px;
+	width: 15px;
+	height: 14px;
+	
+	padding: 0px;
+	outline-style: none !important;
+	border-width: 1px;
+
+}
+
+.title-bar button:active {
+	border-width: 1px;
+}
+
+.title-bar button::after {
+	outline-offset: -1px;
+	content: '';
+	display: block;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 12px;
+	height: 10px;
+	
+}
+
+.title-bar button.minimize::after {
+	background-image: url(/minimize-active.png);
+}
+
+.title-bar button.maximize::after {
+	background-image: url(/maximize-active.png);
+}
+
+.title-bar button.close::after {
+	background-image: url(/close-active.png);
+}

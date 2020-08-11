@@ -1,0 +1,125 @@
+@font-face {
+    font-family: 'fixedsys';
+    src: url('fsex302-webfont.woff2') format('woff2'),
+         url('fsex302-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+	height: 100%;
+	margin: 0px;
+	padding: 1em;
+	box-sizing: border-box;
+	user-select: none;
+	display: grid;
+	place-items: center;
+}
+
+html, body, input, button {
+	font-family: fixedsys;
+	font-size: 12pt;
+}
+
+input {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+body {
+	background: url(/dawid-zawila-9d33wIMMzoE-unsplash.jpg);
+	background-size: cover;
+}
+
+.window {
+	width: 480px;
+	height: 640px;
+	resize: both;
+	overflow: hidden;
+}
+
+.pane {
+	border: 2px solid;
+	border-image: url(/border.png) 2 2 2 2;
+	background-color: #c3c3c3;
+	image-rendering: pixelated;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+}
+
+img {
+	align-self: baseline;
+}
+
+.frame {
+	margin: 1em;
+	flex-basis: 100%;
+	align-self: stretch;
+	border: 1px solid black;
+	display: flex;
+	flex-direction: column;
+}
+
+.frame.white {
+	background-color: white;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.inset {
+	border: 2px solid;
+	border-image: url(/border-inset.png) 2 2 2 2;
+	border-color: #c3c3c3;
+	image-rendering: pixelated;
+	box-sizing: border-box;
+}
+
+button {
+	font-family: fixedsys;
+	font-size: 12pt;
+	border-style: solid;
+	border-image: url(/border-inner.png) 1 2 2 1 fill;
+	border-width: 1px 2px 2px 1px;
+	border-image-width: 1px 2px 2px 1px;
+	outline-offset: -4px;
+	min-width: 120px;
+	text-align: center;
+}
+
+button:active {
+	outline-offset: -5px;
+	border-image: url(/border-depressed.png) 2 3 3 2 fill;
+	border-width: 2px 1px 1px 3px;
+	border-image-width: 2px 3px 3px 2px;
+}
+
+*:focus {
+	outline-width: 1px;
+	outline-color: black;
+	outline-style: dotted;
+}
+
+button.pane {
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+	padding-left: 2.5em;
+	padding-right: 2.5em;
+	margin: 1em;
+	flex-direction: unset;
+	display: inline-block;
+}
+
+label, img.icon {
+	margin-left: 1em;
+	margin-top: 1em;
+}
+
+hr {
+	margin: 0px;
+}

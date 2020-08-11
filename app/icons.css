@@ -1,0 +1,35 @@
+.icon-list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.icon-list div {
+	display: flex;
+	flex-direction: column;
+	margin: 0.25em;
+}
+
+.icon-list div:focus {
+	outline-style: none;
+}
+
+.icon-list div img,
+.icon-list div label {
+	align-self: center;
+	
+	word-break: break-all;
+	max-width: 64px;
+	margin: 0.25em;
+	text-align: center;
+}
+.icon-list div:focus img,
+.icon-list div:focus label {
+	outline-style: dotted;
+	outline-width: 1px;
+}
+
+.icon-list div:focus label {
+	background-color: #000082;
+	color: #FFF;
+}
