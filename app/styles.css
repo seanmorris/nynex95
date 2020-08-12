@@ -12,18 +12,11 @@ html, body {
 	padding: 1em;
 	box-sizing: border-box;
 	user-select: none;
-	display: grid;
-	place-items: center;
 }
 
 html, body, input, button {
 	font-family: fixedsys;
 	font-size: 12pt;
-}
-
-input {
-	padding-left: 0.5em;
-	padding-right: 0.5em;
 }
 
 body {
@@ -43,7 +36,6 @@ body {
 	border-image: url(/border.png) 2 2 2 2;
 	background-color: #c3c3c3;
 	image-rendering: pixelated;
-	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 }
@@ -53,12 +45,22 @@ img {
 }
 
 .frame {
-	margin: 1em;
-	flex-basis: 100%;
-	align-self: stretch;
-	border: 1px solid black;
+	overflow: auto;
+	/*border: 1px solid black;*/
 	display: flex;
 	flex-direction: column;
+}
+
+.frame.padded {
+	padding: 1em;
+}
+
+.frame.liquid {
+	flex: 1;
+}
+
+.scroll {
+	overflow: auto;
 }
 
 .frame.white {
@@ -69,7 +71,8 @@ img {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	align-items: center;
+	align-content: center;
+
 }
 
 .inset {
@@ -77,16 +80,15 @@ img {
 	border-image: url(/border-inset.png) 2 2 2 2;
 	border-color: #c3c3c3;
 	image-rendering: pixelated;
-	box-sizing: border-box;
 }
 
 button {
 	font-family: fixedsys;
 	font-size: 12pt;
 	border-style: solid;
-	border-image: url(/border-inner.png) 1 2 2 1 fill;
-	border-width: 1px 2px 2px 1px;
-	border-image-width: 1px 2px 2px 1px;
+	border-image: url(/border-inner.png) 2 3 3 2 fill;
+	border-width: 2px 2px 2px 2px;
+	border-image-width: 2px 2px 2px 2px;
 	outline-offset: -4px;
 	min-width: 120px;
 	text-align: center;
@@ -95,11 +97,11 @@ button {
 button:active {
 	outline-offset: -5px;
 	border-image: url(/border-depressed.png) 2 3 3 2 fill;
-	border-width: 2px 1px 1px 3px;
+	border-width: 3px 1px 1px 3px;
 	border-image-width: 2px 3px 3px 2px;
 }
 
-*:focus {
+label:focus-within span, *:focus {
 	outline-width: 1px;
 	outline-color: black;
 	outline-style: dotted;
@@ -110,14 +112,28 @@ button.pane {
 	padding-bottom: 0.25em;
 	padding-left: 2.5em;
 	padding-right: 2.5em;
-	margin: 1em;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+	margin-bottom: 0.5em;
+	margin-top: 0.5em;
 	flex-direction: unset;
 	display: inline-block;
 }
 
-label, img.icon {
-	margin-left: 1em;
-	margin-top: 1em;
+label {
+	display: flex;
+	align-items: center;
+}
+
+input[type="radio"] {
+	margin: 0px;
+	margin-right: 0.25em;
+}
+
+input, label, img.icon {
+	padding-left: 0.125em;
+	padding-right: 0.125em;
+	align-self: baseline;
 }
 
 hr {

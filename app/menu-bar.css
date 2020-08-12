@@ -2,7 +2,6 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	display: flex;
-	align-self: flex-start;
 }
 
 .menu-bar > * {

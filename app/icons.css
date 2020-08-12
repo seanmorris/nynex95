@@ -8,18 +8,23 @@
 	display: flex;
 	flex-direction: column;
 	margin: 0.25em;
+	width: 64px;
 }
 
 .icon-list div:focus {
 	outline-style: none;
 }
 
+.icon-list div:focus img {
+	filter: grayscale(100%) sepia(100%) invert(100%);
+}
+
 .icon-list div img,
 .icon-list div label {
 	align-self: center;
+	display: block;
 	
 	word-break: break-all;
-	max-width: 64px;
 	margin: 0.25em;
 	text-align: center;
 }
@@ -27,6 +32,7 @@
 .icon-list div:focus label {
 	outline-style: dotted;
 	outline-width: 1px;
+	outline-color: black
 }
 
 .icon-list div:focus label {
