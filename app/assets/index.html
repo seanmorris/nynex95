@@ -9,8 +9,77 @@
 </head>
 <body>
 
-  <div class = "window pane">
-  
+  <div class = "window pane resize">
+
+    <div class = "title-bar">
+      <img src = "/w95_13.ico" />
+      <span class = "title">Nynepad 95</span>
+      <span>
+        <button tabindex = "-1" class = "minimize"></button>
+        <button tabindex = "-1" class = "maximize"></button>
+        <button tabindex = "-1" class = "close"></button>
+      </span>
+    </div>
+
+    <div class = "menu-bar">
+
+      <div tabindex = "0">
+        <u>F</u>ile
+        <ul class = "pane">
+          <li tabindex = "0"><u>N</u>ew</li>
+          <li tabindex = "0"><u>O</u>pen</li>
+          <li tabindex = "0"><u>S</u>ave</li>
+          <li tabindex = "0">S<u>a</u>ve As</li>
+          <li tabindex = "0"><u>Q</u>uit</li>
+        </ul>
+      </div>
+
+      <div tabindex = "0">
+        <u>E</u>dit
+        <ul class = "pane">
+          <li tabindex = "0">Undo</li>
+          <li tabindex = "0">Redo</li>
+          <hr />
+          <li tabindex = "0">Cut</li>
+          <li tabindex = "0">Copy</li>
+          <li tabindex = "0">Paste</li>
+          <li tabindex = "0">Delete</li>
+          <hr />
+          <li tabindex = "0">Find</li>
+          <li tabindex = "0">Replace</li>
+        </ul>
+      </div>
+
+      <div tabindex = "0">
+        <u>F</u>ormat
+        <ul class = "pane">
+          <li tabindex = "0">Font</li>
+          <li tabindex = "0">Font Size</li>
+          <li tabindex = "0">Word Wrap</li>
+          <li tabindex = "0">Overscroll</li>
+        </ul>
+      </div>
+
+      <div tabindex = "0">
+        <u>H</u>elp
+        <ul class = "pane">
+          <li tabindex = "0">Help</li>
+          <li tabindex = "0">About</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <hr />
+
+    <div class = "frame liquid">
+      <textarea class = "inset liquid"></textarea>
+    </div>
+
+  </div>
+
+  <div class = "window pane resize">
+
     <div class = "title-bar">
       <img src = "/w95_13.ico" />
       <span class = "title">Welcome to Nynex95</span>
@@ -22,21 +91,21 @@
     </div>
 
     <div class = "menu-bar">
-      
+
       <div tabindex = "0">
-      
+
         <u>F</u>ile
-      
+
         <ul class = "pane">
-          
+
           <li tabindex = "0">
             <u>N</u>ew
           </li>
-          
+
           <li tabindex = "0">
             <u>O</u>pen
           </li>
-          
+
           <li tabindex = "0">
             Open <u>R</u>ecent
 
@@ -47,9 +116,9 @@
             </ul>
 
           </li>
-          
+
           <hr />
-          
+
           <li tabindex = "0">
             <u>P</u>lugins
 
@@ -87,23 +156,23 @@
             </ul>
 
           </li>
-          
+
           <hr />
-          
+
           <li tabindex = "0">Save</li>
           <li tabindex = "0">Save As</li>
-          
+
           <hr />
-          
+
           <li tabindex = "0">Close</li>
           <li tabindex = "0">Quit</li>
-        
+
         </ul>
-      
+
       </div>
-      
+
       <div tabindex = "0">
-        
+
         <u>E</u>dit
 
          <ul class = "pane">
@@ -120,19 +189,19 @@
         </ul>
 
       </div>
-      
+
       <div tabindex = "0">
         <u>V</u>iew
       </div>
-      
+
       <div tabindex = "0">
         <u>G</u>o
       </div>
-      
+
       <div tabindex = "0">
         F<u>a</u>vorites
       </div>
-      
+
       <div tabindex = "0">
         <u>H</u>elp
       </div>
@@ -140,36 +209,53 @@
     </div>
 
     <hr />
-    
-    <div class = "frame padded liquid">
-      
+
+    <div class = "frame liquid">
       <div class = "row">
-        <img class = "icon" src = "/w95_13.ico" />
         <label>this is a label.</label>
         <label class = "inset">this is an inset label.</label>
-        <label>input: <input class = "inset"></label>
-      </div>
-
-      <div class = "frame padded">
-        this is a frame <br />
+        <label>input: <input value = "this is input" class = "inset"></label>
         <label>
-          <input name = "option" type = "radio" />
-          <span>This is an option</span>
-        </label>
-        <label>
-          <input name = "option" type = "radio" />
-          <span>This is an option</span>
+          select:
+          <select class = "inset">
+            <option></option>
+            <option value = "red">Red</option>
+            <option value = "green">Green</option>
+            <option value = "blue">Blue</option>
+          </select>
         </label>
       </div>
 
-      <div class = "frame white inset scroll liquid">
+      <div class = "row">
+        <div class = "frame padded">
+          Continue?
+
+          <label>
+            <input name = "option" type = "radio" />
+            <span>Restart</span>
+          </label>
+
+          <label>
+            <input name = "option" type = "radio" />
+            <span>Shutdown</span>
+          </label>
+
+
+          <label>
+            <input name = "dontask" type = "checkbox" />
+            <span>Don't ask again</span>
+          </label>
+        </div>
+      </div>
+
+      <div class = "frame white inset scroll margin">
         <div class = "icon-list">
-          
+
           <div tabindex="0">
             <img src = "/w98_computer_taskmgr.ico" />
             <label>Hello-World</label>
           </div>
-          
+
           <div tabindex="0">
             <img src = "/w98_clock.ico" />
             <label>Time</label>
@@ -274,29 +360,59 @@
             <img src = "/w95_13.ico" />
             <label>Chip X</label>
           </div>
-        
+
         </div>
       </div>
-      
+
       <div class = "row">
         <label>Buttons!</label>
         <button class = "pane">ok</button>
         <button class = "pane">cancel</button><br />
         <button class = "pane">another button</button>
-        <label>Icon:</label>
-        <img src = "/w95_13.ico" />
       </div>
-      
+
       <div class = "row">
-        <img src = "/w95_13.ico" />
-        <label>Icon:</label>
+        <div class = "row" tabindex="-1">
+          <img src = "/w95_16.ico" />
+          <label>PC Icon</label>
+        </div>
+
+        <div class = "row" tabindex="-1">
+          <img src = "/w95_16.ico" />
+          <label>PC Icon</label>
+        </div>
+
+        <div class = "row" tabindex="-1">
+          <img src = "/w98_computer_taskmgr.ico" />
+          <label>PC Icon</label>
+        </div>
       </div>
-      
+
       <div class = "row">
-        <label><img src = "/w95_13.ico" /> Icon</label>
+        <div class = "row" tabindex="-1">
+          <label>PC Icon</label>
+          <img class = "icon16" src = "/w95_16.ico" />
+        </div>
+
+        <div class = "row" tabindex="-1">
+          <label>PC Icon</label>
+          <img src = "/w95_16.ico" />
+        </div>
+
+        <div class = "row" tabindex="-1">
+          <label>PC Icon</label>
+          <img src = "/w98_computer_taskmgr.ico" />
+        </div>
       </div>
-    
+
     </div>
   </div>
-  
+
+  <div class = "task-bar pane">
+    <button class = "">
+      <img class = "icon16" src = "/w95_16.ico" />
+      <div>Begin</div>
+    </button>
+  </div>
+
 </body>

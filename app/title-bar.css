@@ -68,6 +68,10 @@
 	background-image: url(/maximize-active.png);
 }
 
+.title-bar button.close {
+	margin-left: 1px;
+}
+
 .title-bar button.close::after {
 	background-image: url(/close-active.png);
 }

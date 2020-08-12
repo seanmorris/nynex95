@@ -9,26 +9,41 @@
 html, body {
 	height: 100%;
 	margin: 0px;
-	padding: 1em;
 	box-sizing: border-box;
 	user-select: none;
 }
 
-html, body, input, button {
+html, body, input, button, select {
 	font-family: fixedsys;
 	font-size: 12pt;
 }
 
 body {
 	background: url(/dawid-zawila-9d33wIMMzoE-unsplash.jpg);
+	background-attachment: fixed;
 	background-size: cover;
 }
 
 .window {
-	width: 480px;
-	height: 640px;
-	resize: both;
+	width: 640px;
+	height: 480px;
 	overflow: hidden;
+	margin: 1em;
+}
+
+.window.minimized {
+	resize: none;
+	width:  128px !important;
+	height: auto !important;
+	display: inline-flex;
+}
+
+.window.minimized > .title-bar {
+	border-bottom: 2px #c3c3c3 solid;
+}
+
+.window.minimized > *:not(.title-bar) {
+	display: none;
 }
 
 .pane {
@@ -46,21 +61,33 @@ img {
 
 .frame {
 	overflow: auto;
-	/*border: 1px solid black;*/
-	display: flex;
 	flex-direction: column;
+	flex-basis: 100%;
+}
+
+.frame .frame {
+	border: 1px solid #808080;	
 }
 
 .frame.padded {
-	padding: 1em;
+	padding: 0.5em;
 }
 
-.frame.liquid {
+.frame.margin {
+	margin: 0.5em;
+}
+
+.liquid {
+	display: flex;
 	flex: 1;
 }
 
 .scroll {
 	overflow: auto;
+}
+
+.resize {
+	resize: both;
 }
 
 .frame.white {
@@ -72,10 +99,13 @@ img {
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-content: center;
-
 }
 
-.inset {
+.row > * {
+	margin: 0.5em;
+}
+
+.frame.inset, .inset {
 	border: 2px solid;
 	border-image: url(/border-inset.png) 2 2 2 2;
 	border-color: #c3c3c3;
@@ -86,7 +116,7 @@ button {
 	font-family: fixedsys;
 	font-size: 12pt;
 	border-style: solid;
-	border-image: url(/border-inner.png) 2 3 3 2 fill;
+	border-image: url(/border.png) 1 2 2 1 fill;
 	border-width: 2px 2px 2px 2px;
 	border-image-width: 2px 2px 2px 2px;
 	outline-offset: -4px;
@@ -108,16 +138,23 @@ label:focus-within span, *:focus {
 }
 
 button.pane {
+	/*text-align: center;*/
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
-	padding-left: 2.5em;
-	padding-right: 2.5em;
+	/*padding-left: 2.5em;
+	padding-right: 2.5em;*/
 	margin-left: 0.5em;
 	margin-right: 0.5em;
 	margin-bottom: 0.5em;
 	margin-top: 0.5em;
 	flex-direction: unset;
 	display: inline-block;
+	display: flex;
+}
+
+button.pane > * {
+	display: inline-block;
+	margin: 0.25em;
 }
 
 label {
@@ -125,17 +162,20 @@ label {
 	align-items: center;
 }
 
+input[type="checkbox"],
 input[type="radio"] {
-	margin: 0px;
-	margin-right: 0.25em;
+	margin: 0.5em;
 }
 
-input, label, img.icon {
-	padding-left: 0.125em;
-	padding-right: 0.125em;
-	align-self: baseline;
-}
+/*input, label, img.icon {
+	padding: 0.125em;
+	align-self: center;
+}*/
 
 hr {
 	margin: 0px;
+}
+
+textarea {
+	resize: none;
 }

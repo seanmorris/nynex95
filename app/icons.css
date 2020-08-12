@@ -16,7 +16,10 @@
 }
 
 .icon-list div:focus img {
-	filter: grayscale(100%) sepia(100%) invert(100%);
+	outline-color: white;
+	filter:
+		sepia(100%)
+		invert(100%);
 }
 
 .icon-list div img,
@@ -32,10 +35,24 @@
 .icon-list div:focus label {
 	outline-style: dotted;
 	outline-width: 1px;
-	outline-color: black
 }
 
 .icon-list div:focus label {
+	outline-color: black;
 	background-color: #000082;
 	color: #FFF;
+}
+
+label > img {
+	margin: 0.25em;
+}
+
+.icon16 {
+	width: 16px;
+	height: 16px;
+}
+
+.icon32 {
+	width: 32px;
+	height: 32px;
 }
