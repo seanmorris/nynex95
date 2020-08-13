@@ -17,7 +17,7 @@ jobs:
         run:  find ./content/ -type f | jq -R -s -c 'split("\n")|.[0:-1]' | tee index/main.json
 
       - name: Add any index files.
-        run:  git add ./content/*
+        run:  git add ./index/*
 
       - name: Commit & push any if changes are found
         run:  |
