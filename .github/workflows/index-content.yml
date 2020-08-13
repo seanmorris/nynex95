@@ -16,5 +16,4 @@ on:
           env:
             MESSAGE: Hello, Actions
 
-        run: |
-          echo $MESSAGE!
+        run: echo $MESSAGE!
