@@ -34,8 +34,8 @@ body {
 }
 
 .window {
-	width: 320px;
-	height: 420px;
+	width: 480px;
+	height: 800px;
 	margin: 0.5em;
 	overflow: hidden;
 }
