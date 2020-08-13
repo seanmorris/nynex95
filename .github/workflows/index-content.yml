@@ -1,0 +1,20 @@
+name: "Index Content"
+
+on:
+
+  push:
+    paths:
+    - 'content/**'
+
+    jobs:
+
+      name: Hello, Actions!
+      runs-on: ubuntu-18.04
+
+      steps:
+        - name: Print the message.
+          env:
+            MESSAGE: Hello, Actions
+
+        run: |
+          echo $MESSAGE!
