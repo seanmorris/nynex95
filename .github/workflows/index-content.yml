@@ -5,16 +5,14 @@ on:
     # - 'content/**'
 
 jobs:
-  print-content:
-    name: Hello, Actions!
+  index-content:
+    name: index-content
     runs-on: ubuntu-18.04
 
     steps:
       - name: checkout.
         uses: actions/checkout@v2
 
-      - name: Print the message.
-        env:
-          MESSAGE: Hello, Actions
+      - name: Build the main index.
         run: |
-          find ./content
+          find ./content/ -type f | jq -R -s -c 'split("\n")|.[0:-1]' | tee index/main.json
