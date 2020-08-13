@@ -16,8 +16,6 @@ jobs:
       - name: Build the main index.
         run:  find ./content/ -type f | jq -R -s -c 'split("\n")|.[0:-1]' | tee index/main.json
 
-      - name: Configure Git Contact
-
       - name: Commit & push any if changes are found
         run:  >
           test -n "$(git status -s)"
