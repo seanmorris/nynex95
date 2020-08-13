@@ -33,7 +33,7 @@
 .gridview td {
 	border-top: 1px solid #c3c3c3;
 	border-right: 1px solid #c3c3c3;
-	white-space: pre;
+	white-space: nowrap;
 }
 
 .gridview th,
@@ -168,6 +168,7 @@ label > img {
 
 .row.status {
 	flex-wrap: nowrap;	
+	white-space: nowrap;
 }
 
 .row.status > * {
@@ -179,6 +180,7 @@ label > img {
 
 .row.status img {
 	margin-right: 0.25em;
+	align-self: center;
 }
 @font-face {
     font-family: 'fixedsys';

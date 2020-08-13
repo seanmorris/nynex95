@@ -4,6 +4,7 @@
 
 .row.status {
 	flex-wrap: nowrap;	
+	white-space: nowrap;
 }
 
 .row.status > * {
@@ -15,4 +16,5 @@
 
 .row.status img {
 	margin-right: 0.25em;
+	align-self: center;
 }
