@@ -58,8 +58,6 @@ body {
 .window {
 	width: 480px;
 	height: 800px;
-	min-width: 96px;
-	min-height: 96px;
 	margin: 0.5em;
 	overflow: hidden;
 }
@@ -100,6 +98,8 @@ body {
 	order: -1;
 	align-self: flex-start;
 	position: relative;
+	min-width: 96px;
+	min-height: 96px;
 }
 
 .pane {
