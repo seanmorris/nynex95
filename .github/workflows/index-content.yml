@@ -16,10 +16,15 @@ jobs:
       - name: Build the main index.
         run:  find ./content/ -type f | jq -R -s -c 'split("\n")|.[0:-1]' | tee index/main.json
 
+      - name: Configure Git Contact
+
       - name: Commit & push any if changes are found
-        run:  |
-          test -n "$(git status -s)" \
-            && echo "Changes" \
-            && git commit -nam 'Indexing content.' \
+        run:  >
+          test -n "$(git status -s)"
+            && echo "Changes"
+            && git
+              -c "user.name=index-bot"
+              -c "user.email=index-bot@seanmorr.is"
+              commit -nam 'Indexing content.'
             && git push
 
