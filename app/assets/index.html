@@ -2,88 +2,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Ninex</title>
+  <title>Nynex95℠</title>
   <link rel="stylesheet" href="/app.css">
   <script src="/app.js"></script>
   <script>require('initialize');</script>
 </head>
 <body>
 
-  <div class = "window pane resize minimized">
-
-    <div class = "title-bar">
-      <img src = "/w95/13-32-4bit.png" />
-      <span class = "title">Nynepad95℠</span>
-      <span>
-        <button tabindex = "-1" class = "minimize" onclick = "((event)=>{event.target.parentNode.parentNode.parentNode.classList.toggle('minimized')}) (event)"></button>
-        <button tabindex = "-1" class = "maximize" onclick = "((event)=>{event.target.parentNode.parentNode.parentNode.classList.toggle('maximized')}) (event)"></button>
-        <button tabindex = "-1" class = "close"></button>
-      </span>
-    </div>
-
-    <div class = "menu-bar">
-
-      <div tabindex = "0">
-        <u>F</u>ile
-        <ul class = "pane">
-          <li tabindex = "0"><u>N</u>ew</li>
-          <li tabindex = "0"><u>O</u>pen</li>
-          <li tabindex = "0"><u>S</u>ave</li>
-          <li tabindex = "0">S<u>a</u>ve As</li>
-          <li tabindex = "0"><u>Q</u>uit</li>
-        </ul>
-      </div>
-
-      <div tabindex = "0">
-        <u>E</u>dit
-        <ul class = "pane">
-          <li tabindex = "0">Undo</li>
-          <li tabindex = "0">Redo</li>
-          <hr />
-          <li tabindex = "0">Cut</li>
-          <li tabindex = "0">Copy</li>
-          <li tabindex = "0">Paste</li>
-          <li tabindex = "0">Delete</li>
-          <hr />
-          <li tabindex = "0">Find</li>
-          <li tabindex = "0">Replace</li>
-        </ul>
-      </div>
-
-      <div tabindex = "0">
-        <u>F</u>ormat
-        <ul class = "pane">
-          <li tabindex = "0">Font</li>
-          <li tabindex = "0">Font Size</li>
-          <li tabindex = "0">Word Wrap</li>
-          <li tabindex = "0">Overscroll</li>
-        </ul>
-      </div>
-
-      <div tabindex = "0">
-        <u>H</u>elp
-        <ul class = "pane">
-          <li tabindex = "0">Help</li>
-          <li tabindex = "0">About</li>
-        </ul>
-      </div>
-
-    </div>
-
-    <div class = "frame liquid">
-      <textarea class = "inset liquid"></textarea>
-    </div>
-
-  </div>
-
-  <div class = "window pane resize minimized">
+  <div class = "window pane resize">
 
     <div class = "title-bar">
       <img src = "/w95/13-32-4bit.png" />
       <span class = "title">Welcome to Nynex95℠</span>
       <span>
-        <button tabindex = "-1" class = "minimize" onclick = "((event)=>{event.target.parentNode.parentNode.parentNode.classList.toggle('minimized')}) (event)"></button>
-        <button tabindex = "-1" class = "maximize" onclick = "((event)=>{event.target.parentNode.parentNode.parentNode.classList.toggle('maximized')}) (event)"></button>
+        <button tabindex = "-1" class = "minimize" onclick = "((event)=>{
+          event.target.parentNode.parentNode.parentNode.classList.remove('maximized');
+          event.target.parentNode.parentNode.parentNode.classList.toggle('minimized');
+        }) (event)"></button>
+        <button tabindex = "-1" class = "maximize" onclick = "((event)=>{
+          event.target.parentNode.parentNode.parentNode.classList.remove('minimized');
+          event.target.parentNode.parentNode.parentNode.classList.toggle('maximized');
+        }) (event)"></button>
         <button tabindex = "-1" class = "close"></button>
       </span>
     </div>
@@ -225,6 +164,10 @@
             <option value = "blue">Blue</option>
           </select>
         </label>
+      </div>
+
+      <div class = "row">
+        <progress class = "inset" value="50" max="100" />
       </div>
 
       <div class = "row">
@@ -624,13 +567,90 @@
   </div>
 
   <div class = "window pane resize">
+    <div class = "title-bar">
+      <img src = "/w95/13-32-4bit.png" />
+      <span class = "title">Nynepad95℠</span>
+      <span>
+        <button tabindex = "-1" class = "minimize" onclick = "((event)=>{
+          event.target.parentNode.parentNode.parentNode.classList.remove('maximized');
+          event.target.parentNode.parentNode.parentNode.classList.toggle('minimized');
+        }) (event)"></button>
+        <button tabindex = "-1" class = "maximize" onclick = "((event)=>{
+          event.target.parentNode.parentNode.parentNode.classList.remove('minimized');
+          event.target.parentNode.parentNode.parentNode.classList.toggle('maximized');
+        }) (event)"></button>
+        <button tabindex = "-1" class = "close"></button>
+      </span>
+    </div>
+
+    <div class = "menu-bar">
+
+      <div tabindex = "0">
+        <u>F</u>ile
+        <ul class = "pane">
+          <li tabindex = "0"><u>N</u>ew</li>
+          <li tabindex = "0"><u>O</u>pen</li>
+          <li tabindex = "0"><u>S</u>ave</li>
+          <li tabindex = "0">S<u>a</u>ve As</li>
+          <li tabindex = "0"><u>Q</u>uit</li>
+        </ul>
+      </div>
+
+      <div tabindex = "0">
+        <u>E</u>dit
+        <ul class = "pane">
+          <li tabindex = "0">Undo</li>
+          <li tabindex = "0">Redo</li>
+          <hr />
+          <li tabindex = "0">Cut</li>
+          <li tabindex = "0">Copy</li>
+          <li tabindex = "0">Paste</li>
+          <li tabindex = "0">Delete</li>
+          <hr />
+          <li tabindex = "0">Find</li>
+          <li tabindex = "0">Replace</li>
+        </ul>
+      </div>
+
+      <div tabindex = "0">
+        <u>F</u>ormat
+        <ul class = "pane">
+          <li tabindex = "0">Font</li>
+          <li tabindex = "0">Font Size</li>
+          <li tabindex = "0">Word Wrap</li>
+          <li tabindex = "0">Overscroll</li>
+        </ul>
+      </div>
+
+      <div tabindex = "0">
+        <u>H</u>elp
+        <ul class = "pane">
+          <li tabindex = "0">Help</li>
+          <li tabindex = "0">About</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class = "frame liquid">
+      <textarea class = "inset liquid"></textarea>
+    </div>
+  </div>
+
+  <div class = "window pane resize">
 
     <div class = "title-bar">
       <img src = "/w95/13-32-4bit.png" />
       <span class = "title">Treeview</span>
       <span>
-        <button tabindex = "-1" class = "minimize" onclick = "((event)=>{event.target.parentNode.parentNode.parentNode.classList.toggle('minimized')}) (event)"></button>
-        <button tabindex = "-1" class = "maximize" onclick = "((event)=>{event.target.parentNode.parentNode.parentNode.classList.toggle('maximized')}) (event)"></button>
+        <button tabindex = "-1" class = "minimize" onclick = "((event)=>{
+          event.target.parentNode.parentNode.parentNode.classList.remove('maximized');
+          event.target.parentNode.parentNode.parentNode.classList.toggle('minimized');
+        }) (event)"></button>
+        <button tabindex = "-1" class = "maximize" onclick = "((event)=>{
+          event.target.parentNode.parentNode.parentNode.classList.remove('minimized');
+          event.target.parentNode.parentNode.parentNode.classList.toggle('maximized');
+        }) (event)"></button>
         <button tabindex = "-1" class = "close"></button>
       </span>
     </div>
@@ -1286,6 +1306,191 @@
 
         </label>
 
+      </div>
+    </div>
+  </div>
+
+  <div class = "window pane resize">
+
+    <div class = "title-bar">
+      <img src = "/w95/13-32-4bit.png" />
+      <span class = "title">Gridview</span>
+      <span>
+        <button tabindex = "-1" class = "minimize" onclick = "((event)=>{
+          event.target.parentNode.parentNode.parentNode.classList.remove('maximized');
+          event.target.parentNode.parentNode.parentNode.classList.toggle('minimized');
+        }) (event)"></button>
+        <button tabindex = "-1" class = "maximize" onclick = "((event)=>{
+          event.target.parentNode.parentNode.parentNode.classList.remove('minimized');
+          event.target.parentNode.parentNode.parentNode.classList.toggle('maximized');
+        }) (event)"></button>
+        <button tabindex = "-1" class = "close"></button>
+      </span>
+    </div>
+
+    <div class = "menu-bar">
+
+      <div tabindex = "0">
+
+        <u>F</u>ile
+
+        <ul class = "pane">
+
+          <li tabindex = "0">
+            <u>N</u>ew
+          </li>
+
+          <li tabindex = "0">
+            <u>O</u>pen
+          </li>
+
+          <li tabindex = "0">
+            Open <u>R</u>ecent
+
+            <ul class = "pane">
+              <li tabindex = "0">Foo</li>
+              <li tabindex = "0">Bar</li>
+              <li tabindex = "0">Baz</li>
+            </ul>
+
+          </li>
+
+          <hr />
+
+          <li tabindex = "0">
+            <u>P</u>lugins
+
+            <ul class = "pane">
+              <li tabindex = "0">
+                Foo
+                <ul class = "pane">
+                  <li tabindex = "0">Settings</li>
+                  <hr />
+                  <li tabindex = "0">Start</li>
+                  <li tabindex = "0">Stop</li>
+                  <li tabindex = "0">Restart</li>
+                </ul>
+              </li>
+              <li tabindex = "0">
+                Bar
+                <ul class = "pane">
+                  <li tabindex = "0">Settings</li>
+                  <hr />
+                  <li tabindex = "0">Start</li>
+                  <li tabindex = "0">Stop</li>
+                  <li tabindex = "0">Restart</li>
+                </ul>
+              </li>
+              <li tabindex = "0">
+                Baz
+                <ul class = "pane">
+                  <li tabindex = "0">Settings</li>
+                  <hr />
+                  <li tabindex = "0">Start</li>
+                  <li tabindex = "0">Stop</li>
+                  <li tabindex = "0">Restart</li>
+                </ul>
+              </li>
+            </ul>
+
+          </li>
+
+          <hr />
+
+          <li tabindex = "0">Save</li>
+          <li tabindex = "0">Save As</li>
+
+          <hr />
+
+          <li tabindex = "0">Close</li>
+          <li tabindex = "0">Quit</li>
+
+        </ul>
+
+      </div>
+
+      <div tabindex = "0">
+
+        <u>E</u>dit
+
+         <ul class = "pane">
+          <li tabindex = "0">Undo</li>
+          <li tabindex = "0">Redo</li>
+          <hr />
+          <li tabindex = "0">Cut</li>
+          <li tabindex = "0">Copy</li>
+          <li tabindex = "0">Paste</li>
+          <li tabindex = "0">Delete</li>
+          <hr />
+          <li tabindex = "0">Find</li>
+          <li tabindex = "0">Replace</li>
+        </ul>
+
+      </div>
+
+
+    </div>
+
+    <hr />
+
+    <div class = "frame liquid">
+      <div class = "frame inset gridview">
+        <table>
+          <tr><th tabindex = "0">id</th><th tabindex = "0">username</th><th tabindex = "0">created</th><th tabindex = "0">updated</th></tr>
+          <tr><td tabindex = "0" contenteditable = "true">1</td><td tabindex = "0" contenteditable = "true">admin</td><td tabindex = "0" contenteditable = "true">0</td><td tabindex = "0" contenteditable = "true">0</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">2</td><td tabindex = "0" contenteditable = "true">sean</td><td tabindex = "0" contenteditable = "true">yesterday</td><td tabindex = "0" contenteditable = "true">today</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">3</td><td tabindex = "0" contenteditable = "true">this_is_a_really_really_really_long_username</td><td tabindex = "0" contenteditable = "true">last week</td><td tabindex = "0" contenteditable = "true">last year</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+          <tr><td tabindex = "0" contenteditable = "true">x</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td><td tabindex = "0" contenteditable = "true">...</td></tr>
+        </table>        
       </div>
     </div>
   </div>

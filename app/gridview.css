@@ -1,0 +1,48 @@
+.gridview {
+}
+
+.gridview th {
+	border: 2px solid;
+	border-image: url(/border.png) 2 2 2 2;
+	background-color: #c3c3c3;
+	font-weight: normal;
+	position: sticky;
+	top: 0;
+}
+
+.gridview th:first-child,
+.gridview td:first-child {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+}
+
+.gridview th:first-child {
+	z-index: 2;
+}
+
+.gridview td:first-child {
+	background-color: #ddd;
+	text-align: center;
+}
+
+.gridview td {
+	border-top: 1px solid #c3c3c3;
+	border-right: 1px solid #c3c3c3;
+	white-space: pre;
+}
+
+.gridview th,
+.gridview td {
+	padding: 0.25em;
+}
+
+.gridview > table {
+	border-spacing: 0px 0px;
+	min-width: 100%;
+}
+
+.gridview td,
+.gridview > table {
+	background-color: #FFF;
+}
