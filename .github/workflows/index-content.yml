@@ -14,5 +14,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build the main index.
-        run: |
-          find ./content/ -type f | jq -R -s -c 'split("\n")|.[0:-1]' | tee index/main.json
+        run:  find ./content/ -type f | jq -R -s -c 'split("\n")|.[0:-1]' | tee index/main.json
+
+      - name: Print git status.
+        run:  git status
