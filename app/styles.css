@@ -25,21 +25,38 @@ body {
 }
 
 .window {
-	width: 640px;
-	height: 480px;
+	width: 480px;
+	height: 640px;
+	margin: 0.5em;
 	overflow: hidden;
-	margin: 1em;
 }
 
 .window.minimized {
 	resize: none;
-	width:  128px !important;
+	width:  196px !important;
 	height: auto !important;
+	display: inline-flex;
+}
+
+.window.maximized:not(.minimized) {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 100000;
+	margin: 0px;
+	border-width: 0px; 
+	resize: none;
+	width:  100%;
+	height: 100%;
 	display: inline-flex;
 }
 
 .window.minimized > .title-bar {
 	border-bottom: 2px #c3c3c3 solid;
+}
+
+.window.maximized:not(.minimized) .title-bar {
+	margin: 0px;
 }
 
 .window.minimized > *:not(.title-bar) {
@@ -50,13 +67,8 @@ body {
 	border: 2px solid;
 	border-image: url(/border.png) 2 2 2 2;
 	background-color: #c3c3c3;
-	image-rendering: pixelated;
 	display: flex;
 	flex-direction: column;
-}
-
-img {
-	align-self: baseline;
 }
 
 .frame {
@@ -105,23 +117,29 @@ img {
 	margin: 0.5em;
 }
 
+/*label > *:first-child + * {
+	margin-left: 0.5em;
+}
+*/
 .frame.inset, .inset {
 	border: 2px solid;
 	border-image: url(/border-inset.png) 2 2 2 2;
 	border-color: #c3c3c3;
-	image-rendering: pixelated;
 }
 
 button {
 	font-family: fixedsys;
 	font-size: 12pt;
 	border-style: solid;
-	border-image: url(/border.png) 1 2 2 1 fill;
+	border-image: url(/border.png) 2 2 2 2 fill;
 	border-width: 2px 2px 2px 2px;
 	border-image-width: 2px 2px 2px 2px;
 	outline-offset: -4px;
-	min-width: 120px;
 	text-align: center;
+}
+
+.window button {
+	min-width: 120px;	
 }
 
 button:active {
@@ -131,30 +149,10 @@ button:active {
 	border-image-width: 2px 3px 3px 2px;
 }
 
-label:focus-within span, *:focus {
+*:focus {
 	outline-width: 1px;
 	outline-color: black;
 	outline-style: dotted;
-}
-
-button.pane {
-	/*text-align: center;*/
-	padding-top: 0.25em;
-	padding-bottom: 0.25em;
-	/*padding-left: 2.5em;
-	padding-right: 2.5em;*/
-	margin-left: 0.5em;
-	margin-right: 0.5em;
-	margin-bottom: 0.5em;
-	margin-top: 0.5em;
-	flex-direction: unset;
-	display: inline-block;
-	display: flex;
-}
-
-button.pane > * {
-	display: inline-block;
-	margin: 0.25em;
 }
 
 label {

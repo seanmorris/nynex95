@@ -18,7 +18,11 @@
 .icon-list div:focus img {
 	outline-color: white;
 	filter:
+		brightness(50%)
+		invert(100%)
+		contrast(50%)
 		sepia(100%)
+		saturate(150%)
 		invert(100%);
 }
 
@@ -27,7 +31,6 @@
 	align-self: center;
 	display: block;
 	
-	word-break: break-all;
 	margin: 0.25em;
 	text-align: center;
 }
@@ -38,7 +41,8 @@
 }
 
 .icon-list div:focus label {
-	outline-color: black;
+	outline-color: white;
+	outline-offset: -1px;
 	background-color: #000082;
 	color: #FFF;
 }

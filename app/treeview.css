@@ -1,0 +1,54 @@
+.treeview {
+}
+
+.treeview,
+.treeview label {
+	padding: 0.125em;
+	display: block;
+	flex-wrap: wrap;
+	background-color: white;
+}
+
+.treeview {
+	min-width: 12em;
+}
+
+.treeview label span {
+	display: flex;
+}
+
+.treeview label label {
+	margin-left: 1em;	
+}
+
+.treeview .icon16 {
+	margin-right: 0.25em;
+}
+
+.treeview input {
+	display: none;
+}
+
+.treeview input ~ label {
+	display: none;
+}
+
+.treeview input:checked ~ label {
+	display: block;
+}
+
+.treeview input:checked ~ * .tree-expanded {
+	display: initial;
+}
+
+.treeview input:checked ~ * .tree-collapsed {
+	display: none;
+}
+
+.treeview input:not(:checked) ~ * .tree-expanded {
+	display: none;
+}
+
+.treeview input:not(:checked) ~ * .tree-collapsed {
+	display: initial;
+}
