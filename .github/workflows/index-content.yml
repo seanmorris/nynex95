@@ -13,8 +13,11 @@ jobs:
       - name: checkout.
         uses: actions/checkout@v2
 
-      - name: Build the main index.
+      - name: Build the index.
         run:  find ./content/ -type f | jq -R -s -c 'split("\n")|.[0:-1]' | tee index/main.json
+
+      - name: Add any index files.
+        run:  git add ./content/*
 
       - name: Commit & push any if changes are found
         run:  |
