@@ -5,7 +5,7 @@ on:
     # - 'content/**'
 
 jobs:
-  hello-actions:
+  print-content:
     name: Hello, Actions!
     runs-on: ubuntu-18.04
 
@@ -17,4 +17,4 @@ jobs:
         env:
           MESSAGE: Hello, Actions
         run: |
-          echo $MESSAGE
+          find ./content
