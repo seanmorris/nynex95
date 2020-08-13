@@ -7,14 +7,14 @@ on:
     - 'content/**'
 
     jobs:
+      hello-actions:
+        name: Hello, Actions!
+        runs-on: ubuntu-18.04
 
-      name: Hello, Actions!
-      runs-on: ubuntu-18.04
+        steps:
+          - name: Print the message.
+            env:
+              MESSAGE: Hello, Actions
 
-      steps:
-        - name: Print the message.
-          env:
-            MESSAGE: Hello, Actions
-
-          run: |
-            echo $MESSAGE!
+            run: |
+              echo $MESSAGE!
