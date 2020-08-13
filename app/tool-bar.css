@@ -1,5 +1,6 @@
 .tool-bar {
 	display: flex;
+	flex-wrap: wrap;
 	padding: 3px;
 }
 
