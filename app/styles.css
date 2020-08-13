@@ -128,8 +128,15 @@ body {
 	align-content: center;
 }
 
-.row > * {
+.row:not(.status) > * {
 	margin: 0.5em;
+}
+
+.row.status > * {
+	flex: 1;
+	color: #444;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
 }
 
 /*label > *:first-child + * {
@@ -201,6 +208,8 @@ progress {
 
 progress::-webkit-progress-bar {
 	background-color: transparent;
+	padding-left: 1px;
+	padding-right: 1px;
 }
 progress::-webkit-progress-value {
 	background-color: transparent;

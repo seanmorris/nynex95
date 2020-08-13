@@ -10,6 +10,10 @@
 	top: 0;
 }
 
+.gridview th:active {
+	border-image: url(/border-depressed.png) 2 3 3 2 fill;
+}
+
 .gridview th:first-child,
 .gridview td:first-child {
 	position: sticky;
