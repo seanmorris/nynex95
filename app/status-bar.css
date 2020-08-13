@@ -1,0 +1,18 @@
+.row:not(.status) > * {
+	margin: 0.5em;
+}
+
+.row.status {
+	flex-wrap: nowrap;	
+}
+
+.row.status > * {
+	flex: 1;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+	display: flex;
+}
+
+.row.status img {
+	margin-right: 0.25em;
+}

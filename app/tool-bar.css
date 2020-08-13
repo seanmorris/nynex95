@@ -1,0 +1,26 @@
+.tool-bar {
+	display: flex;
+	padding: 3px;
+}
+
+.tool-bar button {
+	display: flex;
+	margin: 0px;
+	padding: 1px 3px;
+}
+
+.tool-bar button img + span {
+	margin-left: 6px;
+	margin-right: 3px;
+}
+
+.tool-bar hr {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.tool-bar button {
+	min-width: auto;
+	min-height: 20px;
+	outline-offset: -3px;
+}

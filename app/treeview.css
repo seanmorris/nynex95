@@ -13,6 +13,12 @@
 	min-width: 12em;
 }
 
+.treeview [contenteditable] {
+	flex: 1;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
 .treeview label span {
 	display: flex;
 }
