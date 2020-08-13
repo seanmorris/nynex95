@@ -1,8 +1,8 @@
 name: "Index Content"
 on:
   push:
-    paths:
-    - 'content/**'
+    # paths:
+    # - 'content/**'
 
 jobs:
   hello-actions:
