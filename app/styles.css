@@ -8,98 +8,31 @@
 
 html, body {
 	height: 100%;
+	width: 100%;
 	box-sizing: border-box;
 	margin: 0px;
 	box-sizing: border-box;
 	user-select: none;
 	display: flex;
 	flex-direction: row;
-	align-items: flex-end;
-	padding-bottom: 1.125em;
+	align-items: flex-start;
 }
 
-body::-webkit-scrollbar {
-	width: 16px;
-	height: 12px;
+body {
+	display: flex;
+	flex-direction: column;
 }
 
-body::-webkit-scrollbar-track {
-	background-color: rgba(0, 0, 0, 0.0);
-	position: absolute;
-	z-index: 0;
-}
-
-body::-webkit-scrollbar-thumb {
-	padding: 12px !important;
-	background-clip: padding-box;
-	border: 2px solid rgba(0, 0, 0, 0);
-	background-color: rgba(0,0,0, 0.25);
-    background-clip: padding-box;
-	width: 4px;
-	border-radius: 10px;
-	position: absolute;
-	z-index: 100;
-}
-
-::-webkit-scrollbar-thumb:hover {
-	background-color: rgba(0,0,0,0.5);
-}
 html, body, input, button, select {
 	font-family: fixedsys;
 	font-size: 12pt;
 }
 
-body {
-	background: url(/dawid-zawila-9d33wIMMzoE-unsplash.jpg);
-	background-attachment: fixed;
-	background-size: cover;
-}
-
-.window {
-	width: 480px;
-	height: 800px;
-	margin: 0.5em;
-	overflow: hidden;
-}
-
-.window.minimized {
-	resize: none;
-	width:  128px !important;
-	height: auto !important;
-	display: inline-flex;
-}
-
-.window.maximized:not(.minimized) {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	z-index: 100000;
-	margin: 0px;
-	border-width: 0px; 
-	resize: none;
-	width:  100% !important;
-	height: 100% !important;
-	display: inline-flex;
-}
-
-.window.minimized > .title-bar {
-	border-bottom: 2px #c3c3c3 solid;
-}
-
-.window.maximized:not(.minimized) .title-bar {
-	margin: 0px;
-}
-
-.window.minimized > *:not(.title-bar) {
-	display: none;
-}
-
-.window:not(.minimized) {
-	order: -1;
-	align-self: flex-start;
+.viewport {
 	position: relative;
-	min-width: 96px;
-	min-height: 96px;
+	align-self: stretch;
+	flex: 1;
+	overflow: auto;
 }
 
 .pane {
@@ -108,6 +41,7 @@ body {
 	background-color: #c3c3c3;
 	display: flex;
 	flex-direction: column;
+	box-sizing: border-box;
 }
 
 .frame {
@@ -117,7 +51,7 @@ body {
 }
 
 .frame .frame {
-	border: 1px solid #808080;	
+	border: 1px solid #808080;
 }
 
 .frame.padded {
@@ -174,7 +108,7 @@ button {
 }
 
 .window button {
-	min-width: 120px;	
+	min-width: 120px;
 }
 
 button:active {
@@ -229,4 +163,11 @@ progress::-webkit-progress-value {
 	background-image: url(/progress.png);
 	background-repeat: repeat-x;
 	background-position: left center
+}
+
+ul.task-list {
+	background-color: white;
+	position: fixed;
+	top:0px;
+	right:1em;
 }

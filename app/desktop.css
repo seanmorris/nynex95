@@ -1,0 +1,35 @@
+.viewport {
+	background-attachment: fixed;
+	background-size: cover;
+	background-image: url(/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg);
+}
+
+.desktop {
+	align-self: stretch;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	min-width: 100%;
+}
+
+.desktop [data-role=icon-list] {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+.desktop [data-role=icon-list] [tabindex] {
+	min-width: 96px;
+	min-height: 64px;
+}
+
+.desktop [data-role=icon-list] [tabindex] label {
+	background-color: rgba(255,255,255,0.125);
+	border-radius: 3px;
+	font-size: 12pt;
+	padding: 0.25em;
+}
+
+.desktop [data-role=icon-list] div:focus label {
+	background-color: rgba(0,0,0,0.5);
+}

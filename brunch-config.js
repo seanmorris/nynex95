@@ -6,4 +6,14 @@ module.exports = {
 	, paths: {
 		public: 'docs/'
 	}
-}
+	, plugins: {
+		babel: {
+			presets:   ['@babel/preset-env']
+			, plugins: ["@babel/plugin-proposal-class-properties"]
+		}
+		, raw: {
+			pattern: /\.tmp\.(.+)$/,
+			wrapper: content => `module.exports = ${JSON.stringify(content)}`
+		}
+	}
+};

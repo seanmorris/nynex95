@@ -1,0 +1,68 @@
+[data-role="window-host"] {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 1;
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	align-self: stretch;
+	pointer-events: none;
+}
+
+.window {
+	position: absolute;
+	pointer-events: initial;
+	width: 200px;
+	height: 320px;
+	overflow: hidden;
+}
+
+.window.minimized {
+	resize: none;
+	width:  128px !important;
+	height: auto !important;
+	display: inline-flex;
+	align-self: flex-end;
+}
+
+.window.maximized:not(.minimized) {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 100000;
+	margin: 0px;
+	border-width: 0px;
+	border-bottom-width: 2px;
+	resize: none;
+	width:  100% !important;
+	height: 100% !important;
+	display: inline-flex;
+}
+
+.window.minimized > .title-bar {
+	border-width: 1px;
+}
+
+.window.maximized:not(.minimized) .title-bar {
+	margin: 0px;
+}
+
+.window.minimized > *:not(.title-bar) {
+	display: none;
+}
+
+.window:not(.minimized) {
+	align-self: flex-start;
+	min-width: 96px;
+	min-height: 96px;
+}
+
+.window.menu-open {
+	overflow: visible;
+}
+
+.window:focus,
+.window:focus-within {
+	z-index: 1;
+}

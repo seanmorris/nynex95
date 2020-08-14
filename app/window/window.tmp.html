@@ -1,0 +1,18 @@
+<div class = "window [[classes|join]]" cv-on = ":focus(event);:blur(event)" cv-ref = "window::" tabindex="-1">
+	[[titleBar]]
+	[[menuBar]]
+	<div class = "frame liquid">
+		<div class = "row">
+			<label class = "inset">[[content]]</label>
+		</div>
+		<div class = "row">
+			<label>
+				[[progr]]%
+			</label>
+			<progress  class = "inset" value="[[progr]]" max="100">
+		</div>
+		<div class = "frame white inset scroll margin">
+			<div data-role = "icon-list" cv-each = "icons:iicon:i">[[iicon]]</div>
+		</div>
+	</div>
+</div>

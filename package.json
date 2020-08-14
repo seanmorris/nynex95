@@ -1,6 +1,6 @@
 {
-  "name": "brunch-app",
-  "description": "Brunch.io application",
+  "name": "Nynex95",
+  "description": "Windows 95-inspired UI for Curvature.",
   "private": true,
   "author": "Brunch",
   "version": "0.0.1",
@@ -9,11 +9,21 @@
     "start": "brunch watch --server",
     "build": "brunch build --production"
   },
-  "dependencies": {},
+  "dependencies": {
+    "curvature": "^0.0.56"
+  },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.0.0",
     "auto-reload-brunch": "^2",
+    "babel-brunch": "^7.0.1",
+    "babel-minify": "^0.5.1",
     "brunch": "^3",
     "clean-css-brunch": "^3",
-    "terser-brunch": "^4"
+    "terser-brunch": "^4",
+    "raw-brunch": "^1.0.2",
+    "uglify-es-brunch": "^1"
   }
 }

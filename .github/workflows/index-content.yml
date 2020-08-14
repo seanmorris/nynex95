@@ -22,7 +22,6 @@ jobs:
       - name: Commit & push any if changes are found
         run:  |
           test -n "$(git status -s)" \
-            && echo "Changes" \
             && git \
               -c "user.name=index-bot" \
               -c "user.email=index-bot@seanmorr.is" \

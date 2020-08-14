@@ -1,0 +1,10 @@
+<div class = "title-bar" cv-on = "mousedown:grabTitleBar(event);">
+	<img cv-attr = "src:icon" />
+	<span class = "title" cv-bind = "title"></span>
+	<span>
+		<button tabindex = "-1" class = "minimize" cv-on = "click:minimize(event)"></button>
+		<button tabindex = "-1" class = "restore" cv-on = "click:restore(event)"></button>
+		<button tabindex = "-1" class = "maximize" cv-on = "click:maximize(event)"></button>
+		<button tabindex = "-1" class = "close" cv-on = "click:close(event)"></button>
+	</span>
+</div>

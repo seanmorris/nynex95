@@ -1,21 +1,24 @@
-.icon-list {
+[data-role=icon-list] {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
+	padding: 0.25em;
 }
 
-.icon-list div {
+[data-role=icon-list] [tabindex] {
 	display: flex;
 	flex-direction: column;
-	margin: 0.25em;
+	align-items: flex-end;
+	margin: 0em;
 	width: 64px;
+	min-height: 64px;
 }
 
-.icon-list div:focus {
+[data-role=icon-list] div:focus {
 	outline-style: none;
 }
 
-.icon-list div:focus img {
+[data-role=icon-list] div:focus img {
 	outline-color: white;
 	filter:
 		brightness(50%)
@@ -26,21 +29,22 @@
 		invert(100%);
 }
 
-.icon-list div img,
-.icon-list div label {
+[data-role=icon-list] div img,
+[data-role=icon-list] div label {
 	align-self: center;
 	display: block;
-	
+	max-width: 100%;
+
 	margin: 0.25em;
 	text-align: center;
 }
-.icon-list div:focus img,
-.icon-list div:focus label {
+[data-role=icon-list] div:focus img,
+[data-role=icon-list] div:focus label {
 	outline-style: dotted;
 	outline-width: 1px;
 }
 
-.icon-list div:focus label {
+[data-role=icon-list] div:focus label {
 	outline-color: white;
 	outline-offset: -1px;
 	background-color: #000082;
