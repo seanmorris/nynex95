@@ -10,7 +10,7 @@
     "build": "brunch build --production"
   },
   "dependencies": {
-    "curvature": "^0.0.56"
+    "curvature": "^0.0.58"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

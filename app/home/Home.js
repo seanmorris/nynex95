@@ -7,15 +7,17 @@ import { TaskBar  } from 'task/TaskBar';
 import { Task     } from 'task/Task';
 
 import { IconExplorer } from 'apps/iconExplorer/IconExplorer';
+import { TaskManager  } from 'apps/taskManager/TaskManager';
 import { Nynepad      } from 'apps/nynepad/Nynepad';
 
 export class Home extends View
 {
 	static singleton = false;
 	static path      = {
-		'/apps/icon-explorer': IconExplorer
-		, '/apps/nynepad':     Nynepad
-		, '/apps/window':      Task
+		'/apps/icon-explorer':  IconExplorer
+		, '/apps/task-manager': TaskManager
+		, '/apps/nynepad':      Nynepad
+		, '/apps/window':       Task
 	};
 
 	static instance()
@@ -76,6 +78,7 @@ export class Home extends View
 
 		if(!taskType)
 		{
+			alert(`${taskName}: Bad command or filename.`);
 			return false;
 		}
 

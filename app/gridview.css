@@ -36,6 +36,11 @@
 	white-space: nowrap;
 }
 
+.gridview th.wide,
+.gridview td.wide {
+	width: 100%;
+}
+
 .gridview th,
 .gridview td {
 	padding: 0.25em;
@@ -44,9 +49,15 @@
 .gridview > table {
 	border-spacing: 0px 0px;
 	min-width: 100%;
+	table-layout: fixed;
 }
 
 .gridview td,
 .gridview > table {
 	background-color: #FFF;
+}
+
+
+.gridview td button {
+	min-width: unset;
 }

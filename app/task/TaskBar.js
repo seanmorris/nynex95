@@ -17,13 +17,13 @@ export class TaskBar extends View
 
 	attached()
 	{
-		// this.onFrame(()=>{
-		// 	const date = new Date;
+		this.onFrame(()=>{
+			const date = new Date;
 
-		// 	this.args.hh = String(date.getHours()).padStart(2,0);
-		// 	this.args.mm = String(date.getMinutes()).padStart(2,0);
-		// 	this.args.ss = String(date.getSeconds()).padStart(2,0);
-		// });
+			this.args.hh = String(date.getHours()).padStart(2,0);
+			this.args.mm = String(date.getMinutes()).padStart(2,0);
+			this.args.ss = String(date.getSeconds()).padStart(2,0);
+		});
 	}
 
 	activate(event, task)

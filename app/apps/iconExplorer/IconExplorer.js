@@ -78,7 +78,7 @@ export class IconExplorer extends Task
 			const age = Date.now() - this.init;
 
 			this.window.args.progr = ((age / 100) % 100).toFixed(2);
-			this.window.args.age = (age / 1000).toFixed(1);
+			this.window.args.window.args.age = (age / 1000).toFixed(1);
 		});
 	}
 }

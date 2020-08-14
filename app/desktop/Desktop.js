@@ -25,6 +25,11 @@ export class Desktop extends View
 				, icon: 60
 			})
 			, new Icon({
+				action: '/apps/task-manager'
+				, name: 'Task Manager'
+				, icon: 61
+			})
+			, new Icon({
 				action: '/apps/window'
 				, name: 'Application Window'
 				, icon: 3

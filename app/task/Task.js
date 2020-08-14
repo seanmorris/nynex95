@@ -7,7 +7,7 @@ let win = undefined;
 
 export class Task
 {
-	title  = 'Application';
+	title  = '';
 	icon   = '/w95/3-16-4bit.png';
 	silent = false;
 
@@ -18,8 +18,6 @@ export class Task
 			const home  = Home.instance();
 			this.window = new Window(this);
 
-			console.log(this.window);
-
 			this.window.addEventListener('closed',   (event) => taskList.remove(this));
 			this.window.addEventListener('attached', (event) => this.attached());
 
@@ -28,7 +26,7 @@ export class Task
 			this.window.focus();
 		}
 
-		return Bindable.make(this);
+		return this;
 	}
 
 	attached()

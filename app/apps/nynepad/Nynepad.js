@@ -17,11 +17,19 @@ export class Nynepad extends Task
 
 		this.init = Date.now();
 
+		this.window.args.charCount = 'initializing...';
+
 		return Bindable.make(this);
 	}
 
 	attached()
 	{
-		this.window.args.menuBar  = new MenuBar(this.args, this);
+		this.window.args.menuBar  = new MenuBar(this.args, this.window);
+
+		this.window.args.bindTo('document', (v,k,t,d) => {
+
+			this.window.args.charCount = v ? v.length : 0;
+
+		});
 	}
 }

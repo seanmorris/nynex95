@@ -11,6 +11,8 @@ import { Icon } from '../icon/Icon';
 
 let Base = class extends View
 {
+	static idInc = 0;
+
 	constructor(args = {})
 	{
 		super(args);
@@ -30,6 +32,7 @@ let Base = class extends View
 
 		this.template = require('./window.tmp');
 
+		this.args.wid = this.constructor.idInc++;
 	}
 
 	postRender()

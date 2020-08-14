@@ -729,7 +729,7 @@ var Bindable = /*#__PURE__*/function () {
           target.___before___[_i9](target, key, target[Stack], undefined, args);
         }
 
-        var instance = _construct(target, _toConsumableArray(args));
+        var instance = Bindable.make(_construct(target, _toConsumableArray(args)));
 
         for (var _i10 in target.___after___) {
           target.___after___[_i10](target, key, target[Stack], instance, args);
@@ -2812,7 +2812,6 @@ var View = /*#__PURE__*/function () {
 
             if (unsafeView && !(v instanceof View)) {
               var unsafeTemplate = v;
-              console.log(unsafeTemplate);
               v = new View(_this7.args, _this7);
               v.template = unsafeTemplate;
             }
@@ -4596,7 +4595,7 @@ var IconExplorer = /*#__PURE__*/function (_Task) {
         var age = Date.now() - _this2.init;
 
         _this2.window.args.progr = (age / 100 % 100).toFixed(2);
-        _this2.window.args.age = (age / 1000).toFixed(1);
+        _this2.window.args.window.args.age = (age / 1000).toFixed(1);
       });
     }
   }]);
@@ -4672,13 +4671,19 @@ var Nynepad = /*#__PURE__*/function (_Task) {
     _defineProperty(_assertThisInitialized(_this), "template", require('./main.tmp'));
 
     _this.init = Date.now();
+    _this.window.args.charCount = 'initializing...';
     return _possibleConstructorReturn(_this, _Bindable.Bindable.make(_assertThisInitialized(_this)));
   }
 
   _createClass(Nynepad, [{
     key: "attached",
     value: function attached() {
-      this.window.args.menuBar = new _MenuBar.MenuBar(this.args, this);
+      var _this2 = this;
+
+      this.window.args.menuBar = new _MenuBar.MenuBar(this.args, this.window);
+      this.window.args.bindTo('document', function (v, k, t, d) {
+        _this2.window.args.charCount = v ? v.length : 0;
+      });
     }
   }]);
 
@@ -4689,7 +4694,97 @@ exports.Nynepad = Nynepad;
 });
 
 ;require.register("apps/nynepad/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame liquid\">\n\t<textarea class = \"inset liquid\"></textarea>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\"></div>\n</div>\n"
+module.exports = "<div class = \"frame liquid\">\n\t<textarea cv-bind = \"document\" class = \"inset liquid\"></textarea>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
+});
+
+;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TaskManager = void 0;
+
+var _Task2 = require("task/Task");
+
+var _Icon = require("../../icon/Icon");
+
+var _Home = require("../../home/Home");
+
+var _MenuBar = require("../../window/MenuBar");
+
+var _Bindable = require("curvature/base/Bindable");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var TaskManager = /*#__PURE__*/function (_Task) {
+  _inherits(TaskManager, _Task);
+
+  var _super = _createSuper(TaskManager);
+
+  function TaskManager(taskList) {
+    var _this;
+
+    _classCallCheck(this, TaskManager);
+
+    _this = _super.call(this, taskList);
+
+    _defineProperty(_assertThisInitialized(_this), "title", 'TaskManager');
+
+    _defineProperty(_assertThisInitialized(_this), "icon", '/w95/61-16-4bit.png');
+
+    _defineProperty(_assertThisInitialized(_this), "template", require('./main.tmp'));
+
+    return _this;
+  }
+
+  _createClass(TaskManager, [{
+    key: "attached",
+    value: function attached() {
+      this.window.endTask = function (event, task) {
+        task.window.close();
+      };
+
+      this.window.focusTask = function (event, task) {
+        task.window.focus();
+      };
+
+      this.window.args.tasks = [];
+      this.window.args.tasks = _Home.Home.instance().tasks.list;
+      this.window.args.menuBar = new _MenuBar.MenuBar(this.args, this.window);
+    }
+  }]);
+
+  return TaskManager;
+}(_Task2.Task);
+
+exports.TaskManager = TaskManager;
+});
+
+;require.register("apps/taskManager/main.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \"frame liquid\">\n\t<div class = \"frame inset gridview\">\n\t\t<table>\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>id</th>\n\t\t\t\t\t<th class = \"wide\">title</th>\n\t\t\t\t\t<th></th>\n\t\t\t\t\t<th></th>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody cv-each = \"tasks:task:t\">\n\t\t\t\t<tr>\n\t\t\t\t\t<td>[[task.wid]]</td>\n\t\t\t\t\t<td>[[task.title]]</td>\n\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<button cv-on = \"click:focusTask(event, task);\">\n\t\t\t\t\t\t\tfocus\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</td>\n\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<button cv-on = \"click:endTask(event, task);\">close</button>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</div>\n</div>\n"
 });
 
 ;require.register("desktop/Desktop.js", function(exports, require, module) {
@@ -4747,6 +4842,10 @@ var Desktop = /*#__PURE__*/function (_View) {
       name: 'Nynepad',
       icon: 60
     }), new _Icon.Icon({
+      action: '/apps/task-manager',
+      name: 'Task Manager',
+      icon: 61
+    }), new _Icon.Icon({
       action: '/apps/window',
       name: 'Application Window',
       icon: 3
@@ -4788,6 +4887,8 @@ var _TaskBar = require("task/TaskBar");
 var _Task = require("task/Task");
 
 var _IconExplorer = require("apps/iconExplorer/IconExplorer");
+
+var _TaskManager = require("apps/taskManager/TaskManager");
 
 var _Nynepad = require("apps/nynepad/Nynepad");
 
@@ -4874,6 +4975,7 @@ var Home = /*#__PURE__*/function (_View) {
       var taskType = Home.path[taskName] || false;
 
       if (!taskType) {
+        alert("".concat(taskName, ": Bad command or filename."));
         return false;
       }
 
@@ -4891,6 +4993,7 @@ _defineProperty(Home, "singleton", false);
 
 _defineProperty(Home, "path", {
   '/apps/icon-explorer': _IconExplorer.IconExplorer,
+  '/apps/task-manager': _TaskManager.TaskManager,
   '/apps/nynepad': _Nynepad.Nynepad,
   '/apps/window': _Task.Task
 });
@@ -5342,7 +5445,7 @@ var Task = /*#__PURE__*/function () {
 
     _classCallCheck(this, Task);
 
-    _defineProperty(this, "title", 'Application');
+    _defineProperty(this, "title", '');
 
     _defineProperty(this, "icon", '/w95/3-16-4bit.png');
 
@@ -5352,7 +5455,6 @@ var Task = /*#__PURE__*/function () {
       var home = _Home.Home.instance();
 
       this.window = new _Window.Window(this);
-      console.log(this.window);
       this.window.addEventListener('closed', function (event) {
         return taskList.remove(_this);
       });
@@ -5363,7 +5465,7 @@ var Task = /*#__PURE__*/function () {
       this.window.focus();
     }
 
-    return _Bindable.Bindable.make(this);
+    return this;
   }
 
   _createClass(Task, [{
@@ -5435,12 +5537,15 @@ var TaskBar = /*#__PURE__*/function (_View) {
 
   _createClass(TaskBar, [{
     key: "attached",
-    value: function attached() {// this.onFrame(()=>{
-      // 	const date = new Date;
-      // 	this.args.hh = String(date.getHours()).padStart(2,0);
-      // 	this.args.mm = String(date.getMinutes()).padStart(2,0);
-      // 	this.args.ss = String(date.getSeconds()).padStart(2,0);
-      // });
+    value: function attached() {
+      var _this2 = this;
+
+      this.onFrame(function () {
+        var date = new Date();
+        _this2.args.hh = String(date.getHours()).padStart(2, 0);
+        _this2.args.mm = String(date.getMinutes()).padStart(2, 0);
+        _this2.args.ss = String(date.getSeconds()).padStart(2, 0);
+      });
     }
   }, {
     key: "activate",
@@ -5598,6 +5703,8 @@ var _ViewProcessor = require("../mixin/ViewProcessor");
 
 var _Icon = require("../icon/Icon");
 
+var _class, _temp;
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5620,7 +5727,9 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-var Base = /*#__PURE__*/function (_View) {
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Base = (_temp = _class = /*#__PURE__*/function (_View) {
   _inherits(Base, _View);
 
   var _super = _createSuper(Base);
@@ -5646,6 +5755,7 @@ var Base = /*#__PURE__*/function (_View) {
     _this.args.content = 'Double-click an icon below.';
     _this.args.smallSrc = _this.args.largeSrc = '--';
     _this.template = require('./window.tmp');
+    _this.args.wid = _this.constructor.idInc++;
     return _this;
   }
 
@@ -5802,8 +5912,7 @@ var Base = /*#__PURE__*/function (_View) {
   }]);
 
   return Base;
-}(_View2.View);
-
+}(_View2.View), _defineProperty(_class, "idInc", 0), _temp);
 Base = _Target.Target.mix(Base);
 Base = _CssSwitch.CssSwitch.mix(Base);
 Base = _ViewProcessor.ViewProcessor.mix(Base);

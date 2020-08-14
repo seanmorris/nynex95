@@ -1,0 +1,30 @@
+<div class = "frame liquid">
+	<div class = "frame inset gridview">
+		<table>
+			<thead>
+				<tr>
+					<th>id</th>
+					<th class = "wide">title</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody cv-each = "tasks:task:t">
+				<tr>
+					<td>[[task.wid]]</td>
+					<td>[[task.title]]</td>
+
+					<td>
+						<button cv-on = "click:focusTask(event, task);">
+							focus
+						</button>
+					</td>
+
+					<td>
+						<button cv-on = "click:endTask(event, task);">close</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
