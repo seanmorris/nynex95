@@ -32,7 +32,7 @@ html, body, input, button, select {
 	position: relative;
 	align-self: stretch;
 	flex: 1;
-	overflow: auto;
+	overflow: hidden;
 }
 
 .pane {
@@ -82,8 +82,15 @@ html, body, input, button, select {
 .row {
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
 	align-content: center;
+}
+
+.wrap {
+	flex-wrap: wrap;
+}
+
+.spacer {
+	flex: 1;
 }
 
 /*label > *:first-child + * {
@@ -134,11 +141,6 @@ input[type="radio"] {
 	margin: 0.5em;
 }
 
-/*input, label, img.icon {
-	padding: 0.125em;
-	align-self: center;
-}*/
-
 hr {
 	margin: 0px;
 }
@@ -166,9 +168,26 @@ progress::-webkit-progress-value {
 }
 
 ul.task-list {
-	background-color: white;
+	background-color: black;
+	color: white;
 	position: fixed;
 	top:0px;
 	right:1em;
 	text-align: right;
+	z-index: 999999999;
+	opacity: 0.75;
+	pointer-events: none;
+	mix-blend-mode: darken;
+}
+
+ul.task-list:hover {
+}
+
+label.icon-label {
+	white-space: nowrap;
+	text-align: right;
+}
+
+label.icon-frame label {
+	display: none;
 }

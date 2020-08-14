@@ -10,6 +10,7 @@ export class Task
 	icon   = '/w95/3-16-4bit.png';
 	silent = false;
 	list   = undefined;
+	window = undefined;
 
 	constructor(taskList)
 	{
@@ -17,6 +18,8 @@ export class Task
 		{
 			const home = Home.instance();
 			const win  = new Window(this);
+
+			this.window = win;
 
 			win.addEventListener('closed', () => taskList.remove(this));
 

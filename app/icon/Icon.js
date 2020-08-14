@@ -10,8 +10,8 @@ export class Icon extends View
 
 		this.template  = require('./icon.tmp');
 
-		this.resource = args.action || '/apps/icon-explorer-stats'
-		this.action   = args.action || '/apps/icon-explorer'
+		this.resource = args.action || false;//'/apps/icon-explorer-stats'
+		this.action   = args.action || false;//'/apps/icon-explorer'
 
 		this.args.name = args.name || `untitled`;
 		this.args.path = args.path || `w95`;
@@ -37,6 +37,17 @@ export class Icon extends View
 	{
 		const home = Home.instance();
 
-		home.run(this.action);
+		switch(typeof this.action)
+		{
+			case 'string':
+				home.run(this.action);
+				break;
+
+			case 'function':
+				this.action(event);
+				break;
+
+		}
+
 	}
 }

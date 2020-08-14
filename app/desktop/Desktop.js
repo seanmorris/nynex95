@@ -12,8 +12,18 @@ export class Desktop extends View
 		this.template = require('./desktop.tmp');
 
 		this.args.icons = [
-			new Icon({name: 'Icon Explorer', icon: 'shell_window4', 'path': 'w98', 'bits': 8})
-			, new Icon({name: 'NynePad', icon: 60})
+			new Icon({
+				action: '/apps/icon-explorer'
+				, name: 'Icon Explorer'
+				, icon: 'shell_window4'
+				, path: 'w98'
+				, bits: 8
+			})
+			, new Icon({
+				action: '/apps/icon-explorer'
+				, name: 'NynePad'
+				, icon: 60
+			})
 		];
 
 		this.windows = new Bag((win, meta, action, index)=>{

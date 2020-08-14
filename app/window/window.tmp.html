@@ -3,7 +3,18 @@
 	[[menuBar]]
 	<div class = "frame liquid">
 		<div class = "row">
-			<label class = "inset">[[content]]</label>
+			<div class = "spacer"></div>
+			<label class = "icon-label">16x16<br />[[smallSrc]]</label>
+			<label class = "inset icon-frame" cv-ref = "small-icon">
+				[[small]]
+			</label>
+			<label class = "icon-label">32x32<br />[[largeSrc]]</label>
+			<label class = "inset icon-frame" cv-ref = "large-icon">
+				[[large]]
+			</label>
+		</div>
+		<div class = "frame white inset scroll margin">
+			<div data-role = "icon-list" cv-each = "icons:iicon:i">[[iicon]]</div>
 		</div>
 		<div class = "row">
 			<label>
@@ -11,8 +22,9 @@
 			</label>
 			<progress  class = "inset" value="[[progr]]" max="100">
 		</div>
-		<div class = "frame white inset scroll margin">
-			<div data-role = "icon-list" cv-each = "icons:iicon:i">[[iicon]]</div>
-		</div>
+	</div>
+	<div class = "status row">
+		<div class = "label inset">Showing: Icons</div>
+		<div class = "label inset">[[age]] seconds old.</div>
 	</div>
 </div>
