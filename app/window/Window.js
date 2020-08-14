@@ -19,7 +19,7 @@ let Base = class extends View
 
 		this.args.classes = ['pane', 'resize'];
 
-		this.pos = Bindable.make({x: 160, y: 100});
+		this.pos = Bindable.make({x: 160, y: 100, z: 0});
 
 		this.args.icon  = args.icon || '/w95/3-16-4bit.png';
 		this.args.title = Date.now() - this.init;
@@ -42,10 +42,17 @@ let Base = class extends View
 
 		this.pos.bindTo('x', (v,k) => {
 			element.style.left = `${v}px`;
+			this.args.x = v;
 		});
 
 		this.pos.bindTo('y', (v,k) => {
 			element.style.top = `${v}px`;
+			this.args.y = v;
+		});
+
+		this.pos.bindTo('z', (v,k) => {
+			element.style.zIndex = v;
+			this.args.z = v;
 		});
 	}
 
@@ -54,11 +61,12 @@ let Base = class extends View
 		this.args.bindTo('title', v => this.args.content = v)
 
 		this.onFrame(()=>{
-			this.args.title = Date.now() - this.init;
-			this.args.progr = Math.round(this.args.title / 100) % 100;
-		});
+			const age = Date.now() - this.init;
 
-		console.log(this.dispatchEvent);
+			this.args.progr = ((age / 100) % 100).toFixed(2);
+
+			this.args.title = `age: ${(age / 1000).toFixed(3)}s`;
+		});
 
 		this.dispatchEvent(new CustomEvent(
 			'attached', {detail:{ parent, target:this }})
@@ -107,7 +115,8 @@ let Base = class extends View
 
 	close()
 	{
-		this.remove();
+		// this.remove();
+		this.windows.remove(this);
 
 		this.dispatchEvent(new CustomEvent(
 			'closed', {detail:{ target:this }}
@@ -116,12 +125,41 @@ let Base = class extends View
 
 	focus()
 	{
+		console.log(this.windows.items());
 
+		const windows = this.windows.items().sort((a,b) => {
+			Number(a.pos.z) - Number(b.pos.z);
+		});
+
+		console.log(windows.map(w=>w.pos.z));
+
+		let passed = false;
+
+		for(const i in windows)
+		{
+			if(windows[i] === this)
+			{
+				passed = true;
+
+				continue;
+			}
+
+			if(passed)
+			{
+				windows[i].pos.z = Number(i) - 1;
+			}
+			else
+			{
+				windows[i].pos.z = Number(i);
+			}
+		}
+
+		this.pos.z = windows.length - 1;
 	}
 
 	blur()
 	{
-
+		// this.pos.z = 0;
 	}
 
 	grabTitleBar(event)

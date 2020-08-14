@@ -32,7 +32,14 @@ export class Home extends View
 
 		this.windows = new Bag((i,s,a) => {
 
+			if(a !== Bag.ITEM_ADDED)
+			{
+				return;
+			}
 
+			i.windows = this.windows;
+
+			i.focus();
 
 		});
 
@@ -47,8 +54,6 @@ export class Home extends View
 
 	run(taskName)
 	{
-		console.log(this, taskName, this.constructor);
-
 		const taskType = Home.path[taskName] || false;
 
 		if(!taskType)

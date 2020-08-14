@@ -170,4 +170,5 @@ ul.task-list {
 	position: fixed;
 	top:0px;
 	right:1em;
+	text-align: right;
 }

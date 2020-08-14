@@ -11,8 +11,6 @@ export class Task
 	silent = false;
 	list   = undefined;
 
-
-
 	constructor(taskList)
 	{
 		if(!this.silent)
@@ -20,11 +18,7 @@ export class Task
 			const home = Home.instance();
 			const win  = new Window(this);
 
-			win.addEventListener('closed', () => {
-				taskList.remove(this);
-
-				console.log(taskList.list);
-			});
+			win.addEventListener('closed', () => taskList.remove(this));
 
 			home.windows.add(win);
 		}

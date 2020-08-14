@@ -210,7 +210,7 @@ var Bag = /*#__PURE__*/function () {
       this.list[id] = item;
 
       if (this.changeCallback) {
-        this.changeCallback(item, this.meta, 1, id);
+        this.changeCallback(item, this.meta, Bag.ITEM_ADDED, id);
       }
     }
   }, {
@@ -238,7 +238,7 @@ var Bag = /*#__PURE__*/function () {
       this.content["delete"](item);
 
       if (this.changeCallback) {
-        this.changeCallback(item, this.meta, -1, id);
+        this.changeCallback(item, this.meta, Bag.ITEM_REMOVED, id);
       }
 
       return item;
@@ -256,6 +256,18 @@ var Bag = /*#__PURE__*/function () {
 }();
 
 exports.Bag = Bag;
+Object.defineProperty(Bag, 'ITEM_ADDED', {
+  configurable: false,
+  enumerable: false,
+  writable: true,
+  value: 1
+});
+Object.defineProperty(Bag, 'ITEM_REMOVED', {
+  configurable: false,
+  enumerable: false,
+  writable: true,
+  value: -1
+});
   })();
 });
 
@@ -4605,7 +4617,14 @@ var Home = /*#__PURE__*/function (_View) {
     _this = _super.call(this, args);
     _this.template = require('./home.tmp');
     _this.args.desktop = new _Desktop.Desktop({}, _assertThisInitialized(_this));
-    _this.windows = new _Bag.Bag(function (i, s, a) {});
+    _this.windows = new _Bag.Bag(function (i, s, a) {
+      if (a !== _Bag.Bag.ITEM_ADDED) {
+        return;
+      }
+
+      i.windows = _this.windows;
+      i.focus();
+    });
     _this.tasks = new _Bag.Bag(); // this.windows.type = Window;
     // this.tasks.type   = Task;
 
@@ -4617,7 +4636,6 @@ var Home = /*#__PURE__*/function (_View) {
   _createClass(Home, [{
     key: "run",
     value: function run(taskName) {
-      console.log(this, taskName, this.constructor);
       var taskType = Home.path[taskName] || false;
 
       if (!taskType) {
@@ -4642,7 +4660,7 @@ _defineProperty(Home, "path", {
 });
 
 ;require.register("home/home.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"viewport\">\n\t<div data-role = \"window-host\" cv-each = \"windows:window:w\">[[window]]</div>\n\t<div class = \"desktop\">[[desktop]]</div>\n</div>\n\n<div class = \"task-bar pane\">\n\t<div class = \"start\">\n\t\t<button>\n\t\t\t<img class = \"icon16\" src = \"/w98/windows-16-4bit.png\" />\n\t\t\t<div>Start</div>\n\t\t</button>\n\t\t<div class = \"pane\">\n\t\t\t<div class = \"brand-stripe\">\n\t\t\t\t<img src = \"/nynex95-logo.svg\">\n\t\t\t</div>\n\t\t\t<ul>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/20-32-4bit.png\" />\n\t\t\t\t\t<label tabindex = \"0\">Programs</label>\n\t\t\t\t\t<img class = \"expand\" src = \"/arrow-expand.png\" />\n\n\t\t\t\t\t<ul class = \"pane\">\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tAccessories\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tGames\n\t\t\t\t\t\t\t<ul class = \"pane\">\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Foo</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Bar</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Baz</li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tStartup\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t</ul>\n\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/21-32-4bit.png\" />\n\t\t\t\t\tDocuments\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/22-32-4bit.png\" />\n\t\t\t\t\tSettings\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/23-32-4bit.png\" />\n\t\t\t\t\tFind\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/24-32-4bit.png\" />\n\t\t\t\t\tHelp\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/25-32-4bit.png\" />\n\t\t\t\t\tRun...\n\t\t\t\t</li>\n\t\t\t\t<hr />\n\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/28-32-4bit.png\" />\n\t\t\t\t\tShutdown...\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\n\t<div class = \"quickstart\">\n\t</div>\n\n\t<div class = \"tasks\">\n\t</div>\n\n\t<div class = \"tray\">\n\t</div>\n</div>\n\n\n<ul class = \"task-list\" cv-each = \"tasks:task:t\">\n\t<li>[[task.title]]</li>\n</ul>\n"
+module.exports = "<div class = \"viewport\">\n\t<div data-role = \"window-host\" cv-each = \"windows:window:w\">[[window]]</div>\n\t<div class = \"desktop\">[[desktop]]</div>\n</div>\n\n<div class = \"task-bar pane\">\n\t<div class = \"start\">\n\t\t<button>\n\t\t\t<img class = \"icon16\" src = \"/w98/windows-16-4bit.png\" />\n\t\t\t<div>Start</div>\n\t\t</button>\n\t\t<div class = \"pane\">\n\t\t\t<div class = \"brand-stripe\">\n\t\t\t\t<img src = \"/nynex95-logo.svg\">\n\t\t\t</div>\n\t\t\t<ul>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/20-32-4bit.png\" />\n\t\t\t\t\t<label tabindex = \"0\">Programs</label>\n\t\t\t\t\t<img class = \"expand\" src = \"/arrow-expand.png\" />\n\n\t\t\t\t\t<ul class = \"pane\">\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tAccessories\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tGames\n\t\t\t\t\t\t\t<ul class = \"pane\">\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Foo</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Bar</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Baz</li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tStartup\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t</ul>\n\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/21-32-4bit.png\" />\n\t\t\t\t\tDocuments\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/22-32-4bit.png\" />\n\t\t\t\t\tSettings\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/23-32-4bit.png\" />\n\t\t\t\t\tFind\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/24-32-4bit.png\" />\n\t\t\t\t\tHelp\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/25-32-4bit.png\" />\n\t\t\t\t\tRun...\n\t\t\t\t</li>\n\t\t\t\t<hr />\n\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/28-32-4bit.png\" />\n\t\t\t\t\tShutdown...\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\n\t<div class = \"quickstart\">\n\t</div>\n\n\t<div class = \"tasks\">\n\t</div>\n\n\t<div class = \"tray\">\n\t</div>\n</div>\n\n\n<ul class = \"task-list\" cv-each = \"tasks:task:t\">\n\t<li>[[task.x]]x[[task.y]]x[[task.z]] [[task.title]]</li>\n</ul>\n"
 });
 
 ;require.register("icon/Icon.js", function(exports, require, module) {
@@ -5069,8 +5087,7 @@ var Task = function Task(taskList) {
     var _win = new _Window.Window(this);
 
     _win.addEventListener('closed', function () {
-      taskList.remove(_this);
-      console.log(taskList.list);
+      return taskList.remove(_this);
     });
 
     home.windows.add(_win);
@@ -5242,7 +5259,8 @@ var Base = /*#__PURE__*/function (_View) {
     _this.args.classes = ['pane', 'resize'];
     _this.pos = _Bindable.Bindable.make({
       x: 160,
-      y: 100
+      y: 100,
+      z: 0
     });
     _this.args.icon = args.icon || '/w95/3-16-4bit.png';
     _this.args.title = Date.now() - _this.init;
@@ -5260,29 +5278,38 @@ var Base = /*#__PURE__*/function (_View) {
   _createClass(Base, [{
     key: "postRender",
     value: function postRender() {
+      var _this2 = this;
+
       this.args.titleBar = new _TitleBar.TitleBar(this.args, this);
       this.args.menuBar = new _MenuBar.MenuBar(this.args, this);
       var element = this.tags.window.element;
       this.pos.bindTo('x', function (v, k) {
         element.style.left = "".concat(v, "px");
+        _this2.args.x = v;
       });
       this.pos.bindTo('y', function (v, k) {
         element.style.top = "".concat(v, "px");
+        _this2.args.y = v;
+      });
+      this.pos.bindTo('z', function (v, k) {
+        element.style.zIndex = v;
+        _this2.args.z = v;
       });
     }
   }, {
     key: "attached",
     value: function attached(parent) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.args.bindTo('title', function (v) {
-        return _this2.args.content = v;
+        return _this3.args.content = v;
       });
       this.onFrame(function () {
-        _this2.args.title = Date.now() - _this2.init;
-        _this2.args.progr = Math.round(_this2.args.title / 100) % 100;
+        var age = Date.now() - _this3.init;
+
+        _this3.args.progr = (age / 100 % 100).toFixed(2);
+        _this3.args.title = "age: ".concat((age / 1000).toFixed(3), "s");
       });
-      console.log(this.dispatchEvent);
       this.dispatchEvent(new CustomEvent('attached', {
         detail: {
           parent: parent,
@@ -5336,7 +5363,8 @@ var Base = /*#__PURE__*/function (_View) {
   }, {
     key: "close",
     value: function close() {
-      this.remove();
+      // this.remove();
+      this.windows.remove(this);
       this.dispatchEvent(new CustomEvent('closed', {
         detail: {
           target: this
@@ -5345,14 +5373,39 @@ var Base = /*#__PURE__*/function (_View) {
     }
   }, {
     key: "focus",
-    value: function focus() {}
+    value: function focus() {
+      console.log(this.windows.items());
+      var windows = this.windows.items().sort(function (a, b) {
+        Number(a.pos.z) - Number(b.pos.z);
+      });
+      console.log(windows.map(function (w) {
+        return w.pos.z;
+      }));
+      var passed = false;
+
+      for (var i in windows) {
+        if (windows[i] === this) {
+          passed = true;
+          continue;
+        }
+
+        if (passed) {
+          windows[i].pos.z = Number(i) - 1;
+        } else {
+          windows[i].pos.z = Number(i);
+        }
+      }
+
+      this.pos.z = windows.length - 1;
+    }
   }, {
     key: "blur",
-    value: function blur() {}
+    value: function blur() {// this.pos.z = 0;
+    }
   }, {
     key: "grabTitleBar",
     value: function grabTitleBar(event) {
-      var _this3 = this;
+      var _this4 = this;
 
       var start = {
         x: this.pos.x,
@@ -5372,8 +5425,8 @@ var Base = /*#__PURE__*/function (_View) {
           x: mouse.x - click.x,
           y: mouse.y - click.y
         };
-        _this3.pos.x = start.x + moved.x;
-        _this3.pos.y = start.y + moved.y;
+        _this4.pos.x = start.x + moved.x;
+        _this4.pos.y = start.y + moved.y;
       };
 
       document.addEventListener('mousemove', moved);
@@ -5420,7 +5473,7 @@ module.exports = "<div class = \"title-bar\" cv-on = \"mousedown:grabTitleBar(ev
 });
 
 ;require.register("window/window.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"window [[classes|join]]\" cv-on = \":focus(event);:blur(event)\" cv-ref = \"window::\" tabindex=\"-1\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t<div class = \"row\">\n\t\t\t<label class = \"inset\">[[content]]</label>\n\t\t</div>\n\t\t<div class = \"row\">\n\t\t\t<label>\n\t\t\t\t[[progr]]%\n\t\t\t</label>\n\t\t\t<progress  class = \"inset\" value=\"[[progr]]\" max=\"100\">\n\t\t</div>\n\t\t<div class = \"frame white inset scroll margin\">\n\t\t\t<div data-role = \"icon-list\" cv-each = \"icons:iicon:i\">[[iicon]]</div>\n\t\t</div>\n\t</div>\n</div>\n"
+module.exports = "<div class = \"window [[classes|join]]\" cv-on = \":focus(event):c;:blur(event)\" cv-ref = \"window::\" tabindex=\"-1\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t<div class = \"row\">\n\t\t\t<label class = \"inset\">[[content]]</label>\n\t\t</div>\n\t\t<div class = \"row\">\n\t\t\t<label>\n\t\t\t\t[[progr]]%\n\t\t\t</label>\n\t\t\t<progress  class = \"inset\" value=\"[[progr]]\" max=\"100\">\n\t\t</div>\n\t\t<div class = \"frame white inset scroll margin\">\n\t\t\t<div data-role = \"icon-list\" cv-each = \"icons:iicon:i\">[[iicon]]</div>\n\t\t</div>\n\t</div>\n</div>\n"
 });
 
 ;require.register("___globals___", function(exports, require, module) {
