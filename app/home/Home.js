@@ -32,7 +32,10 @@ export class Home extends View
 
 		this.windows = new Bag((i,s,a) => {
 
+
+
 		});
+
 		this.tasks   = new Bag();
 
 		// this.windows.type = Window;
