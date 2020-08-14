@@ -4623,7 +4623,6 @@ var Home = /*#__PURE__*/function (_View) {
       }
 
       i.windows = _this.windows;
-      i.focus();
     });
     _this.tasks = new _Bag.Bag(); // this.windows.type = Window;
     // this.tasks.type   = Task;
@@ -5091,6 +5090,8 @@ var Task = function Task(taskList) {
     });
 
     home.windows.add(_win);
+
+    _win.focus();
   }
 };
 
@@ -5374,27 +5375,16 @@ var Base = /*#__PURE__*/function (_View) {
   }, {
     key: "focus",
     value: function focus() {
-      console.log(this.windows.items());
-      var windows = this.windows.items().sort(function (a, b) {
-        Number(a.pos.z) - Number(b.pos.z);
-      });
-      var passed = false;
-      var ii = 0;
+      var prevZ = this.pos.z;
+      var windows = this.windows.items();
 
       for (var i in windows) {
-        if (windows[i].pos.z >= windows.length) {
-          windows[i].pos.z = windows.length - 1;
-          continue;
+        if (windows[i].pos.z > prevZ) {
+          windows[i].pos.z--;
         }
-
-        windows[i].pos.z = ii++;
       }
 
       this.pos.z = windows.length;
-    }
-  }, {
-    key: "blur",
-    value: function blur() {// this.pos.z = 0;
     }
   }, {
     key: "grabTitleBar",
@@ -5426,7 +5416,6 @@ var Base = /*#__PURE__*/function (_View) {
       document.addEventListener('mousemove', moved);
       document.addEventListener('mouseup', function (event) {
         document.removeEventListener('mousemove', moved);
-        ;
       }, {
         once: true
       });
@@ -5467,7 +5456,7 @@ module.exports = "<div class = \"title-bar\" cv-on = \"mousedown:grabTitleBar(ev
 });
 
 ;require.register("window/window.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"window [[classes|join]]\" cv-on = \":focus(event):c;:blur(event)\" cv-ref = \"window::\" tabindex=\"-1\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t<div class = \"row\">\n\t\t\t<label class = \"inset\">[[content]]</label>\n\t\t</div>\n\t\t<div class = \"row\">\n\t\t\t<label>\n\t\t\t\t[[progr]]%\n\t\t\t</label>\n\t\t\t<progress  class = \"inset\" value=\"[[progr]]\" max=\"100\">\n\t\t</div>\n\t\t<div class = \"frame white inset scroll margin\">\n\t\t\t<div data-role = \"icon-list\" cv-each = \"icons:iicon:i\">[[iicon]]</div>\n\t\t</div>\n\t</div>\n</div>\n"
+module.exports = "<div class = \"window [[classes|join]]\" cv-on = \"mousedown:focus(event):c\" cv-ref = \"window::\" tabindex=\"-1\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t<div class = \"row\">\n\t\t\t<label class = \"inset\">[[content]]</label>\n\t\t</div>\n\t\t<div class = \"row\">\n\t\t\t<label>\n\t\t\t\t[[progr]]%\n\t\t\t</label>\n\t\t\t<progress  class = \"inset\" value=\"[[progr]]\" max=\"100\">\n\t\t</div>\n\t\t<div class = \"frame white inset scroll margin\">\n\t\t\t<div data-role = \"icon-list\" cv-each = \"icons:iicon:i\">[[iicon]]</div>\n\t\t</div>\n\t</div>\n</div>\n"
 });
 
 ;require.register("___globals___", function(exports, require, module) {

@@ -21,6 +21,8 @@ export class Task
 			win.addEventListener('closed', () => taskList.remove(this));
 
 			home.windows.add(win);
+
+			win.focus();
 		}
 	}
 }

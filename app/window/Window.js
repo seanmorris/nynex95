@@ -125,33 +125,19 @@ let Base = class extends View
 
 	focus()
 	{
-		console.log(this.windows.items());
+		const prevZ = this.pos.z;
 
-		const windows = this.windows.items().sort((a,b) => {
-			Number(a.pos.z) - Number(b.pos.z);
-		});
-
-		let passed = false;
-		let ii = 0;
+		const windows = this.windows.items();
 
 		for(const i in windows)
 		{
-			if(windows[i].pos.z >= windows.length)
+			if(windows[i].pos.z > prevZ)
 			{
-				windows[i].pos.z = windows.length - 1;
-
-				continue;
+				windows[i].pos.z--;
 			}
-
-			windows[i].pos.z = ii++;
 		}
 
 		this.pos.z = windows.length;
-	}
-
-	blur()
-	{
-		// this.pos.z = 0;
 	}
 
 	grabTitleBar(event)
@@ -172,7 +158,7 @@ let Base = class extends View
 
 		document.addEventListener('mouseup', (event) => {
 
-			document.removeEventListener('mousemove', moved);;
+			document.removeEventListener('mousemove', moved);
 
 		}, {once: true});
 	}

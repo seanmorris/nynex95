@@ -38,9 +38,6 @@ export class Home extends View
 			}
 
 			i.windows = this.windows;
-
-			i.focus();
-
 		});
 
 		this.tasks   = new Bag();
