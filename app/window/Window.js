@@ -65,7 +65,7 @@ let Base = class extends View
 
 			this.args.progr = ((age / 100) % 100).toFixed(2);
 
-			this.args.title = `age: ${(age / 1000).toFixed(3)}s`;
+			this.args.title = `age: ${(age / 1000).toFixed(1)}s`;
 		});
 
 		this.dispatchEvent(new CustomEvent(
@@ -131,30 +131,22 @@ let Base = class extends View
 			Number(a.pos.z) - Number(b.pos.z);
 		});
 
-		console.log(windows.map(w=>w.pos.z));
-
 		let passed = false;
+		let ii = 0;
 
 		for(const i in windows)
 		{
-			if(windows[i] === this)
+			if(windows[i].pos.z >= windows.length)
 			{
-				passed = true;
+				windows[i].pos.z = windows.length - 1;
 
 				continue;
 			}
 
-			if(passed)
-			{
-				windows[i].pos.z = Number(i) - 1;
-			}
-			else
-			{
-				windows[i].pos.z = Number(i);
-			}
+			windows[i].pos.z = ii++;
 		}
 
-		this.pos.z = windows.length - 1;
+		this.pos.z = windows.length;
 	}
 
 	blur()

@@ -5308,7 +5308,7 @@ var Base = /*#__PURE__*/function (_View) {
         var age = Date.now() - _this3.init;
 
         _this3.args.progr = (age / 100 % 100).toFixed(2);
-        _this3.args.title = "age: ".concat((age / 1000).toFixed(3), "s");
+        _this3.args.title = "age: ".concat((age / 1000).toFixed(1), "s");
       });
       this.dispatchEvent(new CustomEvent('attached', {
         detail: {
@@ -5378,25 +5378,19 @@ var Base = /*#__PURE__*/function (_View) {
       var windows = this.windows.items().sort(function (a, b) {
         Number(a.pos.z) - Number(b.pos.z);
       });
-      console.log(windows.map(function (w) {
-        return w.pos.z;
-      }));
       var passed = false;
+      var ii = 0;
 
       for (var i in windows) {
-        if (windows[i] === this) {
-          passed = true;
+        if (windows[i].pos.z >= windows.length) {
+          windows[i].pos.z = windows.length - 1;
           continue;
         }
 
-        if (passed) {
-          windows[i].pos.z = Number(i) - 1;
-        } else {
-          windows[i].pos.z = Number(i);
-        }
+        windows[i].pos.z = ii++;
       }
 
-      this.pos.z = windows.length - 1;
+      this.pos.z = windows.length;
     }
   }, {
     key: "blur",

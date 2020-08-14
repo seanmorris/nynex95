@@ -746,8 +746,8 @@ ul.task-list {
 
 .window.maximized:not(.minimized) {
 	position: absolute;
-	top: 0px;
-	left: 0px;
+	top: 0px !important;;
+	left: 0px !important;;
 	z-index: 100000;
 	margin: 0px;
 	border-width: 0px;
