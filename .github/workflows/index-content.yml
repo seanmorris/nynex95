@@ -26,6 +26,6 @@ jobs:
               -c "user.name=index-bot" \
               -c "user.email=index-bot@seanmorr.is" \
               commit -nam 'Indexing content.' \
-            && git push
+            && git push \
             || true
 
