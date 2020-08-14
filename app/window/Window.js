@@ -15,15 +15,13 @@ let Base = class extends View
 	{
 		super(args);
 
-		this.init = Date.now();
-
 		this.args.classes = ['pane', 'resize'];
 		this.args.preview = '/w95/1-16-4bit.png';
 
 		this.pos = Bindable.make({x: 160, y: 100, z: 0});
 
-		this.args.icon  = args.icon || '/w95/3-16-4bit.png';
-		this.args.title = 'Icon Explorer';
+		this.args.icon  = args.icon       || '/w95/3-16-4bit.png';
+		this.args.title = this.args.title || 'Application Window';
 		this.args.progr = 0;
 
 		this.args.content = 'Double-click an icon below.';
@@ -31,38 +29,12 @@ let Base = class extends View
 		this.args.smallSrc = this.args.largeSrc = '--';
 
 		this.template = require('./window.tmp');
-		this.args.icons = Array(72).fill(1).map((v, k) => {
 
-			const icon = new Icon({
-				action: (event) => {
-
-					this.args.preview = icon.args.src;
-					this.args.content = icon.args.src;
-
-					const large = new Icon(Object.assign({},icon.args));
-					const small = new Icon(Object.assign({},icon.args));
-
-					small.args.size = 16;
-
-					this.args.large = large;
-					this.args.small = small;
-
-					this.args.smallSrc = small.args.src;
-					this.args.largeSrc = large.args.src;
-				}
-				, icon: 1+k
-				, name: 1+k
-			});
-
-			return icon;
-
-		});
 	}
 
 	postRender()
 	{
 		this.args.titleBar = new TitleBar(this.args, this);
-		this.args.menuBar  = new MenuBar(this.args, this);
 
 		const element = this.tags.window.element;
 
@@ -80,40 +52,13 @@ let Base = class extends View
 			element.style.zIndex = v;
 			this.args.z = v;
 		});
-
 	}
 
 	attached(parent)
 	{
-		const smallIcon = this.tags['small-icon'].element;
-
-		smallIcon.style.width          = '64px';
-		smallIcon.style.height         = '64px';
-		smallIcon.style.display        = 'flex';
-		smallIcon.style.justifyContent = 'center';
-
-		const largeIcon = this.tags['large-icon'].element;
-
-		largeIcon.style.width          = '64px';
-		largeIcon.style.height         = '64px';
-		largeIcon.style.display        = 'flex';
-		largeIcon.style.justifyContent = 'center';
-
-		this.args.bindTo('age', v => {
-			this.args.title = `Icon Explorer - Window Age: ${v}s`
-		});
-
-		this.onFrame(()=>{
-			const age = Date.now() - this.init;
-
-			this.args.progr = ((age / 100) % 100).toFixed(2);
-
-			this.args.age = (age / 1000).toFixed(1);
-		});
-
 		this.dispatchEvent(new CustomEvent(
-			'attached', {detail:{ parent, target:this }})
-		);
+			'attached', {detail:{ target:this }}
+		));
 	}
 
 	menuFocus()
@@ -158,7 +103,6 @@ let Base = class extends View
 
 	close()
 	{
-		// this.remove();
 		this.windows.remove(this);
 
 		this.dispatchEvent(new CustomEvent(
@@ -172,15 +116,29 @@ let Base = class extends View
 
 		const windows = this.windows.items();
 
+
 		for(const i in windows)
 		{
 			if(windows[i].pos.z > prevZ)
 			{
 				windows[i].pos.z--;
+				windows[i].classes.focused = false;
 			}
 		}
 
 		this.pos.z = windows.length;
+		this.classes.focused = true;
+	}
+
+	doubleClickTitle(event)
+	{
+		if(this.classes.maximized || this.classes.minimized)
+		{
+			this.restore();
+			return;
+		}
+
+		this.maximize();
 	}
 
 	grabTitleBar(event)

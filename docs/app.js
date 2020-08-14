@@ -3603,6 +3603,8 @@ var View = /*#__PURE__*/function () {
             _this11.args[k] = v;
           }
         });
+        viewList.onRemove(debindA);
+        viewList.onRemove(debindB);
 
         _this11.onRemove(debindA);
 
@@ -4141,6 +4143,7 @@ var ViewList = /*#__PURE__*/function () {
 
     _classCallCheck(this, ViewList);
 
+    this.removed = false;
     this.args = _Bindable.Bindable.makeBindable({});
     this.args.value = _Bindable.Bindable.makeBindable(list || {});
     this.args.subArgs = _Bindable.Bindable.makeBindable({});
@@ -4473,6 +4476,8 @@ var ViewList = /*#__PURE__*/function () {
       if (this.args.value && !this.args.value.isBound()) {
         _Bindable.Bindable.clearBindings(this.args.value);
       }
+
+      this.removed = true;
     }
   }]);
 
@@ -4482,7 +4487,212 @@ var ViewList = /*#__PURE__*/function () {
 exports.ViewList = ViewList;
   })();
 });
-require.register("desktop/Desktop.js", function(exports, require, module) {
+require.register("apps/iconExplorer/IconExplorer.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.IconExplorer = void 0;
+
+var _Task2 = require("task/Task");
+
+var _Icon = require("../../icon/Icon");
+
+var _Home = require("../../home/Home");
+
+var _Bindable = require("curvature/base/Bindable");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var IconExplorer = /*#__PURE__*/function (_Task) {
+  _inherits(IconExplorer, _Task);
+
+  var _super = _createSuper(IconExplorer);
+
+  function IconExplorer(taskList) {
+    var _this;
+
+    _classCallCheck(this, IconExplorer);
+
+    _this = _super.call(this, taskList);
+
+    _defineProperty(_assertThisInitialized(_this), "title", 'Icon Explorer');
+
+    _defineProperty(_assertThisInitialized(_this), "icon", '/w95/3-16-4bit.png');
+
+    _defineProperty(_assertThisInitialized(_this), "template", require('./main.tmp'));
+
+    _this.init = Date.now();
+    return _possibleConstructorReturn(_this, _Bindable.Bindable.make(_assertThisInitialized(_this)));
+  }
+
+  _createClass(IconExplorer, [{
+    key: "attached",
+    value: function attached() {
+      var _this2 = this;
+
+      this.window.args.icons = Array(72).fill(1).map(function (v, k) {
+        var icon = new _Icon.Icon({
+          action: function action(event) {
+            _this2.window.args.preview = icon.args.src;
+            _this2.window.args.content = icon.args.src;
+            var large = new _Icon.Icon(Object.assign({}, icon.args));
+            var small = new _Icon.Icon(Object.assign({}, icon.args));
+            small.args.size = 16;
+            _this2.window.args.large = large;
+            _this2.window.args.small = small;
+            _this2.window.args.smallSrc = small.args.src;
+            _this2.window.args.largeSrc = large.args.src;
+            _this2.window.args.icon = small.args.src;
+          },
+          icon: 1 + k,
+          name: 1 + k
+        });
+        return icon;
+      });
+
+      if (this.window.tags['small-icon']) {
+        var smallIcon = this.window.tags['small-icon'].element;
+        smallIcon.style.width = '64px';
+        smallIcon.style.height = '64px';
+        smallIcon.style.display = 'flex';
+        smallIcon.style.justifyContent = 'center';
+      }
+
+      if (this.window.tags['large-icon']) {
+        var largeIcon = this.window.tags['large-icon'].element;
+        largeIcon.style.width = '64px';
+        largeIcon.style.height = '64px';
+        largeIcon.style.display = 'flex';
+        largeIcon.style.justifyContent = 'center';
+      }
+
+      this.window.args.bindTo('age', function (v) {// this.args.title = `Icon Explorer - Window Age: ${v}s`
+      });
+      this.window.onFrame(function () {
+        var age = Date.now() - _this2.init;
+
+        _this2.window.args.progr = (age / 100 % 100).toFixed(2);
+        _this2.window.args.age = (age / 1000).toFixed(1);
+      });
+    }
+  }]);
+
+  return IconExplorer;
+}(_Task2.Task);
+
+exports.IconExplorer = IconExplorer;
+});
+
+;require.register("apps/iconExplorer/main.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \"row\">\n\t<div class = \"spacer\"></div>\n\t<label class = \"icon-label\">16x16<br />[[smallSrc]]</label>\n\t<label class = \"inset icon-frame\" cv-ref = \"small-icon\">\n\t\t[[small]]\n\t</label>\n\t<label class = \"icon-label\">32x32<br />[[largeSrc]]</label>\n\t<label class = \"inset icon-frame\" cv-ref = \"large-icon\">\n\t\t[[large]]\n\t</label>\n</div>\n\n<div class = \"frame white inset scroll margin\">\n\t<div data-role = \"icon-list\" cv-each = \"icons:iicon:i\">[[iicon]]</div>\n</div>\n\n<div class = \"row\">\n\t<label>\n\t\t[[progr]]%\n\t</label>\n\t<progress  class = \"inset\" value=\"[[progr]]\" max=\"100\">\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">Showing: Icons</div>\n\t<div class = \"label inset\">[[age]] seconds old.</div>\n</div>\n"
+});
+
+;require.register("apps/nynepad/Nynepad.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Nynepad = void 0;
+
+var _Task2 = require("task/Task");
+
+var _Icon = require("../../icon/Icon");
+
+var _Home = require("../../home/Home");
+
+var _MenuBar = require("../../window/MenuBar");
+
+var _Bindable = require("curvature/base/Bindable");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Nynepad = /*#__PURE__*/function (_Task) {
+  _inherits(Nynepad, _Task);
+
+  var _super = _createSuper(Nynepad);
+
+  function Nynepad(taskList) {
+    var _this;
+
+    _classCallCheck(this, Nynepad);
+
+    _this = _super.call(this, taskList);
+
+    _defineProperty(_assertThisInitialized(_this), "title", 'Nynepad 95');
+
+    _defineProperty(_assertThisInitialized(_this), "icon", '/w95/60-16-4bit.png');
+
+    _defineProperty(_assertThisInitialized(_this), "template", require('./main.tmp'));
+
+    _this.init = Date.now();
+    return _possibleConstructorReturn(_this, _Bindable.Bindable.make(_assertThisInitialized(_this)));
+  }
+
+  _createClass(Nynepad, [{
+    key: "attached",
+    value: function attached() {
+      this.window.args.menuBar = new _MenuBar.MenuBar(this.args, this);
+    }
+  }]);
+
+  return Nynepad;
+}(_Task2.Task);
+
+exports.Nynepad = Nynepad;
+});
+
+;require.register("apps/nynepad/main.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \"frame liquid\">\n\t<textarea class = \"inset liquid\"></textarea>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\"></div>\n</div>\n"
+});
+
+;require.register("desktop/Desktop.js", function(exports, require, module) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4533,9 +4743,13 @@ var Desktop = /*#__PURE__*/function (_View) {
       path: 'w98',
       bits: 8
     }), new _Icon.Icon({
-      action: '/apps/icon-explorer',
-      name: 'NynePad',
+      action: '/apps/nynepad',
+      name: 'Nynepad',
       icon: 60
+    }), new _Icon.Icon({
+      action: '/apps/window',
+      name: 'Application Window',
+      icon: 3
     })];
     _this.windows = new _Bag.Bag(function (win, meta, action, index) {// console.log(this.windows.list);
     });
@@ -4572,6 +4786,10 @@ var _Window = require("window/Window");
 var _TaskBar = require("task/TaskBar");
 
 var _Task = require("task/Task");
+
+var _IconExplorer = require("apps/iconExplorer/IconExplorer");
+
+var _Nynepad = require("apps/nynepad/Nynepad");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -4672,7 +4890,9 @@ exports.Home = Home;
 _defineProperty(Home, "singleton", false);
 
 _defineProperty(Home, "path", {
-  '/apps/icon-explorer': _Task.Task
+  '/apps/icon-explorer': _IconExplorer.IconExplorer,
+  '/apps/nynepad': _Nynepad.Nynepad,
+  '/apps/window': _Task.Task
 });
 });
 
@@ -5104,43 +5324,57 @@ var _Sealed = require("../mixin/Sealed");
 
 var _Window = require("../window/Window");
 
+var _Bindable = require("curvature/base/Bindable");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var win = undefined;
 
-var Task = function Task(taskList) {
-  var _this = this;
+var Task = /*#__PURE__*/function () {
+  function Task(taskList) {
+    var _this = this;
 
-  _classCallCheck(this, Task);
+    _classCallCheck(this, Task);
 
-  _defineProperty(this, "title", 'Application');
+    _defineProperty(this, "title", 'Application');
 
-  _defineProperty(this, "icon", '/w95/3-16-4bit.png');
+    _defineProperty(this, "icon", '/w95/3-16-4bit.png');
 
-  _defineProperty(this, "silent", false);
+    _defineProperty(this, "silent", false);
 
-  _defineProperty(this, "list", undefined);
+    if (!this.silent) {
+      var home = _Home.Home.instance();
 
-  _defineProperty(this, "window", undefined);
+      this.window = new _Window.Window(this);
+      console.log(this.window);
+      this.window.addEventListener('closed', function (event) {
+        return taskList.remove(_this);
+      });
+      this.window.addEventListener('attached', function (event) {
+        return _this.attached();
+      });
+      home.windows.add(this.window);
+      this.window.focus();
+    }
 
-  if (!this.silent) {
-    var home = _Home.Home.instance();
-
-    var _win = new _Window.Window(this);
-
-    this.window = _win;
-
-    _win.addEventListener('closed', function () {
-      return taskList.remove(_this);
-    });
-
-    home.windows.add(_win);
-
-    _win.focus();
+    return _Bindable.Bindable.make(this);
   }
-};
+
+  _createClass(Task, [{
+    key: "attached",
+    value: function attached() {
+      console.log(this);
+    }
+  }]);
+
+  return Task;
+}();
 
 exports.Task = Task;
 });
@@ -5201,22 +5435,33 @@ var TaskBar = /*#__PURE__*/function (_View) {
 
   _createClass(TaskBar, [{
     key: "attached",
-    value: function attached() {
-      var _this2 = this;
-
-      this.onFrame(function () {
-        var date = new Date();
-        _this2.args.hh = String(date.getHours()).padStart(2, 0);
-        _this2.args.mm = String(date.getMinutes()).padStart(2, 0);
-        _this2.args.ss = String(date.getSeconds()).padStart(2, 0);
-      });
+    value: function attached() {// this.onFrame(()=>{
+      // 	const date = new Date;
+      // 	this.args.hh = String(date.getHours()).padStart(2,0);
+      // 	this.args.mm = String(date.getMinutes()).padStart(2,0);
+      // 	this.args.ss = String(date.getSeconds()).padStart(2,0);
+      // });
     }
   }, {
     key: "activate",
     value: function activate(event, task) {
       if (task.window) {
         task.window.focus();
+
+        if (task.window.classes.minimized) {
+          task.window.restore();
+        }
       }
+    }
+  }, {
+    key: "doubleTap",
+    value: function doubleTap(event, task) {
+      if (task.window.classes.minimized || task.window.classes.maximized) {
+        task.window.restore();
+        return;
+      }
+
+      task.window.maximize();
     }
   }]);
 
@@ -5227,7 +5472,7 @@ exports.TaskBar = TaskBar;
 });
 
 ;require.register("task/taskBar.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"task-bar pane\">\n\t<div class = \"start\">\n\t\t<button>\n\t\t\t<img class = \"icon16\" src = \"/w98/windows-16-4bit.png\" />\n\t\t\t<div>Start</div>\n\t\t</button>\n\t\t<div class = \"pane\">\n\t\t\t<div class = \"brand-stripe\">\n\t\t\t\t<img src = \"/nynex95-logo.svg\">\n\t\t\t</div>\n\t\t\t<ul>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/20-32-4bit.png\" />\n\t\t\t\t\t<label tabindex = \"0\">Programs</label>\n\t\t\t\t\t<img class = \"expand\" src = \"/arrow-expand.png\" />\n\n\t\t\t\t\t<ul class = \"pane\">\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tAccessories\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tGames\n\t\t\t\t\t\t\t<ul class = \"pane\">\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Foo</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Bar</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Baz</li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tStartup\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t</ul>\n\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/21-32-4bit.png\" />\n\t\t\t\t\tDocuments\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/22-32-4bit.png\" />\n\t\t\t\t\tSettings\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/23-32-4bit.png\" />\n\t\t\t\t\tFind\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/24-32-4bit.png\" />\n\t\t\t\t\tHelp\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/25-32-4bit.png\" />\n\t\t\t\t\tRun...\n\t\t\t\t</li>\n\t\t\t\t<hr />\n\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/28-32-4bit.png\" />\n\t\t\t\t\tShutdown...\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\n\t<div class = \"quickstart\">\n\t</div>\n\n\t<div class = \"task-list\" data-count = \"[[taskCount]]\" cv-each = \"tasks:task:t\">\n\t\t<button cv-on = \"click:activate(event, task)\">\n\t\t\t<img class = \"icon16\" cv-attr = \"src:task.icon\" />\n\t\t\t[[task.title]]\n\t\t</button>\n\t</div>\n\n\t<div class = \"spacer\">\n\t</div>\n\n\t<div class = \"tray inset\">\n\t\t[[hh]]:[[mm]]:[[ss]]\n\t</div>\n</div>\n"
+module.exports = "<div class = \"task-bar pane\">\n\t<div class = \"start\">\n\t\t<button>\n\t\t\t<img class = \"icon16\" src = \"/w98/windows-16-4bit.png\" />\n\t\t\t<div>Start</div>\n\t\t</button>\n\t\t<div class = \"pane\">\n\t\t\t<div class = \"brand-stripe\">\n\t\t\t\t<img src = \"/nynex95-logo.svg\">\n\t\t\t</div>\n\t\t\t<ul>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/20-32-4bit.png\" />\n\t\t\t\t\t<label tabindex = \"0\">Programs</label>\n\t\t\t\t\t<img class = \"expand\" src = \"/arrow-expand.png\" />\n\n\t\t\t\t\t<ul class = \"pane\">\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tAccessories\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tGames\n\t\t\t\t\t\t\t<ul class = \"pane\">\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Foo</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Bar</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Baz</li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tStartup\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t</ul>\n\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/21-32-4bit.png\" />\n\t\t\t\t\tDocuments\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/22-32-4bit.png\" />\n\t\t\t\t\tSettings\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/23-32-4bit.png\" />\n\t\t\t\t\tFind\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/24-32-4bit.png\" />\n\t\t\t\t\tHelp\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/25-32-4bit.png\" />\n\t\t\t\t\tRun...\n\t\t\t\t</li>\n\t\t\t\t<hr />\n\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/28-32-4bit.png\" />\n\t\t\t\t\tShutdown...\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\n\t<div class = \"quickstart\">\n\t</div>\n\n\t<div class = \"task-list\" data-count = \"[[taskCount]]\" cv-each = \"tasks:task:t\">\n\t\t<button cv-on = \"click:activate(event,task);dblclick:doubleTap(event,task);\">\n\t\t\t<img class = \"icon16\" cv-attr = \"src:task.icon\" />\n\t\t\t[[task.title]]\n\t\t</button>\n\t</div>\n\n\t<div class = \"spacer\">\n\t</div>\n\n\t<div class = \"tray inset\">\n\t\t[[hh]]:[[mm]]:[[ss]]\n\t</div>\n</div>\n"
 });
 
 ;require.register("window/MenuBar.js", function(exports, require, module) {
@@ -5388,7 +5633,6 @@ var Base = /*#__PURE__*/function (_View) {
     _classCallCheck(this, Base);
 
     _this = _super.call(this, args);
-    _this.init = Date.now();
     _this.args.classes = ['pane', 'resize'];
     _this.args.preview = '/w95/1-16-4bit.png';
     _this.pos = _Bindable.Bindable.make({
@@ -5397,29 +5641,11 @@ var Base = /*#__PURE__*/function (_View) {
       z: 0
     });
     _this.args.icon = args.icon || '/w95/3-16-4bit.png';
-    _this.args.title = 'Icon Explorer';
+    _this.args.title = _this.args.title || 'Application Window';
     _this.args.progr = 0;
     _this.args.content = 'Double-click an icon below.';
     _this.args.smallSrc = _this.args.largeSrc = '--';
     _this.template = require('./window.tmp');
-    _this.args.icons = Array(72).fill(1).map(function (v, k) {
-      var icon = new _Icon.Icon({
-        action: function action(event) {
-          _this.args.preview = icon.args.src;
-          _this.args.content = icon.args.src;
-          var large = new _Icon.Icon(Object.assign({}, icon.args));
-          var small = new _Icon.Icon(Object.assign({}, icon.args));
-          small.args.size = 16;
-          _this.args.large = large;
-          _this.args.small = small;
-          _this.args.smallSrc = small.args.src;
-          _this.args.largeSrc = large.args.src;
-        },
-        icon: 1 + k,
-        name: 1 + k
-      });
-      return icon;
-    });
     return _this;
   }
 
@@ -5429,7 +5655,6 @@ var Base = /*#__PURE__*/function (_View) {
       var _this2 = this;
 
       this.args.titleBar = new _TitleBar.TitleBar(this.args, this);
-      this.args.menuBar = new _MenuBar.MenuBar(this.args, this);
       var element = this.tags.window.element;
       this.pos.bindTo('x', function (v, k) {
         element.style.left = "".concat(v, "px");
@@ -5447,30 +5672,8 @@ var Base = /*#__PURE__*/function (_View) {
   }, {
     key: "attached",
     value: function attached(parent) {
-      var _this3 = this;
-
-      var smallIcon = this.tags['small-icon'].element;
-      smallIcon.style.width = '64px';
-      smallIcon.style.height = '64px';
-      smallIcon.style.display = 'flex';
-      smallIcon.style.justifyContent = 'center';
-      var largeIcon = this.tags['large-icon'].element;
-      largeIcon.style.width = '64px';
-      largeIcon.style.height = '64px';
-      largeIcon.style.display = 'flex';
-      largeIcon.style.justifyContent = 'center';
-      this.args.bindTo('age', function (v) {
-        _this3.args.title = "Icon Explorer - Window Age: ".concat(v, "s");
-      });
-      this.onFrame(function () {
-        var age = Date.now() - _this3.init;
-
-        _this3.args.progr = (age / 100 % 100).toFixed(2);
-        _this3.args.age = (age / 1000).toFixed(1);
-      });
       this.dispatchEvent(new CustomEvent('attached', {
         detail: {
-          parent: parent,
           target: this
         }
       }));
@@ -5521,7 +5724,6 @@ var Base = /*#__PURE__*/function (_View) {
   }, {
     key: "close",
     value: function close() {
-      // this.remove();
       this.windows.remove(this);
       this.dispatchEvent(new CustomEvent('closed', {
         detail: {
@@ -5538,15 +5740,27 @@ var Base = /*#__PURE__*/function (_View) {
       for (var i in windows) {
         if (windows[i].pos.z > prevZ) {
           windows[i].pos.z--;
+          windows[i].classes.focused = false;
         }
       }
 
       this.pos.z = windows.length;
+      this.classes.focused = true;
+    }
+  }, {
+    key: "doubleClickTitle",
+    value: function doubleClickTitle(event) {
+      if (this.classes.maximized || this.classes.minimized) {
+        this.restore();
+        return;
+      }
+
+      this.maximize();
     }
   }, {
     key: "grabTitleBar",
     value: function grabTitleBar(event) {
-      var _this4 = this;
+      var _this3 = this;
 
       var start = {
         x: this.pos.x,
@@ -5566,18 +5780,18 @@ var Base = /*#__PURE__*/function (_View) {
           x: mouse.x - click.x,
           y: mouse.y - click.y
         };
-        _this4.pos.x = start.x + moved.x;
-        _this4.pos.y = start.y + moved.y;
+        _this3.pos.x = start.x + moved.x;
+        _this3.pos.y = start.y + moved.y;
       };
 
       document.addEventListener('mousemove', moved);
       document.addEventListener('mouseup', function (event) {
-        if (_this4.pos.y < 0) {
-          _this4.pos.y = 0;
+        if (_this3.pos.y < 0) {
+          _this3.pos.y = 0;
         }
 
-        if (_this4.pos.x < 0) {
-          _this4.pos.x = 0;
+        if (_this3.pos.x < 0) {
+          _this3.pos.x = 0;
         }
 
         document.removeEventListener('mousemove', moved);
@@ -5617,11 +5831,11 @@ module.exports = "<div class = \"menu-bar\" cv-on = \"blur:menuBlur(event):c;foc
 });
 
 ;require.register("window/titleBar.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"title-bar\" cv-on = \"mousedown:grabTitleBar(event);\">\n\t<img cv-attr = \"src:icon\" />\n\t<span class = \"title\" cv-bind = \"title\"></span>\n\t<span>\n\t\t<button tabindex = \"-1\" class = \"minimize\" cv-on = \"click:minimize(event)\"></button>\n\t\t<button tabindex = \"-1\" class = \"restore\" cv-on = \"click:restore(event)\"></button>\n\t\t<button tabindex = \"-1\" class = \"maximize\" cv-on = \"click:maximize(event)\"></button>\n\t\t<button tabindex = \"-1\" class = \"close\" cv-on = \"click:close(event)\"></button>\n\t</span>\n</div>\n"
+module.exports = "<div class = \"title-bar\" cv-on = \"mousedown:grabTitleBar(event);dblclick:doubleClickTitle(event);\">\n\t<img cv-attr = \"src:icon\" />\n\t<span class = \"title\" cv-bind = \"title\"></span>\n\t<span>\n\t\t<button tabindex = \"-1\" class = \"minimize\" cv-on = \"click:minimize(event)\"></button>\n\t\t<button tabindex = \"-1\" class = \"restore\" cv-on = \"click:restore(event)\"></button>\n\t\t<button tabindex = \"-1\" class = \"maximize\" cv-on = \"click:maximize(event)\"></button>\n\t\t<button tabindex = \"-1\" class = \"close\" cv-on = \"click:close(event)\"></button>\n\t</span>\n</div>\n"
 });
 
 ;require.register("window/window.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"window [[classes|join]]\" cv-on = \"mousedown:focus(event):c\" cv-ref = \"window::\" tabindex=\"-1\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t<div class = \"row\">\n\t\t\t<div class = \"spacer\"></div>\n\t\t\t<label class = \"icon-label\">16x16<br />[[smallSrc]]</label>\n\t\t\t<label class = \"inset icon-frame\" cv-ref = \"small-icon\">\n\t\t\t\t[[small]]\n\t\t\t</label>\n\t\t\t<label class = \"icon-label\">32x32<br />[[largeSrc]]</label>\n\t\t\t<label class = \"inset icon-frame\" cv-ref = \"large-icon\">\n\t\t\t\t[[large]]\n\t\t\t</label>\n\t\t</div>\n\t\t<div class = \"frame white inset scroll margin\">\n\t\t\t<div data-role = \"icon-list\" cv-each = \"icons:iicon:i\">[[iicon]]</div>\n\t\t</div>\n\t\t<div class = \"row\">\n\t\t\t<label>\n\t\t\t\t[[progr]]%\n\t\t\t</label>\n\t\t\t<progress  class = \"inset\" value=\"[[progr]]\" max=\"100\">\n\t\t</div>\n\t</div>\n\t<div class = \"status row\">\n\t\t<div class = \"label inset\">Showing: Icons</div>\n\t\t<div class = \"label inset\">[[age]] seconds old.</div>\n\t</div>\n</div>\n"
+module.exports = "<div class = \"window [[classes|join]]\" cv-on = \"mousedown:focus(event):c\" cv-ref = \"window::\" tabindex=\"-1\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t[[$$template]]\n\t</div>\n</div>\n"
 });
 
 ;require.register("___globals___", function(exports, require, module) {

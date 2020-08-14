@@ -600,6 +600,7 @@ label.icon-frame label {
 	padding-right: 0.5em;
 }
 
+.window.focused .title-bar,
 .window:focus .title-bar,
 .window:focus-within .title-bar {
 	background-color: #000082;
@@ -847,11 +848,6 @@ label.icon-frame label {
 
 .window.menu-open {
 	overflow: visible;
-}
-
-.window:focus,
-.window:focus-within {
-	z-index: 1;
 }
 
 

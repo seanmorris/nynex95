@@ -1,6 +1,7 @@
-import { Home   } from '../home/Home';
-import { Sealed } from '../mixin/Sealed';
-import { Window } from '../window/Window';
+import { Home     } from '../home/Home';
+import { Sealed   } from '../mixin/Sealed';
+import { Window   } from '../window/Window';
+import { Bindable } from 'curvature/base/Bindable';
 
 let win = undefined;
 
@@ -9,23 +10,29 @@ export class Task
 	title  = 'Application';
 	icon   = '/w95/3-16-4bit.png';
 	silent = false;
-	list   = undefined;
-	window = undefined;
 
 	constructor(taskList)
 	{
 		if(!this.silent)
 		{
-			const home = Home.instance();
-			const win  = new Window(this);
+			const home  = Home.instance();
+			this.window = new Window(this);
 
-			this.window = win;
+			console.log(this.window);
 
-			win.addEventListener('closed', () => taskList.remove(this));
+			this.window.addEventListener('closed',   (event) => taskList.remove(this));
+			this.window.addEventListener('attached', (event) => this.attached());
 
-			home.windows.add(win);
+			home.windows.add(this.window);
 
-			win.focus();
+			this.window.focus();
 		}
+
+		return Bindable.make(this);
+	}
+
+	attached()
+	{
+		console.log(this);
 	}
 }

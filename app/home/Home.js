@@ -6,11 +6,16 @@ import { Window   } from 'window/Window';
 import { TaskBar  } from 'task/TaskBar';
 import { Task     } from 'task/Task';
 
+import { IconExplorer } from 'apps/iconExplorer/IconExplorer';
+import { Nynepad      } from 'apps/nynepad/Nynepad';
+
 export class Home extends View
 {
 	static singleton = false;
 	static path      = {
-		'/apps/icon-explorer': Task
+		'/apps/icon-explorer': IconExplorer
+		, '/apps/nynepad':     Nynepad
+		, '/apps/window':      Task
 	};
 
 	static instance()

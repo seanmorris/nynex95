@@ -61,8 +61,3 @@
 .window.menu-open {
 	overflow: visible;
 }
-
-.window:focus,
-.window:focus-within {
-	z-index: 1;
-}

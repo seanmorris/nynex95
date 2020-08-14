@@ -70,7 +70,7 @@
 	</div>
 
 	<div class = "task-list" data-count = "[[taskCount]]" cv-each = "tasks:task:t">
-		<button cv-on = "click:activate(event, task)">
+		<button cv-on = "click:activate(event,task);dblclick:doubleTap(event,task);">
 			<img class = "icon16" cv-attr = "src:task.icon" />
 			[[task.title]]
 		</button>

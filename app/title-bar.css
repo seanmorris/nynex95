@@ -1,3 +1,4 @@
+.window.focused .title-bar,
 .window:focus .title-bar,
 .window:focus-within .title-bar {
 	background-color: #000082;

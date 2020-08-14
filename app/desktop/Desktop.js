@@ -20,9 +20,14 @@ export class Desktop extends View
 				, bits: 8
 			})
 			, new Icon({
-				action: '/apps/icon-explorer'
-				, name: 'NynePad'
+				action: '/apps/nynepad'
+				, name: 'Nynepad'
 				, icon: 60
+			})
+			, new Icon({
+				action: '/apps/window'
+				, name: 'Application Window'
+				, icon: 3
 			})
 		];
 
