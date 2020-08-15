@@ -1,8 +1,7 @@
 name: "Index Content"
+
 on:
   push:
-    # paths:
-    # - 'content/**'
 
 jobs:
   index-content:
@@ -29,3 +28,8 @@ jobs:
             && git push \
             || true
 
+
+# on:
+#   push:
+#     # paths:
+#     # - 'content/**'

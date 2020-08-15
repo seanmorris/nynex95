@@ -4772,9 +4772,9 @@ var Folder = /*#__PURE__*/function (_View) {
     _this = _super.call(this, args);
     _this.args.expanded = false;
     _this.args.icon = args.icon || '/w95/4-16-4bit.png';
-    _this.args.name = args.name || 'Root'; // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents';
+    _this.args.name = args.name || 'Root';
+    _this.args.url = args.url || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents'; // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents';
 
-    _this.args.url = args.url || 'https://api.github.com/repos/seanmorris/nynex95/contents';
     _this.template = require('./folder.tmp');
     return _this;
   }
@@ -5364,7 +5364,7 @@ module.exports = "<div class = \"json-view [[topLevel]]\"> <span cv-on = \"click
 });
 
 ;require.register("control/plaintext.tmp.html", function(exports, require, module) {
-module.exports = "<pre class = \"plaintext-control white main-content\">[[content]]</pre>\n"
+module.exports = "<pre class = \"plaintext-control white inset main-content\">[[content]]</pre>\n"
 });
 
 ;require.register("desktop/Desktop.js", function(exports, require, module) {
