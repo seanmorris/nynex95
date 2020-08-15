@@ -2,15 +2,15 @@
   "name": "Nynex95",
   "description": "Windows 95-inspired UI for Curvature.",
   "private": true,
-  "author": "Brunch",
+  "author": "Sean Morris",
   "version": "0.0.1",
-  "repository": "",
+  "repository": "https://github.com/seanmorris/nynex95",
   "scripts": {
     "start": "brunch watch --server",
     "build": "brunch build --production"
   },
   "dependencies": {
-    "curvature": "^0.0.58"
+    "curvature": "^0.0.59"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
