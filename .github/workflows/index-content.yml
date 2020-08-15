@@ -3,7 +3,7 @@ name: Index Content
 on:
   push:
     branches:
-      - *
+      - '**'
     paths:
       - 'content/**'
 
