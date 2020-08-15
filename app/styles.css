@@ -54,7 +54,7 @@ html, body, input, button, select {
 	border: 1px solid #808080;
 }
 
-.frame.padded {
+.padded {
 	padding: 0.5em;
 }
 
@@ -75,7 +75,7 @@ html, body, input, button, select {
 	resize: both;
 }
 
-.frame.white {
+.white {
 	background-color: white;
 }
 
@@ -86,7 +86,13 @@ html, body, input, button, select {
 }
 
 .cols {
+	display: flex;
 	flex-direction: row;
+}
+
+.rows {
+	display: flex;
+	flex-direction: column;
 }
 
 .wrap {
@@ -213,18 +219,41 @@ label.icon-frame label {
 	height: 100%;
 }
 
-.repo-browser pre {
-	margin: 0.5em 0.75em;
-}
-
-.json-view.top-level {
+.repo-browser .main-content {
 	padding: 1em;
+}
+.repo-browser pre.main-content {
+	padding: 0.25em 1em;
 }
 
 .json-view:not(.top-level) {
 	display: contents;
 }
 
+:not(.expanded) > .json-view-body {
+	display: none;
+}
+
+.json-view.main-content {
+	background-color: black;
+	color: white;
+}
+
 .json-view .json-view-body {
 	margin-left : 2em;
+}
+
+.image-control.main-content {
+	display: flex;
+	flex: 1;
+	justify-content:center;
+	align-items:center;
+	background-color: #C3C3C3;
+}
+
+.image-control.main-content img {
+}
+
+.plaintext-control {
+	margin: 0px;
 }

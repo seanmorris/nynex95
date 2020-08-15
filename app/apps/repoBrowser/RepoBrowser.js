@@ -7,6 +7,8 @@ import { Bindable } from 'curvature/base/Bindable';
 
 import { Folder } from './Folder';
 import { Json as JsonControl } from '../../control/Json';
+import { Image as ImageControl } from '../../control/Image';
+import { Plaintext as PlaintextControl } from '../../control/Plaintext';
 
 export class RepoBrowser extends Task
 {
@@ -21,6 +23,9 @@ export class RepoBrowser extends Task
 
 	attached()
 	{
+		this.window.args.filetype = '';
+		this.window.args.chars    = '';
+
 		this.window.classes['repo-browser'] = true;
 
 		const folder = new Folder({browser:this});
@@ -32,16 +37,47 @@ export class RepoBrowser extends Task
 
 		this.window.args.bindTo('filename', v => {
 
-			const filetype = String(v).split('.').pop();
+			const filetype = (v||'').split('.').pop();
 
-			if(filetype === 'json')
+			if(this.window.args.control)
 			{
-				this.window.args.control = new JsonControl(this.window.args, this);
+				this.window.args.control.remove();
 			}
 
+			this.window.args.filetype = filetype || '';
 
-			this.window.args.filetype = filetype;
+			this.window.args.chars = 0;
 
+			switch(filetype)
+			{
+
+				case 'ico':
+				case 'gif':
+				case 'png':
+				case 'jpg':
+				case 'jpeg':
+				case 'webp':
+					this.window.args.control = new ImageControl(
+						{src:this.window.args.meta.download_url}, this
+					);
+					break;
+				case 'json':
+					this.window.args.control = new JsonControl(
+						{
+							expanded: 'expanded'
+							, tree: JSON.parse(this.window.args.content)
+						}, this
+					);
+					break;
+
+				default:
+					this.window.args.control = new PlaintextControl(
+						{content: this.window.args.content}, this
+					);
+					break;
+			}
+
+			this.window.args.chars = (this.window.args.content||'').length;
 		});
 	}
 }

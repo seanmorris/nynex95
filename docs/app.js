@@ -4772,7 +4772,8 @@ var Folder = /*#__PURE__*/function (_View) {
     _this = _super.call(this, args);
     _this.args.expanded = false;
     _this.args.icon = args.icon || '/w95/4-16-4bit.png';
-    _this.args.name = args.name || 'Root';
+    _this.args.name = args.name || 'Root'; // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents';
+
     _this.args.url = args.url || 'https://api.github.com/repos/seanmorris/nynex95/contents';
     _this.template = require('./folder.tmp');
     return _this;
@@ -4799,10 +4800,15 @@ var Folder = /*#__PURE__*/function (_View) {
         return r.json();
       }).then(function (files) {
         if (!Array.isArray(files)) {
+          _this2.args.browser.window.args.content = '';
+          _this2.args.browser.window.args.filename = '';
           _this2.args.browser.window.args.content = 'loading...';
           fetch(files.download_url).then(function (r) {
             return r.text();
           }).then(function (body) {
+            _this2.args.browser.window.args.content = '';
+            _this2.args.browser.window.args.filename = '';
+            _this2.args.browser.window.args.meta = files;
             _this2.args.browser.window.args.content = body;
             _this2.args.browser.window.args.filename = files.name;
           });
@@ -4868,6 +4874,10 @@ var _Folder = require("./Folder");
 
 var _Json = require("../../control/Json");
 
+var _Image = require("../../control/Image");
+
+var _Plaintext = require("../../control/Plaintext");
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4918,6 +4928,8 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
     value: function attached() {
       var _this2 = this;
 
+      this.window.args.filetype = '';
+      this.window.args.chars = '';
       this.window.classes['repo-browser'] = true;
       var folder = new _Folder.Folder({
         browser: this
@@ -4926,13 +4938,42 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
       this.window.args.files.push(folder);
       folder.expand();
       this.window.args.bindTo('filename', function (v) {
-        var filetype = String(v).split('.').pop();
+        var filetype = (v || '').split('.').pop();
 
-        if (filetype === 'json') {
-          _this2.window.args.control = new _Json.Json(_this2.window.args, _this2);
+        if (_this2.window.args.control) {
+          _this2.window.args.control.remove();
         }
 
-        _this2.window.args.filetype = filetype;
+        _this2.window.args.filetype = filetype || '';
+        _this2.window.args.chars = 0;
+
+        switch (filetype) {
+          case 'ico':
+          case 'gif':
+          case 'png':
+          case 'jpg':
+          case 'jpeg':
+          case 'webp':
+            _this2.window.args.control = new _Image.Image({
+              src: _this2.window.args.meta.download_url
+            }, _this2);
+            break;
+
+          case 'json':
+            _this2.window.args.control = new _Json.Json({
+              expanded: 'expanded',
+              tree: JSON.parse(_this2.window.args.content)
+            }, _this2);
+            break;
+
+          default:
+            _this2.window.args.control = new _Plaintext.Plaintext({
+              content: _this2.window.args.content
+            }, _this2);
+            break;
+        }
+
+        _this2.window.args.chars = (_this2.window.args.content || '').length;
       });
     }
   }]);
@@ -4948,7 +4989,7 @@ module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"inset treeview\">\n\t\t<div class = \"resize\">[[file]]</div>\n\t</div>\n\t<div class = \"frame inset content\">[[control]]<pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\">[[filetype]]</div>\n</div>\n"
+module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"inset treeview\">\n\t\t<div class = \"resize\">[[file]]</div>\n\t</div>\n\t<div class = \"frame rows inset content\">\n\t\t<div class = \"pane\">File: [[filename]]</div>\n\t\t[[control]]\n\t</div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\">type: [[filetype]] size: [[chars]]</div>\n</div>\n"
 });
 
 ;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {
@@ -5041,6 +5082,101 @@ exports.TaskManager = TaskManager;
 module.exports = "<div class = \"frame liquid\">\n\t<div class = \"frame inset gridview\">\n\t\t<table>\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>id</th>\n\t\t\t\t\t<th class = \"wide\">title</th>\n\t\t\t\t\t<th></th>\n\t\t\t\t\t<th></th>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody cv-each = \"tasks:task:t\">\n\t\t\t\t<tr>\n\t\t\t\t\t<td>[[task.wid]]</td>\n\t\t\t\t\t<td>[[task.title]]</td>\n\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<button cv-on = \"click:focusTask(event, task);\">\n\t\t\t\t\t\t\tfocus\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</td>\n\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<button cv-on = \"click:endTask(event, task);\">close</button>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</div>\n</div>\n"
 });
 
+;require.register("control/Html.js", function(exports, require, module) {
+"use strict";
+
+var _View2 = require("curvature/base/View");
+
+var _Home = require("../home/Home");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Base = /*#__PURE__*/function (_View) {
+  _inherits(Base, _View);
+
+  var _super = _createSuper(Base);
+
+  function Base(args, parent) {
+    var _this;
+
+    _classCallCheck(this, Base);
+
+    _this = _super.call(this, args, parent);
+    _this.template = require('./html.tmp');
+    return _this;
+  }
+
+  return Base;
+}(_View2.View);
+});
+
+;require.register("control/Image.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Image = void 0;
+
+var _View2 = require("curvature/base/View");
+
+var _Home = require("../home/Home");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Image = /*#__PURE__*/function (_View) {
+  _inherits(Image, _View);
+
+  var _super = _createSuper(Image);
+
+  function Image(args, parent) {
+    var _this;
+
+    _classCallCheck(this, Image);
+
+    _this = _super.call(this, args, parent);
+    _this.template = require('./image.tmp');
+    return _this;
+  }
+
+  return Image;
+}(_View2.View);
+
+exports.Image = Image;
+});
+
 ;require.register("control/Json.js", function(exports, require, module) {
 "use strict";
 
@@ -5050,6 +5186,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.Json = void 0;
 
 var _View2 = require("curvature/base/View");
+
+var _Bindable = require("curvature/base/Bindable");
 
 var _Home = require("../home/Home");
 
@@ -5087,32 +5225,52 @@ var Base = /*#__PURE__*/function (_View) {
 
     _this = _super.call(this, args, parent);
     _this.template = require('./json.tmp');
-
-    _this.args.bindTo('content', function (v) {
-      if (!v) {
-        return;
-      }
-
-      _this.args.tree = JSON.parse(v);
-
-      for (var i in _this.args.tree) {
-        if (_typeof(_this.args.tree[i]) === 'object') {
-          _this.args.tree[i] = new Json({
-            tree: _this.args.tree[i]
-          }, _assertThisInitialized(_this));
-        }
-      }
-    });
-
+    _this.args.expandIcon = '+';
+    _this.args.expanded = args.expanded || '';
     return _this;
   }
 
   _createClass(Base, [{
     key: "attached",
     value: function attached() {
+      var _this2 = this;
+
+      this.args.bindTo('tree', function (v) {
+        if (!v) {
+          return;
+        }
+
+        _this2.args.tree = v;
+
+        for (var i in _this2.args.tree) {
+          if (_typeof(_this2.args.tree[i]) === 'object') {
+            var subTree = _this2.args.tree[i];
+            _this2.args.tree[i] = new Json({}, _this2);
+            _this2.args.tree[i].args.tree = subTree;
+          }
+        }
+      });
+
       if (!this.parent || !(this.parent instanceof Json)) {
-        this.args.topLevel = 'top-level';
+        this.args.topLevel = 'top-level main-content';
       }
+    }
+  }, {
+    key: "expand",
+    value: function expand(event, key) {
+      console.log(key);
+
+      if (key) {
+        if (!this.args.tree[key]) {
+          return;
+        }
+
+        this.args.tree[key].expand(event);
+        return;
+      }
+
+      this.args.expanded = this.args.expanded ? '' : 'expanded';
+      this.args.expandIcon = this.args.expanded ? '+' : 'x';
     }
   }, {
     key: "type",
@@ -5142,8 +5300,71 @@ exports.Json = Json;
 ;
 });
 
-require.register("control/json.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"json-view [[topLevel]]\">{\n\t<div class = \"json-view-body\" cv-each = \"tree:value:key\">\n\t\t<div><b>[[key]]: </b><span data-type = [[value|type]]\"\">[[value]]</span></div>\n\t</div>\n\t}\n</div>\n"
+require.register("control/Plaintext.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Plaintext = void 0;
+
+var _View2 = require("curvature/base/View");
+
+var _Home = require("../home/Home");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Plaintext = /*#__PURE__*/function (_View) {
+  _inherits(Plaintext, _View);
+
+  var _super = _createSuper(Plaintext);
+
+  function Plaintext(args, parent) {
+    var _this;
+
+    _classCallCheck(this, Plaintext);
+
+    _this = _super.call(this, args, parent);
+    _this.template = require('./plaintext.tmp');
+    return _this;
+  }
+
+  return Plaintext;
+}(_View2.View);
+
+exports.Plaintext = Plaintext;
+});
+
+;require.register("control/html.tmp.html", function(exports, require, module) {
+module.exports = "<iframe srcdoc = \"[[srcdoc]]\"></iframe>\n"
+});
+
+;require.register("control/image.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \"image-control main-content\">\n\t<img class = \"inset white padded\" cv-attr = \"src:src\" />\n</div>\n\n"
+});
+
+;require.register("control/json.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \"json-view [[topLevel]]\"> <span cv-on = \"click:expand(event)\" cv-bind = \"expandIcon\"></span> {\n\t<div class = \"[[expanded]]\">\n\t\t<div class = \"json-view-body\" cv-each = \"tree:value:key\">\n\t\t\t<div><span class =\"json-key\" cv-on = \"click:expand(event, key)\">[[key]]:</span><span class =\"json-value\" data-type = [[value|type]]\"\">[[value]]</span></div>\n\t\t</div>\n\t</div>\n\t}\n</div>\n"
+});
+
+;require.register("control/plaintext.tmp.html", function(exports, require, module) {
+module.exports = "<pre class = \"plaintext-control white main-content\">[[content]]</pre>\n"
 });
 
 ;require.register("desktop/Desktop.js", function(exports, require, module) {

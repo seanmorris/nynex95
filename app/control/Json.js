@@ -1,5 +1,5 @@
 import { View } from 'curvature/base/View';
-
+import { Bindable } from 'curvature/base/Bindable';
 
 import { Home } from '../home/Home';
 
@@ -11,34 +11,62 @@ let Base = class extends View
 
 		this.template  = require('./json.tmp');
 
-		this.args.bindTo('content', v => {
+		this.args.expandIcon = '+';
+		this.args.expanded   = args.expanded || '';
+	}
+
+	attached()
+	{
+		this.args.bindTo('tree', v => {
 
 			if(!v)
 			{
 				return;
 			}
 
-			this.args.tree = JSON.parse(v);
+			this.args.tree = v;
 
 			for(const i in this.args.tree)
 			{
 				if(typeof this.args.tree[i] === 'object')
 				{
-					this.args.tree[i] = new Json(
-						{tree:this.args.tree[i]}
-						, this
-					);
+					const subTree = this.args.tree[i];
+
+					this.args.tree[i] = new Json({}, this);
+					this.args.tree[i].args.tree = subTree;
 				}
 			}
 		});
-	}
 
-	attached()
-	{
 		if(!this.parent || !(this.parent instanceof Json))
 		{
-			this.args.topLevel = 'top-level';
+			this.args.topLevel = 'top-level main-content';
 		}
+	}
+
+	expand(event, key)
+	{
+		console.log(key);
+
+		if(key)
+		{
+			if(!this.args.tree[key])
+			{
+				return;
+			}
+
+			this.args.tree[key].expand(event);
+
+			return;
+		}
+
+		this.args.expanded = this.args.expanded
+			? ''
+			: 'expanded';
+
+		this.args.expandIcon = this.args.expanded
+			? '+'
+			: 'x';
 	}
 
 	type(value)
