@@ -5,17 +5,15 @@ on:
 
 jobs:
   publish-workers:
-    name:    Publish github Proxy
+    name:    Publish Worker
     runs-on: ubuntu-18.04
-
-    env:
-      apiToken: ${{ secrets.CF_API_TOKEN }}
 
     steps:
       - name: checkout.
         uses: actions/checkout@v2
 
       - name: Publish
-        uses: cloudflare/wrangler-action@1.1.0
+        uses: cloudflare/wrangler-action@1.2.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: '.cloudflare/workers/github-proxy'
