@@ -813,7 +813,7 @@ label.icon-frame label {
 }
 
 .treeview pre {
-	margin: 1em;
+	margin: 0.25em;
 }
 
 [data-role="window-host"] {
