@@ -4934,7 +4934,7 @@ module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"frame inset treeview\">\n\t\t[[file]]\n\t</div>\n\t<div class = \"frame inset\"><pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
+module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"inset treeview\">\n\t\t<div class = \"resize\">[[file]]</div>\n\t</div>\n\t<div class = \"frame inset content\"><pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
 });
 
 ;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {

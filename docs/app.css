@@ -466,8 +466,21 @@ label.icon-frame label {
 	display: none;
 }
 
-.repo-browser .treeview{
-	flex: 25%;
+.repo-browser .treeview {
+	/*display: flex;
+	flex: 1;*/
+}
+
+.repo-browser .treeview .content {
+	/*display: flex;
+	flex: 1;*/
+}
+
+.repo-browser .treeview .resize {
+	white-space: nowrap;
+	resize: horizontal;
+	overflow: auto;
+	height: 100%;
 }
 
 .repo-browser pre {
@@ -766,17 +779,18 @@ label.icon-frame label {
 }
 
 .treeview {
-	min-width: 12em;
+	/*flex: 1;*/
+	/*min-width: 12em;*/
 }
 
 .treeview [contenteditable] {
-	flex: 1;
+	/*flex: 1;*/
 	margin-left: 0.5em;
 	margin-right: 0.5em;
 }
 
 .treeview label span {
-	display: flex;
+	/*display: flex;*/
 }
 
 .treeview label label {

@@ -196,8 +196,21 @@ label.icon-frame label {
 	display: none;
 }
 
-.repo-browser .treeview{
-	flex: 25%;
+.repo-browser .treeview {
+	/*display: flex;
+	flex: 1;*/
+}
+
+.repo-browser .treeview .content {
+	/*display: flex;
+	flex: 1;*/
+}
+
+.repo-browser .treeview .resize {
+	white-space: nowrap;
+	resize: horizontal;
+	overflow: auto;
+	height: 100%;
 }
 
 .repo-browser pre {
