@@ -13,5 +13,5 @@ jobs:
       - name: Publish
         uses: cloudflare/wrangler-action@1.2.0
         with:
-          workingDirectory: ./cloudflare/workers/github-proxy
           apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: .cloudflare/workers/github-proxy
