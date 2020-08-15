@@ -27,7 +27,7 @@ async function handleRequest(request) {
 
 			const { readable, writable } = new TransformStream();
 
-			const let writer = writable.getWriter();
+			const writer = writable.getWriter();
 			const encoder = new TextEncoder();
 
 			const headers = new Headers(response.headers);
