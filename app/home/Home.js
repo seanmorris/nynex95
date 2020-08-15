@@ -8,6 +8,7 @@ import { Task     } from 'task/Task';
 
 import { IconExplorer } from 'apps/iconExplorer/IconExplorer';
 import { TaskManager  } from 'apps/taskManager/TaskManager';
+import { RepoBrowser  } from 'apps/repoBrowser/RepoBrowser';
 import { Nynepad      } from 'apps/nynepad/Nynepad';
 
 export class Home extends View
@@ -17,6 +18,7 @@ export class Home extends View
 		'/apps/icon-explorer':  IconExplorer
 		, '/apps/task-manager': TaskManager
 		, '/apps/nynepad':      Nynepad
+		, '/apps/repo-browser': RepoBrowser
 		, '/apps/window':       Task
 	};
 

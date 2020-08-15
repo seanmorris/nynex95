@@ -21,7 +21,7 @@ export class IconExplorer extends Task
 
 	attached()
 	{
-		this.window.args.icons = Array(72).fill(1).map((v, k) => {
+		this.window.args.icons = Array(73).fill(1).map((v, k) => {
 
 			const icon = new Icon({
 				action: (event) => {

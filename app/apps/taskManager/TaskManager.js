@@ -7,7 +7,7 @@ import { Bindable } from 'curvature/base/Bindable';
 
 export class TaskManager extends Task
 {
-	title    = 'TaskManager';
+	title    = 'Task Manager';
 	icon     = '/w95/61-16-4bit.png';
 	template = require('./main.tmp');
 

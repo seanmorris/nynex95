@@ -1,0 +1,32 @@
+<div class = "frame cols liquid">
+	<div cv-each = "files:file:f" class = "frame inset treeview">
+
+		[[file]]
+
+		<!-- <label tabindex = "0" cv-with = "file" cv-carry = "file">
+			<input type = "checkbox" cv-on = "click:load(event, file)">
+			<span>
+				<img class = "icon16 tree-collapsed" src = "/w95/4-16-4bit.png" />
+				<img class = "icon16 tree-expanded" src = "/w95/5-16-4bit.png" />
+				[[name]]
+			</span>
+			<duv  cv-each = "subfiles:subfile:s">
+				<label>
+					<input type = "checkbox" cv-on = "click:load(event, subfile)">
+					<span cv-with = "subfile" cv-carry = "subfile">
+						<img class = "icon16 tree-collapsed" src = "/w95/4-16-4bit.png" />
+						<img class = "icon16 tree-expanded" src = "/w95/5-16-4bit.png" />
+						[[name]]
+					</span>
+				</label>
+			</duv>
+		</label> -->
+
+	</div>
+	<div class = "frame inset treeview"><pre>[[content]]</pre></div>
+</div>
+
+<div class = "status row">
+	<div class = "label inset">untitled</div>
+	<div class = "label inset">[[charCount]]</div>
+</div>

@@ -1,0 +1,11 @@
+<div class = "folder">
+	<span cv-on = "click:expand(event, file)">
+		<img src = "[[icon]]" />
+		<label>[[name]]</label>
+	</span>
+	<span cv-if = "expanded">
+		<div class = "sub" cv-each = "files:file:f">
+			[[file]]
+		</div>
+	</span>
+</div>

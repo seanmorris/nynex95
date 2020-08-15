@@ -85,6 +85,10 @@ html, body, input, button, select {
 	align-content: center;
 }
 
+.cols {
+	flex-direction: row;
+}
+
 .wrap {
 	flex-wrap: wrap;
 }

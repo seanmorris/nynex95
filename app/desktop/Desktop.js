@@ -20,19 +20,24 @@ export class Desktop extends View
 				, bits: 8
 			})
 			, new Icon({
+				action: '/apps/repo-browser'
+				, name: 'Repo Browser'
+				, icon: 73
+			})
+			, new Icon({
 				action: '/apps/nynepad'
 				, name: 'Nynepad'
 				, icon: 60
 			})
 			, new Icon({
-				action: '/apps/task-manager'
-				, name: 'Task Manager'
-				, icon: 61
-			})
-			, new Icon({
 				action: '/apps/window'
 				, name: 'Application Window'
 				, icon: 3
+			})
+			, new Icon({
+				action: '/apps/task-manager'
+				, name: 'Task Manager'
+				, icon: 61
 			})
 		];
 

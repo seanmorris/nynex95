@@ -5,7 +5,7 @@
 .treeview label {
 	padding: 0.125em;
 	display: block;
-	flex-wrap: wrap;
+	/*flex-wrap: wrap;*/
 	background-color: white;
 }
 
@@ -24,7 +24,7 @@
 }
 
 .treeview label label {
-	margin-left: 1em;	
+	margin-left: 1em;
 }
 
 .treeview .icon16 {
@@ -35,10 +35,12 @@
 	display: none;
 }
 
+.treeview input ~ div,
 .treeview input ~ label {
 	display: none;
 }
 
+.treeview input:checked ~ div,
 .treeview input:checked ~ label {
 	display: block;
 }
@@ -57,4 +59,17 @@
 
 .treeview input:not(:checked) ~ * .tree-collapsed {
 	display: initial;
+}
+
+.treeview .folder > span {
+	display: flex;
+	align-items: center;
+}
+
+.treeview .folder .sub {
+	margin-left: 1em;
+}
+
+.treeview pre {
+	margin: 1em;
 }

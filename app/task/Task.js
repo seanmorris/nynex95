@@ -31,6 +31,5 @@ export class Task
 
 	attached()
 	{
-		console.log(this);
 	}
 }
