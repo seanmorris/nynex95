@@ -42,6 +42,8 @@ async function handleRequest(request) {
 
 				if(Array.isArray(parsedBody))
 				{
+					writer.write(encoder.encode('data: ' + JSON.stringify({count:parsedBody.length}) + '\n\n'));
+
 					for(const line of parsedBody)
 					{
 						writer.write(encoder.encode('data: ' + JSON.stringify(line) + '\n\n'));
