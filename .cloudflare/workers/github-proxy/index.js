@@ -15,7 +15,8 @@ async function handleRequest(request) {
 	const headers = new Headers(request.headers);
 
 	headers.append('User-Agent',    'node.js');
-	headers.append('Cache-Control', 'no-cacheche');
+	headers.append('Cache-Control', 'no-cache');
+	headers.append('pragma',        'no-cache');
 
 	return fetch(githubUrl, {headers}).then(response => {
 
