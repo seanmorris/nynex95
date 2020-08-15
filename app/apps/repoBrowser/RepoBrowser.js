@@ -22,24 +22,5 @@ export class RepoBrowser extends Task
 	{
 		this.window.args.files = this.window.args.files || [];
 		this.window.args.files.push(new Folder({browser:this}));
-
-		// fetch('https://api.github.com/repos/seanmorris/nynex95/contents')
-		// .then(response => response.json())
-		// .then(files => {
-
-		// 	this.window.args.files = files;
-
-		// 	this.window.args.files.map(f => {
-
-		// 		console.log(f = Bindable.make(f));
-
-		// 		f.subfiles = []
-
-		// 		return f;
-		// 	});
-
-		// 	console.log(this.window.args.files);
-
-		// });
 	}
 }
