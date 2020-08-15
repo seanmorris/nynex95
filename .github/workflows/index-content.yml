@@ -2,8 +2,10 @@ name: Index Content
 
 on:
   push:
-    paths:
-      - 'content/**'
+    branches:
+      - '**'
+    # paths:
+    #   - content/**
 
 jobs:
   index-content:

@@ -3,9 +3,9 @@ name: Publish Cloudflare Workers
 on:
   push:
     branches:
-      - master
-    paths:
-      - '.cloudflare/**'
+      - '**'
+    # paths:
+    #   - .cloudflare/**
 
 jobs:
   publish-workers:
