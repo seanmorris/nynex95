@@ -8,6 +8,9 @@ jobs:
     name:    Publish github Proxy
     runs-on: ubuntu-18.04
 
+    env:
+      apiToken: ${{ secrets.CF_API_TOKEN }}
+
     steps:
       - name: checkout.
         uses: actions/checkout@v2
@@ -15,6 +18,4 @@ jobs:
       - name: Publish
         uses: cloudflare/wrangler-action@1.1.0
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-        env:
           apiToken: ${{ secrets.CF_API_TOKEN }}
