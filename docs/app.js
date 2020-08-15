@@ -4773,7 +4773,8 @@ var Folder = /*#__PURE__*/function (_View) {
     _this.args.expanded = false;
     _this.args.icon = args.icon || '/w95/4-16-4bit.png';
     _this.args.name = args.name || 'Root';
-    _this.args.url = args.url || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents'; // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents';
+    _this.args.url = args.url || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master'; // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+    // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents';
 
     _this.template = require('./folder.tmp');
     return _this;
@@ -4962,6 +4963,8 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
               return r.text();
             }).then(function (r) {
               _this2.window.args.control.args.srcdoc = r;
+            })["catch"](function (error) {
+              _this2.window.args.control.args.srcdoc = error;
             });
             break;
 

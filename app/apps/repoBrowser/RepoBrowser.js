@@ -65,8 +65,11 @@ export class RepoBrowser extends Task
 
 						this.window.args.control.args.srcdoc = r;
 
-					});
+					}).catch(error => {
 
+						this.window.args.control.args.srcdoc = error;
+
+					});
 					break;
 
 				case 'ico':

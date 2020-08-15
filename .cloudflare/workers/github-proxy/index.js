@@ -14,7 +14,8 @@ async function handleRequest(request) {
 
 	const headers = new Headers(request.headers);
 
-	headers.append('User-Agent', 'node.js');
+	headers.append('User-Agent',    'node.js');
+	headers.append('Cache-Control', 'no-cacheche');
 
 	return fetch(githubUrl, {headers}).then(response => {
 
@@ -31,9 +32,10 @@ async function handleRequest(request) {
 
 		if(originalUrl.searchParams.get('api') == 'json-source')
 		{
-			headers.append('Content-Type', 'text/event-stream');
+			headers.append('Content-Type',  'text/event-stream');
 			headers.append('Cache-Control', 'no-cache');
-			headers.append('Connection', 'keep-alive');
+			headers.append('Connection',    'keep-alive');
+
 			headers.append('Access-Control-Allow-Origin', '*');
 			headers.append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
