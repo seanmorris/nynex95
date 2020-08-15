@@ -4913,10 +4913,13 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
   _createClass(RepoBrowser, [{
     key: "attached",
     value: function attached() {
-      this.window.args.files = this.window.args.files || [];
-      this.window.args.files.push(new _Folder.Folder({
+      this.window.classes['repo-browser'] = true;
+      var folder = new _Folder.Folder({
         browser: this
-      }));
+      });
+      this.window.args.files = this.window.args.files || [];
+      this.window.args.files.push(folder);
+      folder.expand();
     }
   }]);
 
@@ -4931,7 +4934,7 @@ module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"frame inset treeview\">\n\t\t[[file]]\n\t</div>\n\t<div class = \"frame inset treeview\"><pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
+module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"frame inset treeview\">\n\t\t[[file]]\n\t</div>\n\t<div class = \"frame inset\"><pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
 });
 
 ;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {

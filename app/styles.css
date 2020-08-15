@@ -195,3 +195,11 @@ label.icon-label {
 label.icon-frame label {
 	display: none;
 }
+
+.repo-browser .treeview{
+	flex: 25%;
+}
+
+.repo-browser pre {
+	margin: 0.5em 0.75em;
+}

@@ -20,7 +20,13 @@ export class RepoBrowser extends Task
 
 	attached()
 	{
+		this.window.classes['repo-browser'] = true;
+
+		const folder = new Folder({browser:this});
+
 		this.window.args.files = this.window.args.files || [];
-		this.window.args.files.push(new Folder({browser:this}));
+		this.window.args.files.push(folder);
+
+		folder.expand();
 	}
 }
