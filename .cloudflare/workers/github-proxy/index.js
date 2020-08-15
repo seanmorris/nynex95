@@ -48,7 +48,7 @@ async function handleRequest(request) {
 			}
 			else
 			{
-				writer.write(encoder.encode('data: ' + raw) + '\n\n');
+				writer.write(encoder.encode('data: ' + raw + '\n\n'));
 			}
 
 			return new Response(readable, {
