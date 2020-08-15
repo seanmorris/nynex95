@@ -12,8 +12,8 @@ jobs:
       - name: Checkout Worker
         uses: actions/checkout@v2
 
-      - name: Publish  Worker
+      - name: Publish Worker
         uses: cloudflare/wrangler-action@1.2.0
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: '.cloudflare/workers/github-proxy'
