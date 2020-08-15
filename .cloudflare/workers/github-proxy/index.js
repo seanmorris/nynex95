@@ -25,10 +25,31 @@ async function handleRequest(request) {
 
 		}).then(({response, responseText}) => {
 
-			return new Response(
-				responseText.replace(/api\.github\.com/g, original.host)
-				, {headers:response.headers}
-			);
+			const { readable, writable } = new TransformStream();
+
+			const let writer = writable.getWriter();
+			const encoder = new TextEncoder();
+
+			const headers = new Headers(response.headers);
+
+			headers.append('Content-Type', 'text/event-stream');
+			headers.append('Cache-Control', 'no-cache');
+			headers.append('Connection', 'keep-alive');
+			headers.append('Access-Control-Allow-Origin', '*');
+			headers.append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+			writer.write(encoder.encode('data: ' + JSON.stringify({a:'It works!'}) + '\n\n'));
+
+			return new Response(readable, {
+				'status':       200
+				, 'statusText': 'ok'
+				, 'headers':     headers
+			});
+
+			// return new Response(
+			// 	responseText.replace(/api\.github\.com/g, original.host)
+			// 	, {headers:response.headers}
+			// );
 
 		});
 }
