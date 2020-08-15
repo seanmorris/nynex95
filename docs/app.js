@@ -4802,8 +4802,9 @@ var Folder = /*#__PURE__*/function (_View) {
           _this2.args.browser.window.args.content = 'loading...';
           fetch(files.download_url).then(function (r) {
             return r.text();
-          }).then(function (file) {
-            _this2.args.browser.window.args.content = file;
+          }).then(function (body) {
+            _this2.args.browser.window.args.content = body;
+            _this2.args.browser.window.args.filename = files.name;
           });
           return;
         }
@@ -4865,6 +4866,8 @@ var _Bindable = require("curvature/base/Bindable");
 
 var _Folder = require("./Folder");
 
+var _Json = require("../../control/Json");
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4913,6 +4916,8 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
   _createClass(RepoBrowser, [{
     key: "attached",
     value: function attached() {
+      var _this2 = this;
+
       this.window.classes['repo-browser'] = true;
       var folder = new _Folder.Folder({
         browser: this
@@ -4920,6 +4925,15 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
       this.window.args.files = this.window.args.files || [];
       this.window.args.files.push(folder);
       folder.expand();
+      this.window.args.bindTo('filename', function (v) {
+        var filetype = String(v).split('.').pop();
+
+        if (filetype === 'json') {
+          _this2.window.args.control = new _Json.Json(_this2.window.args, _this2);
+        }
+
+        _this2.window.args.filetype = filetype;
+      });
     }
   }]);
 
@@ -4934,7 +4948,7 @@ module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"inset treeview\">\n\t\t<div class = \"resize\">[[file]]</div>\n\t</div>\n\t<div class = \"frame inset content\"><pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
+module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"inset treeview\">\n\t\t<div class = \"resize\">[[file]]</div>\n\t</div>\n\t<div class = \"frame inset content\">[[control]]<pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\">[[filetype]]</div>\n</div>\n"
 });
 
 ;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {
@@ -5025,6 +5039,111 @@ exports.TaskManager = TaskManager;
 
 ;require.register("apps/taskManager/main.tmp.html", function(exports, require, module) {
 module.exports = "<div class = \"frame liquid\">\n\t<div class = \"frame inset gridview\">\n\t\t<table>\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>id</th>\n\t\t\t\t\t<th class = \"wide\">title</th>\n\t\t\t\t\t<th></th>\n\t\t\t\t\t<th></th>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody cv-each = \"tasks:task:t\">\n\t\t\t\t<tr>\n\t\t\t\t\t<td>[[task.wid]]</td>\n\t\t\t\t\t<td>[[task.title]]</td>\n\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<button cv-on = \"click:focusTask(event, task);\">\n\t\t\t\t\t\t\tfocus\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</td>\n\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<button cv-on = \"click:endTask(event, task);\">close</button>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</div>\n</div>\n"
+});
+
+;require.register("control/Json.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Json = void 0;
+
+var _View2 = require("curvature/base/View");
+
+var _Home = require("../home/Home");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Base = /*#__PURE__*/function (_View) {
+  _inherits(Base, _View);
+
+  var _super = _createSuper(Base);
+
+  function Base(args, parent) {
+    var _this;
+
+    _classCallCheck(this, Base);
+
+    _this = _super.call(this, args, parent);
+    _this.template = require('./json.tmp');
+
+    _this.args.bindTo('content', function (v) {
+      if (!v) {
+        return;
+      }
+
+      _this.args.tree = JSON.parse(v);
+
+      for (var i in _this.args.tree) {
+        if (_typeof(_this.args.tree[i]) === 'object') {
+          _this.args.tree[i] = new Json({
+            tree: _this.args.tree[i]
+          }, _assertThisInitialized(_this));
+        }
+      }
+    });
+
+    return _this;
+  }
+
+  _createClass(Base, [{
+    key: "attached",
+    value: function attached() {
+      if (!this.parent || !(this.parent instanceof Json)) {
+        this.args.topLevel = 'top-level';
+      }
+    }
+  }, {
+    key: "type",
+    value: function type(value) {
+      return _typeof(value);
+    }
+  }]);
+
+  return Base;
+}(_View2.View);
+
+var Json = /*#__PURE__*/function (_Base) {
+  _inherits(Json, _Base);
+
+  var _super2 = _createSuper(Json);
+
+  function Json() {
+    _classCallCheck(this, Json);
+
+    return _super2.apply(this, arguments);
+  }
+
+  return Json;
+}(Base);
+
+exports.Json = Json;
+;
+});
+
+require.register("control/json.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \"json-view [[topLevel]]\">{\n\t<div class = \"json-view-body\" cv-each = \"tree:value:key\">\n\t\t<div><b>[[key]]: </b><span data-type = [[value|type]]\"\">[[value]]</span></div>\n\t</div>\n\t}\n</div>\n"
 });
 
 ;require.register("desktop/Desktop.js", function(exports, require, module) {
@@ -5422,10 +5541,7 @@ var CssSwitch = /*#__PURE__*/function (_Mixin) {
     value: function after__constructor() {
       var _this = this;
 
-      this.classes = _Bindable.Bindable.makeBindable({
-        pane: true,
-        resize: true
-      });
+      this.classes = _Bindable.Bindable.makeBindable({});
       this.classes.bindTo(function (v, k) {
         return _this.args.classes = Object.assign({}, _this.classes);
       }, {
@@ -6027,6 +6143,8 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
   }, {
     key: "attached",
     value: function attached(parent) {
+      this.classes.resize = true;
+      this.classes.pane = true;
       this.dispatchEvent(new CustomEvent('attached', {
         detail: {
           target: this

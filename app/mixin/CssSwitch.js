@@ -5,7 +5,7 @@ export class CssSwitch extends Mixin
 {
 	after__constructor()
 	{
-		this.classes = Bindable.makeBindable({pane:true, resize:true});
+		this.classes = Bindable.makeBindable({});
 
 		this.classes.bindTo(
 			(v,k) => this.args.classes = Object.assign({}, this.classes)

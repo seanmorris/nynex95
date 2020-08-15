@@ -59,6 +59,9 @@ let Base = class extends View
 
 	attached(parent)
 	{
+		this.classes.resize = true;
+		this.classes.pane   = true;
+
 		this.dispatchEvent(new CustomEvent(
 			'attached', {detail:{ target:this }}
 		));

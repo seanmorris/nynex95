@@ -216,3 +216,15 @@ label.icon-frame label {
 .repo-browser pre {
 	margin: 0.5em 0.75em;
 }
+
+.json-view.top-level {
+	padding: 1em;
+}
+
+.json-view:not(.top-level) {
+	display: contents;
+}
+
+.json-view .json-view-body {
+	margin-left : 2em;
+}

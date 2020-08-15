@@ -6,6 +6,7 @@ import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
 import { Folder } from './Folder';
+import { Json as JsonControl } from '../../control/Json';
 
 export class RepoBrowser extends Task
 {
@@ -28,5 +29,19 @@ export class RepoBrowser extends Task
 		this.window.args.files.push(folder);
 
 		folder.expand();
+
+		this.window.args.bindTo('filename', v => {
+
+			const filetype = String(v).split('.').pop();
+
+			if(filetype === 'json')
+			{
+				this.window.args.control = new JsonControl(this.window.args, this);
+			}
+
+
+			this.window.args.filetype = filetype;
+
+		});
 	}
 }

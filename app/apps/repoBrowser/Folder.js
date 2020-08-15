@@ -37,9 +37,10 @@ export class Folder extends View
 			{
 				this.args.browser.window.args.content = 'loading...';
 
-				fetch(files.download_url).then(r => r.text()).then(file => {
+				fetch(files.download_url).then(r => r.text()).then(body => {
 
-					this.args.browser.window.args.content = file;
+					this.args.browser.window.args.content  = body;
+					this.args.browser.window.args.filename = files.name;
 
 				});
 
