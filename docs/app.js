@@ -4931,7 +4931,7 @@ module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"frame inset treeview\">\n\n\t\t[[file]]\n\n\t\t<!-- <label tabindex = \"0\" cv-with = \"file\" cv-carry = \"file\">\n\t\t\t<input type = \"checkbox\" cv-on = \"click:load(event, file)\">\n\t\t\t<span>\n\t\t\t\t<img class = \"icon16 tree-collapsed\" src = \"/w95/4-16-4bit.png\" />\n\t\t\t\t<img class = \"icon16 tree-expanded\" src = \"/w95/5-16-4bit.png\" />\n\t\t\t\t[[name]]\n\t\t\t</span>\n\t\t\t<duv  cv-each = \"subfiles:subfile:s\">\n\t\t\t\t<label>\n\t\t\t\t\t<input type = \"checkbox\" cv-on = \"click:load(event, subfile)\">\n\t\t\t\t\t<span cv-with = \"subfile\" cv-carry = \"subfile\">\n\t\t\t\t\t\t<img class = \"icon16 tree-collapsed\" src = \"/w95/4-16-4bit.png\" />\n\t\t\t\t\t\t<img class = \"icon16 tree-expanded\" src = \"/w95/5-16-4bit.png\" />\n\t\t\t\t\t\t[[name]]\n\t\t\t\t\t</span>\n\t\t\t\t</label>\n\t\t\t</duv>\n\t\t</label> -->\n\n\t</div>\n\t<div class = \"frame inset treeview\"><pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
+module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"frame inset treeview\">\n\t\t[[file]]\n\t</div>\n\t<div class = \"frame inset treeview\"><pre>[[content]]</pre></div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">untitled</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
 });
 
 ;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {
@@ -5993,9 +5993,9 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
     });
     _this.args.icon = args.icon || '/w95/3-16-4bit.png';
     _this.args.title = _this.args.title || 'Application Window';
-    _this.args.progr = 0;
-    _this.args.content = 'Double-click an icon below.';
-    _this.args.smallSrc = _this.args.largeSrc = '--';
+    _this.args.progr = 0; // this.args.content = 'Double-click an icon below.';
+    // this.args.smallSrc = this.args.largeSrc = '--';
+
     _this.template = require('./window.tmp');
     _this.args.wid = _this.constructor.idInc++;
     return _this;

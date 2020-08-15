@@ -26,9 +26,9 @@ let Base = class extends View
 		this.args.title = this.args.title || 'Application Window';
 		this.args.progr = 0;
 
-		this.args.content = 'Double-click an icon below.';
+		// this.args.content = 'Double-click an icon below.';
 
-		this.args.smallSrc = this.args.largeSrc = '--';
+		// this.args.smallSrc = this.args.largeSrc = '--';
 
 		this.template = require('./window.tmp');
 
