@@ -1,18 +1,18 @@
-name: Publish Worker
+name: Publish Cloudflare Workers
 
 on:
   push:
 
 jobs:
   publish-workers:
-    name:    Publish Worker
+    name:    Publish Workers
     runs-on: ubuntu-18.04
 
     steps:
       - name: Checkout Worker
         uses: actions/checkout@v2
 
-      - name: Publish Worker
+      - name: Publish GithubProxy Worker
         uses: cloudflare/wrangler-action@1.2.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
