@@ -6,6 +6,7 @@ import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
 import { Folder } from './Folder';
+import { Html as HtmlControl } from '../../control/Html';
 import { Json as JsonControl } from '../../control/Json';
 import { Image as ImageControl } from '../../control/Image';
 import { Plaintext as PlaintextControl } from '../../control/Plaintext';
@@ -51,6 +52,23 @@ export class RepoBrowser extends Task
 			switch(filetype)
 			{
 
+				case 'md':
+					this.window.args.control = new HtmlControl(
+						{ srcdoc: 'loading...' }
+						, this
+					);
+
+					fetch(
+						this.window.args.meta.download_url
+						, {headers: {Accept: 'application/vnd.github.v3.html'}}
+					).then(r=>r.text()).then(r=>{
+
+						this.window.args.control.args.srcdoc = r;
+
+					});
+
+					break;
+
 				case 'ico':
 				case 'gif':
 				case 'png':
@@ -58,21 +76,25 @@ export class RepoBrowser extends Task
 				case 'jpeg':
 				case 'webp':
 					this.window.args.control = new ImageControl(
-						{src:this.window.args.meta.download_url}, this
+						{src:this.window.args.meta.download_url}
+						, this
 					);
 					break;
+
 				case 'json':
 					this.window.args.control = new JsonControl(
 						{
 							expanded: 'expanded'
 							, tree: JSON.parse(this.window.args.content)
-						}, this
+						}
+						, this
 					);
 					break;
 
 				default:
 					this.window.args.control = new PlaintextControl(
-						{content: this.window.args.content}, this
+						{content: this.window.args.content}
+						, this
 					);
 					break;
 			}

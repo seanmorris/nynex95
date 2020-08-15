@@ -1,8 +1,6 @@
 import { View } from 'curvature/base/View';
 
-import { Home } from '../home/Home';
-
-let Base = class extends View
+export class Html extends View
 {
 	constructor(args, parent)
 	{

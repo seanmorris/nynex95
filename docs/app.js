@@ -4872,6 +4872,8 @@ var _Bindable = require("curvature/base/Bindable");
 
 var _Folder = require("./Folder");
 
+var _Html = require("../../control/Html");
+
 var _Json = require("../../control/Json");
 
 var _Image = require("../../control/Image");
@@ -4948,6 +4950,21 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
         _this2.window.args.chars = 0;
 
         switch (filetype) {
+          case 'md':
+            _this2.window.args.control = new _Html.Html({
+              srcdoc: 'loading...'
+            }, _this2);
+            fetch(_this2.window.args.meta.download_url, {
+              headers: {
+                Accept: 'application/vnd.github.v3.html'
+              }
+            }).then(function (r) {
+              return r.text();
+            }).then(function (r) {
+              _this2.window.args.control.args.srcdoc = r;
+            });
+            break;
+
           case 'ico':
           case 'gif':
           case 'png':
@@ -5085,9 +5102,12 @@ module.exports = "<div class = \"frame liquid\">\n\t<div class = \"frame inset g
 ;require.register("control/Html.js", function(exports, require, module) {
 "use strict";
 
-var _View2 = require("curvature/base/View");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Html = void 0;
 
-var _Home = require("../home/Home");
+var _View2 = require("curvature/base/View");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -5107,23 +5127,25 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-var Base = /*#__PURE__*/function (_View) {
-  _inherits(Base, _View);
+var Html = /*#__PURE__*/function (_View) {
+  _inherits(Html, _View);
 
-  var _super = _createSuper(Base);
+  var _super = _createSuper(Html);
 
-  function Base(args, parent) {
+  function Html(args, parent) {
     var _this;
 
-    _classCallCheck(this, Base);
+    _classCallCheck(this, Html);
 
     _this = _super.call(this, args, parent);
     _this.template = require('./html.tmp');
     return _this;
   }
 
-  return Base;
+  return Html;
 }(_View2.View);
+
+exports.Html = Html;
 });
 
 ;require.register("control/Image.js", function(exports, require, module) {
@@ -5352,7 +5374,7 @@ exports.Plaintext = Plaintext;
 });
 
 ;require.register("control/html.tmp.html", function(exports, require, module) {
-module.exports = "<iframe srcdoc = \"[[srcdoc]]\"></iframe>\n"
+module.exports = "<iframe class = \"html-control main-content\" srcdoc = \"[[srcdoc]]\"></iframe>\n"
 });
 
 ;require.register("control/image.tmp.html", function(exports, require, module) {

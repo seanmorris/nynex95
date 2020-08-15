@@ -256,4 +256,11 @@ label.icon-frame label {
 
 .plaintext-control {
 	margin: 0px;
+	flex: 1;
+}
+
+.html-control.main-content {
+	background-color: white;
+	flex: 1;
+	border: none;
 }
