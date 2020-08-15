@@ -9,10 +9,10 @@ addEventListener('fetch', event => {
 })
 
 async function handleRequest(request) {
-	const original = new URL(request.url);
-	const newUrl   = 'https://api.github.com' + original.pathname;
+	const originalUrl = new URL(request.url);
+	const githubUrl   = 'https://api.github.com' + originalUrl.pathname;
 
-	return fetch(newUrl, {headers: new Headers({'User-Agent': 'node.js'})})
+	return fetch(githubUrl, {headers: new Headers({'User-Agent': 'node.js'})})
 		.then(response => {
 
 			return new Promise(accept => {
@@ -24,9 +24,9 @@ async function handleRequest(request) {
 		}).then(({response, responseText}) => {
 
 			const headers = new Headers(response.headers);
-			const rawBody = responseText.replace(/api\.github\.com/g, original.host);
+			const rawBody = responseText.replace(/api\.github\.com/g, originalUrl.host);
 
-			if(origina.searchParams.get('api') == 'json-source')
+			if(originalUrl.searchParams.get('api') == 'json-source')
 			{
 				headers.append('Content-Type', 'text/event-stream');
 				headers.append('Cache-Control', 'no-cache');
