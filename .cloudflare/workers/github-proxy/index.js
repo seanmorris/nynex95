@@ -12,8 +12,6 @@ async function handleRequest(request) {
 	const original = new URL(request.url);
 	const newUrl   = 'https://api.github.com' + original.pathname;
 
-	console.log(request.hostname, newUrl);
-
 	return fetch(newUrl, {headers: new Headers({'User-Agent': 'node.js'})})
 		.then(response => {
 
@@ -30,7 +28,7 @@ async function handleRequest(request) {
 			const writer = writable.getWriter();
 			const encoder = new TextEncoder();
 
-			const headers = new Headers(response.headers);
+			const headers = new Headers();
 
 			headers.append('Content-Type', 'text/event-stream');
 			headers.append('Cache-Control', 'no-cache');
