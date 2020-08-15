@@ -28,7 +28,7 @@ async function handleRequest(request) {
 			const writer = writable.getWriter();
 			const encoder = new TextEncoder();
 
-			const headers = new Headers();
+			const headers = new Headers(response.headers);
 
 			headers.append('Content-Type', 'text/event-stream');
 			headers.append('Cache-Control', 'no-cache');
@@ -36,7 +36,20 @@ async function handleRequest(request) {
 			headers.append('Access-Control-Allow-Origin', '*');
 			headers.append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
-			writer.write(encoder.encode('data: ' + JSON.stringify({a:'It works!'}) + '\n\n'));
+			const raw  = responseText.replace(/api\.github\.com/g, original.host);
+			const body = JSON.parse(raw);
+
+			if(Array.isArray(body))
+			{
+				for(const line of body)
+				{
+					writer.write(encoder.encode('data: ' + JSON.stringify(line) + '\n\n'));
+				}
+			}
+			else
+			{
+				writer.write(encoder.encode('data: ' + raw) + '\n\n');
+			}
 
 			return new Response(readable, {
 				'status':       200
@@ -45,7 +58,7 @@ async function handleRequest(request) {
 			});
 
 			// return new Response(
-			// 	responseText.replace(/api\.github\.com/g, original.host)
+			//
 			// 	, {headers:response.headers}
 			// );
 
