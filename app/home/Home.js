@@ -89,5 +89,9 @@ export class Home extends View
 		const task = new taskType(this.tasks);
 
 		this.tasks.add(task);
+
+		this.onTimeout(250, () => {
+			task.dispatchEvent(new CustomEvent('start'))
+		});
 	}
 }

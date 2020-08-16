@@ -2232,7 +2232,10 @@ var View = /*#__PURE__*/function () {
           return;
         }
 
-        callback(Date.now());
+        if (!_this3.paused) {
+          callback(Date.now());
+        }
+
         requestAnimationFrame(c);
       };
 
@@ -4683,7 +4686,6 @@ var IconExplorer = /*#__PURE__*/function (_Task) {
 
     _defineProperty(_assertThisInitialized(_this), "template", require('./main.tmp'));
 
-    _this.init = Date.now();
     return _possibleConstructorReturn(_this, _Bindable.Bindable.make(_assertThisInitialized(_this)));
   }
 
@@ -4692,6 +4694,7 @@ var IconExplorer = /*#__PURE__*/function (_Task) {
     value: function attached() {
       var _this2 = this;
 
+      this.init = Date.now();
       this.window.args.icons = Array(73).fill(1).map(function (v, k) {
         var icon = new _Icon.Icon({
           action: function action(event) {
@@ -4885,10 +4888,10 @@ var Folder = /*#__PURE__*/function (_View) {
     _this = _super.call(this, args);
     _this.args.expanded = false;
     _this.args.icon = args.icon || '/w95/4-16-4bit.png';
-    _this.args.name = args.name || 'Root'; // this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
-    // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+    _this.args.name = args.name || 'Root';
+    _this.args.url = args.url || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now(); // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+    // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
 
-    _this.args.url = args.url || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
     _this.template = require('./folder.tmp');
     return _this;
   }
@@ -5072,9 +5075,9 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
             _this2.window.args.control = new _Html.Html({
               srcdoc: 'loading...'
             }, _this2);
-            fetch(_this2.window.args.meta.url + '&api=json', {
+            fetch(_this2.window.args.meta.url + '&api=json&t=' + Date.now(), {
               headers: {
-                Accept: 'application/vnd.github.v3.html+json'
+                accept: 'application/vnd.github.v3.html+json'
               }
             }).then(function (r) {
               return r.text();
@@ -5715,6 +5718,9 @@ var Home = /*#__PURE__*/function (_View) {
 
       var task = new taskType(this.tasks);
       this.tasks.add(task);
+      this.onTimeout(250, function () {
+        task.dispatchEvent(new CustomEvent('start'));
+      });
     }
   }]);
 
@@ -6162,52 +6168,138 @@ var _Window = require("../window/Window");
 
 var _Bindable = require("curvature/base/Bindable");
 
+var _Target = require("../mixin/Target");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var win = undefined;
+var taskId = 0;
+var Accept = Symbol('accept');
+var Reject = Symbol('reject');
 
-var Task = /*#__PURE__*/function () {
+var Task = /*#__PURE__*/function (_EventTarget) {
+  _inherits(Task, _EventTarget);
+
+  var _super = _createSuper(Task);
+
   function Task(taskList) {
-    var _this = this;
+    var _this;
 
     _classCallCheck(this, Task);
 
-    _defineProperty(this, "title", '');
+    _this = _super.call(this);
 
-    _defineProperty(this, "icon", '/w95/3-16-4bit.png');
+    _defineProperty(_assertThisInitialized(_this), "title", 'Generic Task');
 
-    _defineProperty(this, "silent", false);
+    _defineProperty(_assertThisInitialized(_this), "icon", '/w95/3-16-4bit.png');
 
-    if (!this.silent) {
-      var home = _Home.Home.instance();
+    _defineProperty(_assertThisInitialized(_this), "silent", false);
 
-      this.window = new _Window.Window(this);
-      this.window.addEventListener('closed', function (event) {
-        return taskList.remove(_this);
+    _defineProperty(_assertThisInitialized(_this), "failure", false);
+
+    _defineProperty(_assertThisInitialized(_this), "thread", new Promise(function (accept, reject) {
+      _this[Accept] = accept;
+      _this[Reject] = reject;
+    }));
+
+    _this.id = taskId++;
+    console.log('Thread initialized.');
+
+    _this.thread["finally"](function () {
+      return console.log('Thread closed.');
+    });
+
+    _this.window = new _Window.Window(_assertThisInitialized(_this));
+
+    _this.addEventListener('start', function (event) {
+      if (!_this.silent) {
+        _this.window.addEventListener('closed', function (event) {
+          _this.signal(event);
+
+          taskList.remove(_assertThisInitialized(_this));
+        });
+
+        _this.window.addEventListener('attached', function (event) {
+          _this.signal(event);
+
+          _this.attached();
+        });
+
+        _Home.Home.instance().windows.add(_this.window);
+
+        _this.window.focus();
+      }
+
+      var retVal = _this.execute();
+
+      if (!(retVal instanceof Promise)) {
+        retVal = Promise.resolve(retVal);
+      }
+
+      retVal.then(function (r) {
+        return _this[Accept](r);
+      })["catch"](function (e) {
+        return _this[Reject](e);
       });
-      this.window.addEventListener('attached', function (event) {
-        return _this.attached();
-      });
-      home.windows.add(this.window);
-      this.window.focus();
-    }
+    });
 
-    return this;
+    return _possibleConstructorReturn(_this, _assertThisInitialized(_this));
   }
 
   _createClass(Task, [{
+    key: "signal",
+    value: function signal(event) {
+      switch (event.type) {
+        case 'closed':
+          this.failure ? this[Reject]() : this[Accept]();
+          break;
+
+        case 'kill':
+          this[Reject]();
+          break;
+      }
+    }
+  }, {
+    key: "execute",
+    value: function execute() {
+      return new Promise(function () {
+        console.log('Thread continued.');
+      });
+    }
+  }, {
     key: "attached",
     value: function attached() {}
   }]);
 
   return Task;
-}();
+}( /*#__PURE__*/_wrapNativeSuper(EventTarget));
 
 exports.Task = Task;
 });
@@ -6482,11 +6574,11 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
     });
     _this.args.icon = args.icon || '/w95/3-16-4bit.png';
     _this.args.title = _this.args.title || 'Application Window';
-    _this.args.progr = 0; // this.args.content = 'Double-click an icon below.';
-    // this.args.smallSrc = this.args.largeSrc = '--';
-
+    _this.args.progr = 0;
     _this.template = require('./window.tmp');
     _this.args.wid = _this.constructor.idInc++;
+    _this.args.titleBar = 'lol';
+    _this.args.titleBar = new _TitleBar.TitleBar(_this.args, _assertThisInitialized(_this));
     return _this;
   }
 
@@ -6495,7 +6587,6 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
     value: function postRender() {
       var _this2 = this;
 
-      this.args.titleBar = new _TitleBar.TitleBar(this.args, this);
       var element = this.tags.window.element;
       this.pos.bindTo('x', function (v, k) {
         element.style.left = "".concat(v, "px");
@@ -6534,6 +6625,16 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
   }, {
     key: "minimize",
     value: function minimize() {
+      var canceled = this.dispatchEvent(new CustomEvent('minimizing', {
+        detail: {
+          target: this
+        }
+      }));
+
+      if (canceled) {
+        return;
+      }
+
       this.classes.minimized = true;
       this.classes.maximized = false;
       this.dispatchEvent(new CustomEvent('minimized', {
@@ -6541,10 +6642,21 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
           target: this
         }
       }));
+      this.pause(true);
     }
   }, {
     key: "restore",
     value: function restore() {
+      var canceled = this.dispatchEvent(new CustomEvent('restoring', {
+        detail: {
+          target: this
+        }
+      }));
+
+      if (canceled) {
+        return;
+      }
+
       this.classes.minimized = false;
       this.classes.maximized = false;
       this.dispatchEvent(new CustomEvent('restored', {
@@ -6552,10 +6664,21 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
           target: this
         }
       }));
+      this.pause(false);
     }
   }, {
     key: "maximize",
     value: function maximize() {
+      var canceled = this.dispatchEvent(new CustomEvent('maximizing', {
+        detail: {
+          target: this
+        }
+      }));
+
+      if (canceled) {
+        return;
+      }
+
       this.classes.minimized = false;
       this.classes.maximized = true;
       this.dispatchEvent(new CustomEvent('maximized', {
@@ -6563,10 +6686,21 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
           target: this
         }
       }));
+      this.pause(false);
     }
   }, {
     key: "close",
     value: function close() {
+      var canceled = this.dispatchEvent(new CustomEvent('closing', {
+        detail: {
+          target: this
+        }
+      }));
+
+      if (canceled) {
+        return;
+      }
+
       this.windows.remove(this);
       this.dispatchEvent(new CustomEvent('closed', {
         detail: {
@@ -6577,6 +6711,16 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
   }, {
     key: "focus",
     value: function focus() {
+      var canceled = this.dispatchEvent(new CustomEvent('focusing', {
+        detail: {
+          target: this
+        }
+      }));
+
+      if (canceled) {
+        return;
+      }
+
       var prevZ = this.pos.z;
       var windows = this.windows.items();
 
@@ -6589,6 +6733,11 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
 
       this.pos.z = windows.length;
       this.classes.focused = true;
+      this.dispatchEvent(new CustomEvent('focused', {
+        detail: {
+          target: this
+        }
+      }));
     }
   }, {
     key: "doubleClickTitle",
@@ -6615,6 +6764,11 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
       };
 
       var moved = function moved(event) {
+        if (_this3.classes.maximized) {
+          _this3.classes.maximized = false;
+          start.y = 0;
+        }
+
         var mouse = {
           x: event.clientX,
           y: event.clientY
@@ -6627,8 +6781,11 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
         _this3.pos.y = start.y + moved.y;
       };
 
-      document.addEventListener('mousemove', moved);
-      document.addEventListener('mouseup', function (event) {
+      var options = {
+        once: true
+      };
+
+      var drop = function drop(event) {
         if (_this3.pos.y < 0) {
           _this3.pos.y = 0;
         }
@@ -6638,9 +6795,15 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
         }
 
         document.removeEventListener('mousemove', moved);
-      }, {
-        once: true
-      });
+        document.removeEventListener('touchmove', moved);
+        document.removeEventListener('mouseup', drop, options);
+        document.removeEventListener('touchend', drop, options);
+      };
+
+      document.addEventListener('touchmove', moved);
+      document.addEventListener('mousemove', moved);
+      document.addEventListener('mouseup', drop, options);
+      document.addEventListener('touchend', drop, options);
     }
   }]);
 
@@ -6677,7 +6840,7 @@ module.exports = "<div class = \"title-bar\" cv-on = \"mousedown:grabTitleBar(ev
 });
 
 ;require.register("window/window.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"window [[classes|join]]\" cv-on = \"mousedown:focus(event):c\" cv-ref = \"window::\" tabindex=\"-1\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t[[$$template]]\n\t</div>\n</div>\n"
+module.exports = "<div\n\ttabindex = \"-1\"\n\tclass    = \"window [[classes|join]]\"\n\tcv-on    = \"mousedown:focus(event):c;touchstart:focus(event):c\"\n\tcv-ref   = \"window::\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t[[$$template]]\n\t</div>\n</div>\n"
 });
 
 ;require.register("___globals___", function(exports, require, module) {

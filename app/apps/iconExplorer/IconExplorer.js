@@ -14,13 +14,14 @@ export class IconExplorer extends Task
 	{
 		super(taskList);
 
-		this.init = Date.now();
 
 		return Bindable.make(this);
 	}
 
 	attached()
 	{
+		this.init = Date.now();
+
 		this.window.args.icons = Array(73).fill(1).map((v, k) => {
 
 			const icon = new Icon({

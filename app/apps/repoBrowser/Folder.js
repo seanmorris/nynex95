@@ -11,9 +11,9 @@ export class Folder extends View
 
 		this.args.icon = args.icon || '/w95/4-16-4bit.png';
 		this.args.name = args.name || 'Root';
-		// this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+		this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now();
 		// this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
-		this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
+		// this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
 		this.template  = require('./folder.tmp');
 	}
 
