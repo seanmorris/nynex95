@@ -7,8 +7,8 @@ on:
 
     paths:
       - '**'
-      # - .cloudflare/**
-      # - .github/workflows/publish-worker.yml
+      - .cloudflare/**
+      - .github/workflows/publish-worker.yml
 
 jobs:
   publish-workers:
@@ -25,7 +25,7 @@ jobs:
           SCRIPT_NAME: github-proxy
 
       - name: Delete Existing KV Store
-        run: sudo npm i -g @cloudflare/wrangler && yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'`
+        run: sudo npm i -g @cloudflare/wrangler && yes | wrangler kv:namespace delete
         working-directory: '.cloudflare/workers/github-proxy'
         env:
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
