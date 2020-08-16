@@ -10,6 +10,7 @@ import { IconExplorer } from 'apps/iconExplorer/IconExplorer';
 import { TaskManager  } from 'apps/taskManager/TaskManager';
 import { RepoBrowser  } from 'apps/repoBrowser/RepoBrowser';
 import { Nynepad      } from 'apps/nynepad/Nynepad';
+import { Clippy       } from 'apps/clippy/Clippy';
 
 export class Home extends View
 {
@@ -20,6 +21,7 @@ export class Home extends View
 		, '/apps/nynepad':      Nynepad
 		, '/apps/repo-browser': RepoBrowser
 		, '/apps/window':       Task
+		, '/apps/clippy':       Clippy
 	};
 
 	static instance()

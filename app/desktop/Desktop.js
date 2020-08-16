@@ -39,6 +39,11 @@ export class Desktop extends View
 				, name: 'Task Manager'
 				, icon: 61
 			})
+			, new Icon({
+				action: '/apps/clippy'
+				, name: 'Summon the Devil'
+				, icon: 3
+			})
 		];
 
 		this.windows = new Bag((win, meta, action, index)=>{
