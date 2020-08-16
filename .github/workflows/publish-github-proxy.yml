@@ -21,7 +21,6 @@ jobs:
 
       - name: Delete Existing Worker
         run: 'curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"'
-
         env:
           SCRIPT_NAME: github-proxy
 
@@ -30,6 +29,8 @@ jobs:
         with:
           workingDirectory: '.cloudflare/workers/github-proxy'
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - run: npm install @cloudflare/wrangler
 
       - name: Delete Existing KV Store
         run: yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'`
