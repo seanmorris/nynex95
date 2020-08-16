@@ -20,16 +20,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Delete Existing Worker
-        run: 'curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"'
+        run: 'curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN"'
         env:
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SCRIPT_NAME: github-proxy
 
       - name: Delete Existing KV Store
         run: sudo npm i -g @cloudflare/wrangler && yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'` || true
         working-directory: '.cloudflare/workers/github-proxy'
         env:
-          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SCRIPT_NAME: github-proxy
 
       - name: Set up Terraform
