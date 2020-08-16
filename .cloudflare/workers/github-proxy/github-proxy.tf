@@ -7,8 +7,8 @@ variable "CLOUDFLARE_API_TOKEN" {
 }
 
 provider "cloudflare" {
-	account_id = var.CLOUDFLARE_ACCOUNT_ID
-	api_token  = var.CLOUDFLARE_API_TOKEN
+	account_id = ${ var.CLOUDFLARE_ACCOUNT_ID }
+	api_token  = ${ var.CLOUDFLARE_API_TOKEN }
 }
 
 resource "cloudflare_workers_kv_namespace" "github-proxy-kv" {
@@ -23,5 +23,4 @@ resource "cloudflare_worker_script" "default" {
     namespace_id = cloudflare_workers_kv_namespace.github-proxy-kv.id
     name         = "PROXY_KV"
   }
-
 }
