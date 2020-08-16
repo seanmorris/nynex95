@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-      steps:
       - name: Set up Terraform
       - uses: hashicorp/setup-terraform@v1
 

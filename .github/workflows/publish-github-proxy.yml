@@ -1,0 +1,53 @@
+name: Publish Github Proxy Worker
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - .cloudflare/**
+      - .github/workflows/publish-worker.yml
+
+jobs:
+  publish-workers:
+    name:    Publish Github Proxy Worker
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout Worker
+        uses: actions/checkout@v2
+
+      - name: Delete Existing Worker
+        run: |
+          curl -X DELETE "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME"
+          -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+        env:
+          SCRIPT_NAME: github-proxy
+
+      - name: Delete Existing KV Store
+        run:  |
+          yes | wrangler kv:namespace delete
+          --namespace-id=`wrangler kv:namespace list
+          | jq -r '.[] | select(.title == "github-proxy-kv").id'`
+        with:
+          workingDirectory: ./cloudflare/workers/${SCRIPT_NAME}
+        env:
+          SCRIPT_NAME: github-proxy
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Init, Plan, Deploy
+        run:  terraform init . && terraform plan . && terraform apply --auto-approve .
+
+      # - name: Publish GithubProxy Worker
+      #   uses: cloudflare/wrangler-action@1.2.0
+      #   with:
+      #     apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      #     workingDirectory: '.cloudflare/workers/github-proxy'
+
+      # - name: Publish GithubAuth Worker
+      #   uses: cloudflare/wrangler-action@1.2.0
+      #   with:
+      #     apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      #     workingDirectory: '.cloudflare/workers/github-auth'
