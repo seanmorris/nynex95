@@ -6,6 +6,7 @@ on:
       - '**'
     paths:
       - .cloudflare/**
+      - .github/publish-worker.yml
 
 jobs:
   publish-workers:
@@ -21,3 +22,10 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: '.cloudflare/workers/github-proxy'
+
+
+      - name: Publish GithubAuth Worker
+        uses: cloudflare/wrangler-action@1.2.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: '.cloudflare/workers/github-auth'
