@@ -682,7 +682,7 @@ var Bindable = /*#__PURE__*/function () {
       };
 
       var get = function get(target, key) {
-        if (key === Ref || key === 'isBound') {
+        if (key === Ref || key === 'isBound' || key === 'bindTo') {
           return target[key];
         }
 
@@ -4885,10 +4885,10 @@ var Folder = /*#__PURE__*/function (_View) {
     _this = _super.call(this, args);
     _this.args.expanded = false;
     _this.args.icon = args.icon || '/w95/4-16-4bit.png';
-    _this.args.name = args.name || 'Root';
-    _this.args.url = args.url || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master'; // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
-    // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
+    _this.args.name = args.name || 'Root'; // this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+    // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
 
+    _this.args.url = args.url || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
     _this.template = require('./folder.tmp');
     return _this;
   }
@@ -5494,7 +5494,7 @@ exports.Plaintext = Plaintext;
 });
 
 ;require.register("control/html.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"html-control main-content\">\n\t<iframe\n\t\tclass = \"inset white\"\n\t\tsrcdoc = \"[[srcdoc]]\"></iframe>\n</div>>\n"
+module.exports = "<div class = \"html-control main-content\">\n\t<iframe\n\t\tclass = \"inset white\"\n\t\tsrcdoc = \"[[srcdoc]]\"></iframe>\n</div>\n"
 });
 
 ;require.register("control/image.tmp.html", function(exports, require, module) {
