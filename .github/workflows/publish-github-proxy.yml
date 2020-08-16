@@ -33,7 +33,7 @@ jobs:
           cd .cloudflare/workers/github-proxy && yes | wrangler kv:namespace delete
           --namespace-id=`wrangler kv:namespace list | jq -r '.[]
           | select(.title == "${SCRIPT_NAME}-kv").id'`
-        workingDirectory: '.cloudflare/workers/github-proxy'
+        working-directory: '.cloudflare/workers/github-proxy'
         env:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SCRIPT_NAME: github-proxy
