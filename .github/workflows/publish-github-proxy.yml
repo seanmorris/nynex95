@@ -34,8 +34,9 @@ jobs:
           --namespace-id=`wrangler kv:namespace list | jq -r '.[]
           | select(.title == "${SCRIPT_NAME}-kv").id'`
         working-directory: '.cloudflare/workers/github-proxy'
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SCRIPT_NAME: github-proxy
 
       - name: Set up Terraform
