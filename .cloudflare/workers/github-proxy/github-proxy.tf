@@ -1,10 +1,8 @@
 variable "CLOUDFLARE_ACCOUNT_ID" {
-  type        = string
   description = "Your Cloudflare account ID - https://developers.cloudflare.com/workers/quickstart#account-id-and-zone-id"
 }
 
 variable "CLOUDFLARE_API_TOKEN" {
-  type        = string
   description = "Your Cloudflare API Token - https://dash.cloudflare.com/profile/api-tokens"
 }
 
@@ -18,15 +16,12 @@ resource "cloudflare_workers_kv_namespace" "github-proxy-kv" {
 }
 
 resource "cloudflare_worker_script" "default" {
-
-  name = "github-proxy"
-
+  name    = "github-proxy"
   content = file("index.js")
 
-
   kv_namespace_binding {
-    name         = "PROXY_KV"
     namespace_id = cloudflare_workers_kv_namespace.github-proxy-kv.id
+    name         = "PROXY_KV"
   }
 
 }
