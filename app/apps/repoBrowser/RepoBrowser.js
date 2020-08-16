@@ -59,8 +59,8 @@ export class RepoBrowser extends Task
 					);
 
 					fetch(
-						this.window.args.meta.download_url
-						, {headers: {Accept: 'application/vnd.github.v3.html'}}
+						this.window.args.meta.url + '&api=json'
+						, {headers: {Accept: 'application/vnd.github.v3.html+json'}}
 					).then(r=>r.text()).then(r=>{
 
 						this.window.args.control.args.srcdoc = r;

@@ -4772,10 +4772,10 @@ var Folder = /*#__PURE__*/function (_View) {
     _this = _super.call(this, args);
     _this.args.expanded = false;
     _this.args.icon = args.icon || '/w95/4-16-4bit.png';
-    _this.args.name = args.name || 'Root';
-    _this.args.url = args.url || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master'; // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
-    // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents';
+    _this.args.name = args.name || 'Root'; // this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+    // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
 
+    _this.args.url = args.url || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
     _this.template = require('./folder.tmp');
     return _this;
   }
@@ -4797,14 +4797,18 @@ var Folder = /*#__PURE__*/function (_View) {
         return;
       }
 
-      fetch(this.args.url).then(function (r) {
+      var url = this.args.url + '&t=' + Date.now();
+      fetch(url).then(function (r) {
         return r.json();
       }).then(function (files) {
         if (!Array.isArray(files)) {
           _this2.args.browser.window.args.content = '';
           _this2.args.browser.window.args.filename = '';
           _this2.args.browser.window.args.content = 'loading...';
-          fetch(files.download_url).then(function (r) {
+
+          var _url = files.download_url + (files.download_url.match(/\?/) ? '&t=' : '?t=') + Date.now();
+
+          fetch(_url).then(function (r) {
             return r.text();
           }).then(function (body) {
             _this2.args.browser.window.args.content = '';
@@ -4955,9 +4959,9 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
             _this2.window.args.control = new _Html.Html({
               srcdoc: 'loading...'
             }, _this2);
-            fetch(_this2.window.args.meta.download_url, {
+            fetch(_this2.window.args.meta.url + '&api=json', {
               headers: {
-                Accept: 'application/vnd.github.v3.html'
+                Accept: 'application/vnd.github.v3.html+json'
               }
             }).then(function (r) {
               return r.text();
@@ -5377,7 +5381,7 @@ exports.Plaintext = Plaintext;
 });
 
 ;require.register("control/html.tmp.html", function(exports, require, module) {
-module.exports = "<iframe class = \"html-control main-content\" srcdoc = \"[[srcdoc]]\"></iframe>\n"
+module.exports = "<div class = \"html-control main-content\">\n\t<iframe\n\t\tclass = \"inset white\"\n\t\tsrcdoc = \"[[srcdoc]]\"></iframe>\n</div>>\n"
 });
 
 ;require.register("control/image.tmp.html", function(exports, require, module) {

@@ -530,9 +530,15 @@ label.icon-frame label {
 }
 
 .html-control.main-content {
-	background-color: white;
+	display: flex;
 	flex: 1;
 	border: none;
+	padding: 0px;
+	margin: 1em;
+}
+
+.html-control iframe {
+	flex: 1;
 }
 
 .task-bar {

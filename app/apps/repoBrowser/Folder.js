@@ -11,9 +11,9 @@ export class Folder extends View
 
 		this.args.icon = args.icon || '/w95/4-16-4bit.png';
 		this.args.name = args.name || 'Root';
-		this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+		// this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
 		// this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
-		// this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents';
+		this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
 		this.template  = require('./folder.tmp');
 	}
 
@@ -33,7 +33,9 @@ export class Folder extends View
 			return;
 		}
 
-		fetch(this.args.url).then(r => r.json()).then(files => {
+		const url = this.args.url + '&t=' + Date.now();
+
+		fetch(url).then(r => r.json()).then(files => {
 
 			if(!Array.isArray(files))
 			{
@@ -41,7 +43,12 @@ export class Folder extends View
 				this.args.browser.window.args.filename = '';
 				this.args.browser.window.args.content  = 'loading...';
 
-				fetch(files.download_url).then(r => r.text()).then(body => {
+				const url = files.download_url + (files.download_url.match(/\?/)
+					? '&t='
+					: '?t='
+				) + Date.now();
+
+				fetch(url).then(r => r.text()).then(body => {
 
 					this.args.browser.window.args.content  = '';
 					this.args.browser.window.args.filename = '';
