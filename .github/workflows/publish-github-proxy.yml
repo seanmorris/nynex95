@@ -5,6 +5,7 @@ on:
     branches:
       - '**'
     paths:
+      - '**'
       - .cloudflare/**
       - .github/workflows/publish-worker.yml
 
