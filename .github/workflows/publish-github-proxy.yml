@@ -27,8 +27,7 @@ jobs:
 
       - name: Delete Existing KV Store
         run: yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "github-proxy-kv").id'`
-        with:
-          workingDirectory: ./cloudflare/workers/${SCRIPT_NAME}
+        working-directory: ./cloudflare/workers/${SCRIPT_NAME}
         env:
           SCRIPT_NAME: github-proxy
 
@@ -37,6 +36,7 @@ jobs:
 
       - name: Init, Plan, Deploy
         run:  terraform init . && terraform plan . && terraform apply --auto-approve .
+        working-directory: ./cloudflare/workers/${SCRIPT_NAME}
 
       # - name: Publish GithubProxy Worker
       #   uses: cloudflare/wrangler-action@1.2.0
