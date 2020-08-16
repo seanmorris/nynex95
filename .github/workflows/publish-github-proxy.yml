@@ -26,7 +26,7 @@ jobs:
           SCRIPT_NAME: github-proxy
 
       - name: Delete Existing KV Store
-        run: npm i -g @cloudflare/wrangler && yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'`
+        run: sudo npm i -g @cloudflare/wrangler && yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'`
         working-directory: '.cloudflare/workers/github-proxy'
         env:
           SCRIPT_NAME: github-proxy
