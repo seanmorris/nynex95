@@ -40,9 +40,3 @@ jobs:
         env:
           TF_VAR_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           TF_VAR_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
-      # - name: Publish GithubAuth Worker
-      #   uses: cloudflare/wrangler-action@1.2.0
-      #   with:
-      #     apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      #     workingDirectory: '.cloudflare/workers/github-auth'
