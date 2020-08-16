@@ -8,7 +8,7 @@ on:
     paths:
       - '**'
       - .cloudflare/**
-      - .github/workflows/publish-worker.yml
+      - .github/workflows/publish-github-proxy.yml
 
 jobs:
   publish-workers:
