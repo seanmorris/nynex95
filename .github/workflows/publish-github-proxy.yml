@@ -29,6 +29,7 @@ jobs:
         uses: cloudflare/wrangler-action@1.2.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: '.cloudflare/workers/github-proxy'
 
       - name: Delete Existing KV Store
         run: cd .cloudflare/workers/github-proxy && yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'`
