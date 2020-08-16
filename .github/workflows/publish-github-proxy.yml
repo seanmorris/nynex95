@@ -32,9 +32,13 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Delete Existing KV Store
+        run: |
+          cd .cloudflare/workers/github-proxy && yes | wrangler kv:namespace delete
+          --namespace-id=`wrangler kv:namespace list | jq -r '.[]
+          | select(.title == "${SCRIPT_NAME}-kv").id'`
         env:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SCRIPT_NAME: github-proxy
-        run: cd .cloudflare/workers/github-proxy && yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "github-proxy-kv").id'`
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
