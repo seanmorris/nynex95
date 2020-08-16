@@ -4579,7 +4579,7 @@ var Clippy = /*#__PURE__*/function (_Task) {
       _this.window.onFrame(function () {
         el.style.backgroundPosition = "".concat(124 * _this.xFrame, "px ").concat(93 * _this.yFrame, "px");
 
-        if (Math.random() > 0.5) {
+        if (Math.random() > 0.3) {
           return;
         }
 
