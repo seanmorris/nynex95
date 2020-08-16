@@ -36,7 +36,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Init, Plan, Deploy
-        run:  curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        run:  curl -fsSL https://apt.releases.hashicorp.com/gpg
         working-directory: ./cloudflare/workers/${SCRIPT_NAME}
 
 
