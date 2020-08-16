@@ -6,7 +6,7 @@ on:
       - '**'
     paths:
       - .cloudflare/**
-      - .github/publish-worker.yml
+      - .github/workflows/publish-worker.yml
 
 jobs:
   publish-workers:
