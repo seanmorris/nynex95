@@ -26,10 +26,7 @@ jobs:
           SCRIPT_NAME: github-proxy
 
       - name: Delete Existing KV Store
-        run: |
-          yes | wrangler kv:namespace delete
-          --namespace-id=`wrangler kv:namespace list
-          | jq -r '.[] | select(.title == "github-proxy-kv").id'`
+        run: yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "github-proxy-kv").id'`
         with:
           workingDirectory: ./cloudflare/workers/${SCRIPT_NAME}
         env:
