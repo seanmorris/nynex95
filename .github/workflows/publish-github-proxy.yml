@@ -7,8 +7,8 @@ on:
 
     paths:
       - '**'
-      # - .cloudflare/**
-      # - .github/workflows/publish-worker.yml
+      - .cloudflare/**
+      - .github/workflows/publish-worker.yml
 
 jobs:
   publish-workers:
