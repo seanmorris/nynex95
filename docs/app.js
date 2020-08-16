@@ -4586,6 +4586,14 @@ var Clippy = /*#__PURE__*/function (_Task) {
         }
 
         Math.random() > 0.5 ? _this.xFrame++ : _this.yFrame++;
+
+        if (_this.xFrame > 22) {
+          _this.xFrame = 0;
+        }
+
+        if (_this.xFrame < 0) {
+          _this.xFrame = 22;
+        }
       });
 
       console.log(tag);
