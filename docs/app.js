@@ -4571,6 +4571,8 @@ var Clippy = /*#__PURE__*/function (_Task) {
     _this.xFrame = 0;
     _this.yFrame = 0;
 
+    _this.window.maximize = function () {};
+
     _this.window.ruleSet.add('.clippy', function (tag) {
       var el = tag.element;
 
@@ -4579,6 +4581,10 @@ var Clippy = /*#__PURE__*/function (_Task) {
 
         if (Math.random() > 0.5) {
           return;
+        }
+
+        if (Math.random() > 0.9) {
+          _this.xFrame -= 3;
         }
 
         if (Math.random() > 0.85) {
@@ -4881,10 +4887,10 @@ var Folder = /*#__PURE__*/function (_View) {
     _this = _super.call(this, args);
     _this.args.expanded = false;
     _this.args.icon = args.icon || '/w95/4-16-4bit.png';
-    _this.args.name = args.name || 'Root'; // this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
-    // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+    _this.args.name = args.name || 'Root';
+    _this.args.url = args.url || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master'; // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+    // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
 
-    _this.args.url = args.url || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
     _this.template = require('./folder.tmp');
     return _this;
   }
