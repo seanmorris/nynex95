@@ -30,6 +30,8 @@ jobs:
         run: sudo npm i -g @cloudflare/wrangler && yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'` || true
         working-directory: '.cloudflare/workers/github-proxy'
         env:
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SCRIPT_NAME: github-proxy
 
       - name: Set up Terraform
