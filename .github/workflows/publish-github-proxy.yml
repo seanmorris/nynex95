@@ -27,12 +27,12 @@ jobs:
 
       - name: Publish GithubProxy Worker
         uses: cloudflare/wrangler-action@1.2.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Delete Existing KV Store
         run: cd .cloudflare/workers/github-proxy && yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'`
         working-directory: '.cloudflare/workers/github-proxy'
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         env:
           SCRIPT_NAME: github-proxy
 
