@@ -11,6 +11,7 @@ import { TaskManager  } from 'apps/taskManager/TaskManager';
 import { RepoBrowser  } from 'apps/repoBrowser/RepoBrowser';
 import { Nynepad      } from 'apps/nynepad/Nynepad';
 import { Clippy       } from 'apps/clippy/Clippy';
+import { GitHub       } from 'apps/gitHub/GitHub';
 
 export class Home extends View
 {
@@ -22,6 +23,7 @@ export class Home extends View
 		, '/apps/repo-browser': RepoBrowser
 		, '/apps/window':       Task
 		, '/apps/clippy':       Clippy
+		, '/apps/github':       GitHub
 	};
 
 	static instance()

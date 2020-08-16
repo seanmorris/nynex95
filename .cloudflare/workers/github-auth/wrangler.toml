@@ -1,0 +1,6 @@
+name        = "github-proxy"
+type        = "javascript"
+account_id  = "99e8c2ab2ab341b66e5d1b6b46d4536d"
+workers_dev = true
+route       = ""
+zone_id     = "b21b77428081428499303482dae542bd"

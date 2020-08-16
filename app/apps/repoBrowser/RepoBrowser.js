@@ -51,7 +51,6 @@ export class RepoBrowser extends Task
 
 			switch(filetype)
 			{
-
 				case 'md':
 					this.window.args.control = new HtmlControl(
 						{ srcdoc: 'loading...' }

@@ -1,0 +1,30 @@
+.clippy-win:not(.minimized) .clippy {
+	width:  128px;
+	height: 94px;
+	background-image: url('/clippy-sprite.png');
+	/*background-position: 128px 96px;*/
+}
+
+.clippy-win:not(.minimized) {
+	width: 128px !important;
+	height: 118px !important;
+	resize: none !important;
+	z-index: 999999 !important;
+}
+
+.clippy-win.focused .title-bar {
+	display: flex;
+	flex: 1;
+}
+
+.clippy-win .title-bar {
+	display: none;
+}
+
+.clippy-win .maximize {
+	display: none;
+}
+
+.clippy-win .title-bar {
+	margin: 0px;
+}

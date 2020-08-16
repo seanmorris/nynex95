@@ -70,6 +70,16 @@ export class Task extends EventTarget
 		return this;
 	}
 
+	print(input)
+	{
+		console.log(error);
+	}
+
+	error(input)
+	{
+		console.error(error);
+	}
+
 	signal(event)
 	{
 		switch(event.type)

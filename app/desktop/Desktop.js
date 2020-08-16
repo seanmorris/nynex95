@@ -40,6 +40,11 @@ export class Desktop extends View
 				, icon: 61
 			})
 			, new Icon({
+				action: '/apps/github'
+				, name: 'GitHub'
+				, icon: 61
+			})
+			, new Icon({
 				action: '/apps/clippy'
 				, name: 'Summon the Devil'
 				, icon: 3
