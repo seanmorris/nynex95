@@ -24,18 +24,14 @@ jobs:
         env:
           SCRIPT_NAME: github-proxy
 
-      - name: Publish GithubProxy Worker
-        uses: cloudflare/wrangler-action@1.2.0
-        with:
-          workingDirectory: '.cloudflare/workers/github-proxy'
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
       - run: npm install @cloudflare/wrangler
 
       - name: Delete Existing KV Store
         run: yes | wrangler kv:namespace delete --namespace-id=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'`
         working-directory: '.cloudflare/workers/github-proxy'
         env:
+          CF_ACCOUNT_ID: '.cloudflare/workers/github-proxy'
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SCRIPT_NAME: github-proxy
 
       - name: Set up Terraform
