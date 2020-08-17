@@ -27,7 +27,7 @@ jobs:
           SCRIPT_NAME: github-auth
 
       - name: Delete Existing KV Store
-        run: sudo npm i -g @cloudflare/wrangler; NAMESPACE_ID=wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'; echo ${SCRIPT_NAME}; echo $NAMESPACE_ID; yes 2>/dev/null | wrangler kv:namespace delete --namespace-id=$NAMESPACE_ID
+        run: sudo npm i -g @cloudflare/wrangler; NAMESPACE_ID=`wrangler kv:namespace list | jq -r '.[] | select(.title == "${SCRIPT_NAME}-kv").id'`; echo ${SCRIPT_NAME}; echo $NAMESPACE_ID; yes 2>/dev/null | wrangler kv:namespace delete --namespace-id=$NAMESPACE_ID
         working-directory: '.cloudflare/workers/github-auth'
         env:
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
