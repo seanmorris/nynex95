@@ -1,11 +1,3 @@
-variable "GHAPI_CLIENT_ID" {
-	description = "GitHub API client ID for your app."
-}
-
-variable "GHAPI_CLIENT_SECRET" {
-	description = "GitHub API client SECRET for your app."
-}
-
 variable "CLOUDFLARE_ACCOUNT_ID" {
 	description = "Your Cloudflare account ID - https://developers.cloudflare.com/workers/quickstart#account-id-and-zone-id"
 }
