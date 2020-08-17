@@ -5,6 +5,8 @@ import { Home } from '../../home/Home';
 import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
+import { GitHub } from '../gitHub/GitHub';
+
 import { Folder } from './Folder';
 import { Html as HtmlControl } from '../../control/Html';
 import { Json as JsonControl } from '../../control/Json';
@@ -38,6 +40,8 @@ export class RepoBrowser extends Task
 
 		this.window.args.bindTo('filename', v => {
 
+			const gitHubToken = GitHub.getToken();
+
 			const filetype = (v||'').split('.').pop();
 
 			if(this.window.args.control)
@@ -49,6 +53,8 @@ export class RepoBrowser extends Task
 
 			this.window.args.chars = 0;
 
+			console.log(gitHubToken);
+
 			switch(filetype)
 			{
 				case 'md':
@@ -57,20 +63,23 @@ export class RepoBrowser extends Task
 						, this
 					);
 
-					fetch(
-						this.window.args.meta.url + '&api=json&t=' + Date.now()
-						, {headers: {
-							accept: 'application/vnd.github.v3.html+json'
-						}}
-					).then(r=>r.text()).then(r=>{
+					const url = this.window.args.meta.url + '&api=json&t=' + Date.now();
 
-						this.window.args.control.args.srcdoc = r;
+					const headers = {
+						accept: 'application/vnd.github.v3.html+json'
+					};
 
-					}).catch(error => {
+					if(gitHubToken)
+					{
+						headers.Authorization = `token ${gitHubToken.access_token}`;
+					}
 
-						this.window.args.control.args.srcdoc = error;
+					console.log(headers);
 
-					});
+					fetch(url, {headers}).then(r=>r.text())
+						.then(r=>this.window.args.control.args.srcdoc = r)
+						.catch(error => this.window.args.control.args.srcdoc = error);
+
 					break;
 
 				case 'ico':

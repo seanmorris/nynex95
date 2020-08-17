@@ -2,6 +2,20 @@ import { Task } from '../../task/Task';
 
 export class GitHub extends Task
 {
+	static setToken(token)
+	{
+		sessionStorage.setItem('github-access-token', token);
+	}
+
+	static getToken()
+	{
+		const source = sessionStorage.getItem('github-access-token');
+
+		return source
+			? JSON.parse(source)
+			: false;
+	}
+
 	execute()
 	{
 		const state = ( Math.random() ).toString(36);
@@ -19,6 +33,8 @@ export class GitHub extends Task
 			);
 
 			window.addEventListener('message', event => {
+
+				GitHub.setToken(event.data);
 
 				this.loginWindow.close();
 

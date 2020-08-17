@@ -1,5 +1,6 @@
 import { View } from 'curvature/base/View';
 import { Bindable } from 'curvature/base/Bindable';
+import { GitHub } from '../gitHub/GitHub';
 
 export class Folder extends View
 {
@@ -33,9 +34,17 @@ export class Folder extends View
 			return;
 		}
 
-		const url = this.args.url + '&t=' + Date.now();
+		const headers = {};
+		const gitHubToken = GitHub.getToken();
 
-		fetch(url).then(r => r.json()).then(files => {
+		if(gitHubToken)
+		{
+			headers.Authorization = `token ${gitHubToken.access_token}`;
+		}
+
+		const url = this.args.url;
+
+		fetch(url, {headers}).then(r => r.json()).then(files => {
 
 			if(!Array.isArray(files))
 			{

@@ -28,9 +28,8 @@ async function handleRequest(request)
 		return fetch(authUrl, {method, headers, body}).then(r => r.text()).then(apiResponse => {
 			const returnHtml =
 `<script>
-	const acceptable = ['http://localhost:3333', https://nynex.unholysh.it'];
-	if(!acceptable.includes(parent.origin)){ return; }
-	opener.postMessage('${apiResponse}', '*');
+	opener.postMessage('${apiResponse}', 'http://localhost:3333');
+	opener.postMessage('${apiResponse}', 'https://nynex.unholysh.it');
 </script>`
 			return new Response(returnHtml, {
 				headers: new Headers({'content-type': 'text/html'})

@@ -24,25 +24,24 @@ async function handleRequest(request) {
 
 	return fetch(githubUrl, {headers}).then(response => {
 
-		return new Promise(accept => {
-			response.text().then(responseText => {
-				accept({response, responseText})
-			});
+		return response.text().then(responseText => {
+			return {response, responseText};
 		});
 
 	}).then(({response, responseText}) => {
 
 		const headers = new Headers(response.headers);
+
+		headers.set('Access-Control-Allow-Origin', '*');
+		headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
 		const rawBody = responseText.replace(/api\.github\.com/g, originalUrl.host);
 
-		if(originalUrl.searchParams.get('api') == 'json-source')
+		if(originalUrl.searchParams.get('api') == 'json-async')
 		{
-			headers.append('Content-Type',  'text/event-stream');
-			headers.append('Cache-Control', 'no-cache');
-			headers.append('Connection',    'keep-alive');
-
-			headers.append('Access-Control-Allow-Origin', '*');
-			headers.append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+			headers.set('Content-Type',  'text/event-stream');
+			headers.set('Cache-Control', 'no-cache');
+			headers.set('Connection',    'keep-alive');
 
 			const { readable, writable } = new TransformStream();
 			const writer = writable.getWriter();
@@ -58,10 +57,14 @@ async function handleRequest(request) {
 				{
 					writer.write(encoder.encode('data: ' + JSON.stringify(line) + '\n\n'));
 				}
+
+				writer.close();
 			}
 			else
 			{
 				writer.write(encoder.encode('data: ' + rawBody + '\n\n'));
+
+				writer.close();
 			}
 
 			return new Response(readable, {
@@ -71,6 +74,6 @@ async function handleRequest(request) {
 			});
 		}
 
-		return new Response(rawBody, {headers:response.headers});
+		return new Response(rawBody, {headers});
 	});
 }
