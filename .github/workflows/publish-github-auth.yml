@@ -1,4 +1,4 @@
-name: Publish Github Proxy Worker
+name: Publish Github Auth Worker
 
 on:
   push:
