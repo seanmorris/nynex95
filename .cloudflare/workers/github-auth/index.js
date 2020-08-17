@@ -14,10 +14,10 @@ async function handleRequest(request) {
 	const method  = 'POST';
 	const body    = JSON.stringify({
 		client_id:     '7150d20fb5a11fe1d332'
-		client_secret: ''
-		code:          ''
-		redirect_uri:  ''
-		state:         ''
+		, client_secret: ''
+		, code:          ''
+		, redirect_uri:  ''
+		, state:         ''
 	});
 
 	// AUTH_KV;
