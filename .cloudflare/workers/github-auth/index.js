@@ -26,7 +26,8 @@ async function handleRequest(request)
 		const headers = new Headers({accept: 'application/json'});
 
 		return fetch(authUrl, {method, headers, body}).then(r => r.text()).then(apiResponse => {
-			const returnHtml = `<head><script>window.opener.postMessage('${apiResponse}', '*');</script></head><body>${apiResponse}</body>`
+			if(!['localhost:3333', 'nynex.unholysh.it'].includes(parent)){return}
+			const returnHtml = `<script>opener.postMessage('${apiResponse}', '*');</script>`
 			return new Response(returnHtml, {
 				headers: new Headers({'content-type': 'text/html'})
 			});

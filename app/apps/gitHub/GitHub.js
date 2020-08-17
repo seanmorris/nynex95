@@ -20,7 +20,7 @@ export class GitHub extends Task
 
 			window.addEventListener('message', event => {
 
-				console.log(event.data);
+				this.loginWindow.close();
 
 			}, false);
 
