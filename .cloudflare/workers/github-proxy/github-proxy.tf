@@ -15,7 +15,7 @@ resource "cloudflare_workers_kv_namespace" "github-proxy-kv" {
 	title = "github-proxy-kv"
 }
 
-resource "cloudflare_worker_script" "default" {
+resource "cloudflare_worker_script" "proxy_script" {
 	name    = "github-proxy"
 	content = file("index.js")
 
@@ -23,4 +23,10 @@ resource "cloudflare_worker_script" "default" {
 		namespace_id = cloudflare_workers_kv_namespace.github-proxy-kv.id
 		name         = "PROXY_KV"
 	}
+}
+
+resource "cloudflare_worker_route" "proxy_route" {
+  zone_id     = "b21b77428081428499303482dae542bd"
+  pattern     = "nynex.unholysh.it/github-proxy/*"
+  script_name = cloudflare_worker_script.proxy_script
 }

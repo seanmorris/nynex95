@@ -23,7 +23,7 @@ resource "cloudflare_workers_kv_namespace" "github-auth-kv" {
 	title = "github-auth-kv"
 }
 
-resource "cloudflare_worker_script" "default" {
+resource "cloudflare_worker_script" "auth_route" {
 	name    = "github-auth"
 	content = file("index.js")
 
@@ -41,4 +41,10 @@ resource "cloudflare_worker_script" "default" {
 		name = "GHAPI_CLIENT_SECRET"
 		text = var.GHAPI_CLIENT_SECRET
 	}
+}
+
+resource "cloudflare_worker_route" "auth_route" {
+  zone_id     = "b21b77428081428499303482dae542bd"
+  pattern     = "nynex.unholysh.it/github-auth/*"
+  script_name = cloudflare_worker_script.auth_route
 }
