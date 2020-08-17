@@ -1,51 +1,38 @@
-addEventListener('fetch', event => {
-	const result = handleRequest(event.request);
-	event.waitUntil(result);
-	event.respondWith(result);
-});
-
-async function handleRequest(request) {
-
-	const sessionKey = crypto.getRandomValues(new Uint8Array(256)).join('');
-	const githubUrl  = 'https://github.com/login/oauth/access_token';
-
+async function handleRequest(request)
+{
 	const url = new URL(request.url);
 	const GET = url.searchParams;
 
-	if('/' === url.pathname)
+	const sessionKey = crypto.getRandomValues(new Uint8Array(256)).join('');
+
+	if('/accept' === url.pathname)
 	{
-		const headers = new Headers();
+		const authUrl = 'https://github.com/login/oauth/access_token';
 		const method  = 'POST';
-		const body    = JSON.stringify({
+		const body    = new FormData;
+
+		Object.entries({
 			client_id:       GHAPI_CLIENT_ID
 			, client_secret: GHAPI_CLIENT_SECRET
 			, code:          GET.get('code')
 			, redirect_uri:  'https://github-auth.unholyshit.workers.dev/accept'
 			, state:         '---'
-		});
+		}).map(([key, value])=>{
+			body.append(key, value);
+		})
 
-		// AUTH_KV;
+		const headers = new Headers({});
 
-		return fetch(githubUrl, {method, headers, body}).then(r => r.text()).then(apiResponse => {
-
-			console.log(apiResponse);
-
+		return fetch(authUrl, {method, headers, body}).then(r => r.text()).then(apiResponse => {
 			return new Response(apiResponse, {
-				headers: new Headers({'content-type': 'plaintext'})
+				headers: new Headers({'content-type': 'html'})
 			});
-
 		});
 	}
-
-	if('/accept' === url.pathname)
-	{
-		return new Response('Step 2', {
-			headers: new Headers({'content-type': 'plaintext'})
-		});
-	}
-
-
-	// return Promise.resolve((accept,reject) => {
-	// });
 }
 
+addEventListener('fetch', event => {
+	const result = handleRequest(event.request);
+	event.waitUntil(result);
+	event.respondWith(result);
+});

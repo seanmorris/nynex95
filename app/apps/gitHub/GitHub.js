@@ -8,7 +8,7 @@ export class GitHub extends Task
 
 		window.open(
 			'https://github.com/login/oauth/authorize'
-				+ '?redirect_uri=https://github-auth.unholyshit.workers.dev/'
+				+ '?redirect_uri=https://github-auth.unholyshit.workers.dev/accept'
 				+ '&client_id=7150d20fb5a11fe1d332'
 				+ '&scope=public_repo'
 				+ '&state=' + state
