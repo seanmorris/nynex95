@@ -11,7 +11,7 @@ on:
 
 jobs:
   publish-workers:
-    name:    Publish Github Proxy Worker
+    name:    Publish Github Auth Worker
     runs-on: ubuntu-18.04
 
     steps:
