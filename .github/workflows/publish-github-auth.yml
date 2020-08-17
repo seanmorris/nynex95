@@ -1,4 +1,4 @@
-name: Publish Github Auth Worker
+name: Publish Github Proxy Worker
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   publish-workers:
-    name:    Publish Github Auth Worker
+    name:    Publish Github Proxy Worker
     runs-on: ubuntu-18.04
 
     steps:
@@ -20,14 +20,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Delete Existing Worker
-        run: 'curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN"'
+        run: curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN"
         env:
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SCRIPT_NAME: github-auth
 
       - name: Delete Existing KV Store
-        run: sudo npm i -g @cloudflare/wrangler; NAMESPACE_ID=`wrangler kv:namespace list | jq -r ".[] | select(.title == \"${SCRIPT_NAME}-kv\").id"`; echo ${SCRIPT_NAME}; echo $NAMESPACE_ID; yes 2>/dev/null | wrangler kv:namespace delete --namespace-id=$NAMESPACE_ID
+        run: sudo npm i -g @cloudflare/wrangler; NAMESPACE_ID=`wrangler kv:namespace list | jq -r ".[] | select(.title == \"$SCRIPT_NAME-kv\").id"`; echo $SCRIPT_NAME; echo $NAMESPACE_ID; yes 2>/dev/null | wrangler kv:namespace delete --namespace-id=$NAMESPACE_ID
         working-directory: '.cloudflare/workers/github-auth'
         env:
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
