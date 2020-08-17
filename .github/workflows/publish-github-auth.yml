@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Delete Existing Worker
-        run: curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN"
+        run: 'curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN"'
         env:
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
