@@ -14,18 +14,21 @@ async function handleRequest(request)
 		Object.entries({
 			client_id:       GHAPI_CLIENT_ID
 			, client_secret: GHAPI_CLIENT_SECRET
-			, code:          GET.get('code')
 			, redirect_uri:  'https://github-auth.unholyshit.workers.dev/accept'
+			, code:          GET.get('code')
 			, state:         '---'
-		}).map(([key, value])=>{
-			body.append(key, value);
-		})
+		}).map(
 
-		const headers = new Headers({});
+			([key, value]) => body.append(key, value)
+
+		);
+
+		const headers = new Headers({accept: 'application/json'});
 
 		return fetch(authUrl, {method, headers, body}).then(r => r.text()).then(apiResponse => {
-			return new Response(apiResponse, {
-				headers: new Headers({'content-type': 'html'})
+			const returnHtml = `<head><script>console.log(window.opener.postMessage('${apiResponse}', '*'));console.log('${apiResponse}');</script></head><body>${apiResponse}</body>`
+			return new Response(returnHtml, {
+				headers: new Headers({'content-type': 'text/html'})
 			});
 		});
 	}

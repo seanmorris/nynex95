@@ -4643,6 +4643,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -4671,9 +4675,37 @@ var GitHub = /*#__PURE__*/function (_Task) {
   _createClass(GitHub, [{
     key: "execute",
     value: function execute() {
+      var _this = this;
+
       var state = Math.random().toString(36);
-      window.open('https://github.com/login/oauth/authorize' + '?redirect_uri=https://github-auth.unholyshit.workers.dev/accept' + '&client_id=7150d20fb5a11fe1d332' + '&scope=public_repo' + '&state=' + state, "github-login-".concat(this.tid), "left=100,top=100,width=750,height=500,resizable=0,scrollbars=0,location=0,menubar=0,toolbar=0,status=0");
-      return new Promise(function () {});
+      return new Promise(function () {
+        _this.loginWindow = window.open('https://github.com/login/oauth/authorize' + '?redirect_uri=https://github-auth.unholyshit.workers.dev/accept' + '&client_id=7150d20fb5a11fe1d332' + '&scope=public_repo' + '&state=' + state, "github-login-".concat(_this.tid), "left=100,top=100,width=750,height=500,resizable=0,scrollbars=0,location=0,menubar=0,toolbar=0,status=0");
+        window.addEventListener('message', function (event) {
+          console.log(event.data);
+        }, false);
+
+        var loop = _this.window.onInterval(100, function () {
+          if (!_this.loginWindow.closed) {
+            return;
+          }
+
+          clearInterval(loop);
+
+          _this.window.close();
+        });
+      });
+    }
+  }, {
+    key: "signal",
+    value: function signal(event) {
+      switch (event.type) {
+        case 'kill':
+        case 'closed':
+          this.loginWindow.close();
+          break;
+      }
+
+      _get(_getPrototypeOf(GitHub.prototype), "signal", this).call(this, event);
     }
   }]);
 
