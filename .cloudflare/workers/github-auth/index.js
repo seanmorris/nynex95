@@ -26,7 +26,7 @@ async function handleRequest(request)
 		const headers = new Headers({accept: 'application/json'});
 
 		return fetch(authUrl, {method, headers, body}).then(r => r.text()).then(apiResponse => {
-			const returnHtml = `<head><script>console.log(window.opener.postMessage('${apiResponse}', '*'));console.log('${apiResponse}');</script></head><body>${apiResponse}</body>`
+			const returnHtml = `<head><script>window.opener.postMessage('${apiResponse}', '*');</script></head><body>${apiResponse}</body>`
 			return new Response(returnHtml, {
 				headers: new Headers({'content-type': 'text/html'})
 			});
