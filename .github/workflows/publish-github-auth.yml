@@ -21,6 +21,10 @@ jobs:
 
       - name: Checking Existing Worker
         run:  'set -eux; curl https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN"'
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          SCRIPT_NAME: github-auth
 
       - name: Delete Existing Worker
         run:  'set -eux; curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN"'
