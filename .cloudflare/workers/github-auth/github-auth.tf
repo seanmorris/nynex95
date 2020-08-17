@@ -46,5 +46,5 @@ resource "cloudflare_worker_script" "auth_route" {
 resource "cloudflare_worker_route" "auth_route" {
   zone_id     = "b21b77428081428499303482dae542bd"
   pattern     = "nynex.unholysh.it/github-auth/*"
-  script_name = cloudflare_worker_script.auth_route
+  script_name = "cloudflare_worker_script" "auth_route"
 }
