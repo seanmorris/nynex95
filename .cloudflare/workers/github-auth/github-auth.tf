@@ -1,3 +1,11 @@
+variable "GHAPI_CLIENT_ID" {
+	description = "GitHub API client ID for your app."
+}
+
+variable "GHAPI_CLIENT_SECRET" {
+	description = "GitHub API client SECRET for your app."
+}
+
 variable "CLOUDFLARE_ACCOUNT_ID" {
 	description = "Your Cloudflare account ID - https://developers.cloudflare.com/workers/quickstart#account-id-and-zone-id"
 }
@@ -21,6 +29,16 @@ resource "cloudflare_worker_script" "default" {
 
 	kv_namespace_binding {
 		namespace_id = cloudflare_workers_kv_namespace.github-auth-kv.id
-		name         = "PROXY_KV"
+		name         = "AUTH_KV"
+	}
+
+	plain_text_binding {
+		name = "GHAPI_CLIENT_ID"
+		text = var.GHAPI_CLIENT_ID
+	}
+
+	secret_text_binding {
+		name = "GHAPI_CLIENT_SECRET"
+		text = var.GHAPI_CLIENT_SECRET
 	}
 }
