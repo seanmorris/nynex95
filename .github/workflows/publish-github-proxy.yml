@@ -6,7 +6,6 @@ on:
       - '**'
 
     paths:
-      - '**'
       - .cloudflare/workers/github-proxy/**
       - .github/workflows/publish-github-proxy.yml
 
