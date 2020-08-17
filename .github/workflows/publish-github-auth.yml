@@ -7,7 +7,7 @@ on:
 
     paths:
       - '**'
-      - .cloudflare/**
+      - .cloudflare/workers/github-auth/**
       - .github/workflows/publish-github-auth.yml
 
 jobs:
