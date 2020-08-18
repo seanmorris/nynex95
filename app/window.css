@@ -13,8 +13,8 @@
 .window {
 	position: absolute;
 	pointer-events: initial;
-	width: 628px;
 	height: 520px;
+	width: 628px;
 	overflow: hidden;
 }
 

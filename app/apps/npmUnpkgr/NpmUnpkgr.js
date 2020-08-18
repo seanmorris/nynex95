@@ -28,11 +28,12 @@ export class NpmUnpkgr extends Task
 
 		this.window.search = (event) => {
 
+			const url = `http://npmsearch.com/query?q=${this.window.args.query}&size=64`;
+
 			event.preventDefault();
 
 			this.window.args.icons = [];
 
-			const url = `http://npmsearch.com/query?q=${this.window.args.query}&size=64`;
 
 			fetch(url).then(r => r.json()).then(body => {
 
