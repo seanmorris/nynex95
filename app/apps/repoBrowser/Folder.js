@@ -52,11 +52,6 @@ export class Folder extends View
 
 		this.populate(this.args.url).then((files)=>{
 
-			if(!this.args.expanded)
-			{
-				return;
-			}
-
 			if(!Array.isArray(files))
 			{
 				return;
@@ -102,40 +97,51 @@ export class Folder extends View
 
 	expand(event, child, open = undefined)
 	{
-		if(this.args.file && this.args.file.type === 'file')
+		if(this.expanding)
 		{
-			this.showControl(this.args.file);
-			return;
+			return this.expanding;
 		}
 
-		if(event)
-		{
-			event.stopImmediatePropagation();
-			event.stopPropagation();
-		}
+		this.expanding = new Promise(() => {
+			if(open === true)
+			{
+				this.args.expanded = true;
+				this.args.icon     = '/w95/5-16-4bit.png';
+			}
+			else if(open === false)
+			{
+				this.args.expanded = false;
+				this.args.icon     = '/w95/4-16-4bit.png';
+			}
+			else if(this.args.expanded)
+			{
+				this.args.icon = '/w95/4-16-4bit.png';
+				this.args.expanded = false;
+			}
+			else
+			{
+				this.args.icon     = '/w95/5-16-4bit.png';
+				this.args.expanded = true;
+			}
 
-		if(open === true)
-		{
-			this.args.expanded = true;
-			this.args.icon     = '/w95/5-16-4bit.png';
-			return;
-		}
-		else if(open === false)
-		{
-			this.args.expanded = false;
-			this.args.icon     = '/w95/4-16-4bit.png';
-			return;
-		}
+			this.populate(this.args.url).then((files)=>{
 
-		if(this.args.expanded)
-		{
-			this.args.icon = '/w95/4-16-4bit.png';
-			this.args.expanded = false;
-			return;
-		}
+				if(event)
+				{
+					event.stopImmediatePropagation();
+					event.stopPropagation();
+				}
 
-		this.args.icon     = '/w95/5-16-4bit.png';
-		this.args.expanded = true;
+				this.expanding = false
+
+				if(this.args.file && this.args.file.type === 'file')
+				{
+					this.showControl(this.args.file);
+				}
+
+				accept();
+			});
+		});
 	}
 
 	showControl(file)
@@ -248,7 +254,9 @@ export class Folder extends View
 
 				});
 
-				return files;
+				return new Promise(accept => {
+					this.onTimeout(files.length*20, accept(files));
+				});
 			}
 
 

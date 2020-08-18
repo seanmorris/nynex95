@@ -28,7 +28,11 @@ export class Nynemark extends Task
 
 			this.editor = new SimpleMDE({element: tag.element});
 
-			this.editor.value("# Welcome to Nynemark\n\nThe Nynex Markdown editor.\n");
+			const init = "![PB&J 🕒](/ui/banana_128.gif)\n\n# Welcome to Nynemark\n\nThe Nynex Markdown editor.\n";
+
+			this.editor.value(init);
+
+			this.editor.togglePreview();
 
 		});
 

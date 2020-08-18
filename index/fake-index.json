@@ -1,0 +1,41 @@
+{
+	"name":   "Fake Index"
+	, "type": "index"
+	, "date": "2020-08-18"
+	, "content": [
+
+		{
+			"name":   "What's Nynex?"
+			, "type": "article"
+			, "@meta": "../content/whats-nynex.json"
+			, "@url":  "../content/whats-nynex.md"
+		}
+
+		, {
+			"name":   "Hello, World!"
+			, "type": "article"
+			, "@meta": "../content/whats-nynex.json"
+			, "@url":  "../content/hello-world.md"
+		}
+
+		, {
+			"name":   "SubFolder!"
+			, "type": "index"
+			, "content": [
+				{
+					"name":   "What's Nynex?"
+					, "type": "article"
+					, "@meta": "../content/whats-nynex.json"
+					, "@url":  "../content/whats-nynex.md"
+				}
+				, {
+					"name":   "Hello, World!"
+					, "type": "article"
+					, "@meta": "../content/whats-nynex.json"
+					, "@url":  "../content/hello-world.md"
+				}
+			]
+		}
+
+	]
+}

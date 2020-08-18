@@ -5288,8 +5288,11 @@ var Nynemark = /*#__PURE__*/function (_Task) {
       _this.editor = new _simplemde["default"]({
         element: tag.element
       });
+      var init = "![PB&J 🕒](/ui/banana_128.gif)\n\n# Welcome to Nynemark\n\nThe Nynex Markdown editor.\n";
 
-      _this.editor.value("# Welcome to Nynemark\n\nThe Nynex Markdown editor.\n");
+      _this.editor.value(init);
+
+      _this.editor.togglePreview();
     });
 
     return _possibleConstructorReturn(_this, _Bindable.Bindable.make(_assertThisInitialized(_this)));
@@ -5607,10 +5610,6 @@ var Folder = /*#__PURE__*/function (_View) {
 
       this.args.browser.current = this;
       this.populate(this.args.url).then(function (files) {
-        if (!_this2.args.expanded) {
-          return;
-        }
-
         if (!Array.isArray(files)) {
           return;
         }
@@ -5653,41 +5652,49 @@ var Folder = /*#__PURE__*/function (_View) {
   }, {
     key: "expand",
     value: function expand(event, child) {
+      var _this3 = this;
+
       var open = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
-      if (this.args.file && this.args.file.type === 'file') {
-        this.showControl(this.args.file);
-        return;
+      if (this.expanding) {
+        return this.expanding;
       }
 
-      if (event) {
-        event.stopImmediatePropagation();
-        event.stopPropagation();
-      }
+      this.expanding = new Promise(function () {
+        if (open === true) {
+          _this3.args.expanded = true;
+          _this3.args.icon = '/w95/5-16-4bit.png';
+        } else if (open === false) {
+          _this3.args.expanded = false;
+          _this3.args.icon = '/w95/4-16-4bit.png';
+        } else if (_this3.args.expanded) {
+          _this3.args.icon = '/w95/4-16-4bit.png';
+          _this3.args.expanded = false;
+        } else {
+          _this3.args.icon = '/w95/5-16-4bit.png';
+          _this3.args.expanded = true;
+        }
 
-      if (open === true) {
-        this.args.expanded = true;
-        this.args.icon = '/w95/5-16-4bit.png';
-        return;
-      } else if (open === false) {
-        this.args.expanded = false;
-        this.args.icon = '/w95/4-16-4bit.png';
-        return;
-      }
+        _this3.populate(_this3.args.url).then(function (files) {
+          if (event) {
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+          }
 
-      if (this.args.expanded) {
-        this.args.icon = '/w95/4-16-4bit.png';
-        this.args.expanded = false;
-        return;
-      }
+          _this3.expanding = false;
 
-      this.args.icon = '/w95/5-16-4bit.png';
-      this.args.expanded = true;
+          if (_this3.args.file && _this3.args.file.type === 'file') {
+            _this3.showControl(_this3.args.file);
+          }
+
+          accept();
+        });
+      });
     }
   }, {
     key: "showControl",
     value: function showControl(file) {
-      var _this3 = this;
+      var _this4 = this;
 
       var name = file.name;
       var type = name.split('.').pop();
@@ -5719,14 +5726,14 @@ var Folder = /*#__PURE__*/function (_View) {
       }).then(function (r) {
         return r.text();
       }).then(function (body) {
-        _this3.args.browser.window.args.content = body;
-        _this3.args.browser.window.args.filename = file.name;
+        _this4.args.browser.window.args.content = body;
+        _this4.args.browser.window.args.filename = file.name;
       });
     }
   }, {
     key: "populate",
     value: function populate(url) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.populating) {
         return this.populating;
@@ -5749,7 +5756,7 @@ var Folder = /*#__PURE__*/function (_View) {
         return r.json();
       }).then(function (files) {
         if (Array.isArray(files)) {
-          _this4.dir = true;
+          _this5.dir = true;
           files.sort(function (a, b) {
             if (a.type !== 'dir' && b.type !== 'dir') {
               return 0;
@@ -5767,22 +5774,24 @@ var Folder = /*#__PURE__*/function (_View) {
             var name = file.name;
             var img = file.type === 'dir' ? '/w95/4-16-4bit.png' : '/w95/60-16-4bit.png';
             var folder = new Folder({
-              browser: _this4.args.browser,
+              browser: _this5.args.browser,
               url: file.url,
               name: name,
               icon: img,
               file: file
-            }, _this4);
-            _this4.files[name] = folder;
+            }, _this5);
+            _this5.files[name] = folder;
 
-            _this4.onTimeout(key * 20, function () {
-              return _this4.args.files.push(folder);
+            _this5.onTimeout(key * 20, function () {
+              return _this5.args.files.push(folder);
             });
           });
-          return files;
+          return new Promise(function (accept) {
+            _this5.onTimeout(files.length * 20, accept(files));
+          });
         }
 
-        _this4.dir = false;
+        _this5.dir = false;
       });
     }
   }]);
@@ -5959,7 +5968,7 @@ exports.RepoBrowser = RepoBrowser;
 });
 
 ;require.register("apps/repoBrowser/folder.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:select(event, file);dblclick:expand(event, file);\" tabindex=\"0\" cv-ref = \"focus::\">\n\t\t<img src = \"[[icon]]\" loading=lazy />\n\t\t<label>[[name]]</label>\n\t</span>\n\t<span cv-if = \"expanded\">\n\t\t<div class = \"sub\" cv-each = \"files:file:f\">\n\t\t\t[[file]]\n\t\t</div>\n\t</span>\n</div>\n"
+module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event, file);dblclick:select(event, file);\" tabindex=\"0\" cv-ref = \"focus::\">\n\t\t<img src = \"[[icon]]\" loading=lazy />\n\t\t<label>[[name]]</label>\n\t</span>\n\t<span cv-if = \"expanded\">\n\t\t<div class = \"sub\" cv-each = \"files:file:f\">\n\t\t\t[[file]]\n\t\t</div>\n\t</span>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {

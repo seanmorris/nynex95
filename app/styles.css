@@ -241,7 +241,7 @@ label.icon-frame label {
 }
 
 .repo-browser .treeview > .resize > .folder {
-	min-width: 6em;
+	min-width: 4em;
 }
 
 .repo-browser .treeview .resize {
