@@ -9,7 +9,7 @@ let taskId = 0;
 const Accept = Symbol('accept');
 const Reject = Symbol('reject');
 
-export class Task extends EventTarget
+export class Task
 {
 	title   = 'Generic Task';
 	icon    = '/w95/3-16-4bit.png';
@@ -23,7 +23,7 @@ export class Task extends EventTarget
 
 	constructor(taskList)
 	{
-		super();
+		// super();
 
 		this.id = taskId++;
 
@@ -33,39 +33,39 @@ export class Task extends EventTarget
 
 		this.window = new Window(this);
 
-		this.addEventListener('start', (event) => {
-			if(!this.silent)
-			{
+		// this.addEventListener('start', (event) => {
+		// });
 
-				this.window.addEventListener('closed', (event) => {
+		if(!this.silent)
+		{
+			this.window.addEventListener('closed', (event) => {
 
-					this.signal(event);
+				this.signal(event);
 
-					taskList.remove(this);
+				taskList.remove(this);
 
-				});
+			});
 
-				this.window.addEventListener('attached', (event) => {
+			this.window.addEventListener('attached', (event) => {
 
-					this.signal(event);
+				this.signal(event);
 
-					this.attached();
-				});
+				this.attached();
+			});
 
-				Home.instance().windows.add(this.window);
+			Home.instance().windows.add(this.window);
 
-				this.window.focus();
-			}
+			this.window.focus();
+		}
 
-			let retVal = this.execute();
+		let retVal = this.execute();
 
-			if(!(retVal instanceof Promise))
-			{
-				retVal = Promise.resolve(retVal);
-			}
+		if(!(retVal instanceof Promise))
+		{
+			retVal = Promise.resolve(retVal);
+		}
 
-			retVal.then(r => this[Accept](r)).catch(e => this[Reject](e));
-		});
+		retVal.then(r => this[Accept](r)).catch(e => this[Reject](e));
 
 		return this;
 	}
@@ -107,3 +107,5 @@ export class Task extends EventTarget
 
 	attached(){}
 }
+
+// export class Task extends Target.mix(BaseTask){};

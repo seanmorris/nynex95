@@ -5,17 +5,19 @@
 }
 
 .desktop {
-	align-self: stretch;
 	position: absolute;
 	top: 0px;
 	bottom: 0px;
 	min-width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-between;
+	flex-wrap: wrap;
 }
 
 .desktop [data-role=icon-list] {
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
+	display: contents;
 }
 
 .desktop [data-role=icon-list] [tabindex] {

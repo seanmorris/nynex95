@@ -10,9 +10,11 @@ export class Folder extends View
 
 		this.args.expanded = false;
 
+		this.args.files = [];
+
 		this.args.icon = args.icon || '/w95/4-16-4bit.png';
 		this.args.name = args.name || 'Root';
-		this.args.url  = args.url  || 'https://github-proxy.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now();
+		this.args.url  = args.url  || 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now();
 		// this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
 		// this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
 		this.template  = require('./folder.tmp');
@@ -27,7 +29,7 @@ export class Folder extends View
 			return;
 		}
 
-		if(this.args.files)
+		if(this.args.files.length)
 		{
 			this.args.icon = '/w95/5-16-4bit.png';
 			this.args.expanded = true;
@@ -37,7 +39,7 @@ export class Folder extends View
 		const headers = {};
 		const gitHubToken = GitHub.getToken();
 
-		if(gitHubToken)
+		if(gitHubToken && gitHubToken.access_token)
 		{
 			headers.Authorization = `token ${gitHubToken.access_token}`;
 		}
@@ -90,7 +92,9 @@ export class Folder extends View
 
 			});
 
-			this.args.files = files.map(file => {
+			this.args.files = [];
+
+			files.map((file, key) => {
 				const browser = this.args.browser;
 
 				const url  = file.url;
@@ -99,7 +103,11 @@ export class Folder extends View
 					? '/w95/4-16-4bit.png'
 					: '/w95/60-16-4bit.png';
 
-				return new Folder({browser, url, name, icon});
+				const folder = new Folder({browser, url, name, icon});
+
+				this.onTimeout(key * 15, ()=>{
+					this.args.files.push(folder);
+				});
 
 			});
 

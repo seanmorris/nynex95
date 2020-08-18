@@ -3,6 +3,7 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	padding: 0.25em;
+	user-select: none;
 }
 
 [data-role=icon-list] [tabindex] {
@@ -10,12 +11,17 @@
 	flex-direction: column;
 	align-items: flex-end;
 	margin: 0em;
-	width: 64px;
+	width: 96px;
 	min-height: 64px;
+	word-break: break-all;
 }
 
 [data-role=icon-list] div:focus {
 	outline-style: none;
+}
+
+[data-role=icon-list] label {
+	padding: 0.25em;
 }
 
 [data-role=icon-list] div:focus img {

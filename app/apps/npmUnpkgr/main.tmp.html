@@ -1,0 +1,31 @@
+<label class = "row">
+	[[searchIcon]]
+	Search:
+	<form class = "wide" cv-on = "submit:search(event)">
+		<input cv-bind = "query" type = "text" class = "wide">
+		<button cv-on = "click:search(event)">go</button>
+	</form>
+</label>
+
+<div class = "white inset scroll liquid">
+	<div data-role = "icon-list" cv-each = "icons:icon:i">[[icon]]</div>
+</div>
+
+<span cv-if = "name">
+	<div class = "row pane padded">
+		<div class = "rows">
+			<button>Install</button>
+			<button>Download</button>
+			<button>Info</button>
+		</div>
+		<div>
+			<span style = "font-size: x-large;">[[name]]</span><br />
+			<span>[[version]]</span><br />
+			<span>[[description]]</span><br />
+		</div>
+	</div>
+</span>
+
+<div class = "status row">
+	<div class = "label inset">[[status]]</div>
+</div>

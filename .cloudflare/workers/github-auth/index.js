@@ -5,7 +5,7 @@ async function handleRequest(request)
 
 	const sessionKey = crypto.getRandomValues(new Uint8Array(256)).join('');
 
-	if('/accept' === url.pathname)
+	if('/github-auth/accept' === url.pathname)
 	{
 		const authUrl = 'https://github.com/login/oauth/access_token';
 		const method  = 'POST';
@@ -14,7 +14,7 @@ async function handleRequest(request)
 		Object.entries({
 			client_id:       GHAPI_CLIENT_ID
 			, client_secret: GHAPI_CLIENT_SECRET
-			, redirect_uri:  'https://github-auth.unholyshit.workers.dev/accept'
+			, redirect_uri:  'https://nynex.unholysh.it/github-auth/accept'
 			, code:          GET.get('code')
 			, state:         '---'
 		}).map(
@@ -36,6 +36,10 @@ async function handleRequest(request)
 			});
 		});
 	}
+
+	return new Response('status: ok.', {
+		headers: new Headers({'content-type': 'text/plain'})
+	});
 }
 
 addEventListener('fetch', event => {

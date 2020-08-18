@@ -8,11 +8,12 @@
   "scripts": {
     "start": "brunch watch --server",
     "build": "brunch build --production",
-    "postinstall": "cp node_modules/php-wasm/php-web.* docs/"
+    "postinstall": "cp node_modules/php-wasm/php-web.* app/assets/"
   },
   "dependencies": {
     "curvature": "^0.0.59",
-    "php-wasm": "^0.0.1"
+    "php-wasm": "^0.0.1",
+    "simplemde": "^1.11.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

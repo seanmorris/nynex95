@@ -9,9 +9,12 @@ import { Task     } from 'task/Task';
 import { IconExplorer } from 'apps/iconExplorer/IconExplorer';
 import { TaskManager  } from 'apps/taskManager/TaskManager';
 import { RepoBrowser  } from 'apps/repoBrowser/RepoBrowser';
+import { PhpEditor    } from 'apps/phpEditor/PhpEditor';
+import { Nynemark     } from 'apps/nynemark/Nynemark';
 import { Nynepad      } from 'apps/nynepad/Nynepad';
 import { Clippy       } from 'apps/clippy/Clippy';
 import { GitHub       } from 'apps/gitHub/GitHub';
+import { NpmUnpkgr    } from 'apps/npmUnpkgr/NpmUnpkgr';
 
 export class Home extends View
 {
@@ -20,10 +23,13 @@ export class Home extends View
 		'/apps/icon-explorer':  IconExplorer
 		, '/apps/task-manager': TaskManager
 		, '/apps/nynepad':      Nynepad
+		, '/apps/nynemark':     Nynemark
 		, '/apps/repo-browser': RepoBrowser
 		, '/apps/window':       Task
-		, '/apps/clippy':       Clippy
+		, '/apps/php':          PhpEditor
 		, '/apps/github':       GitHub
+		, '/apps/npm-unpkgr':   NpmUnpkgr
+		, '/apps/clippy':       Clippy
 	};
 
 	static instance()
@@ -93,7 +99,7 @@ export class Home extends View
 		this.tasks.add(task);
 
 		this.onTimeout(250, () => {
-			task.dispatchEvent(new CustomEvent('start'))
+			task.signal(new CustomEvent('start'))
 		});
 	}
 }

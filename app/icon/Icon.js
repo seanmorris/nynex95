@@ -13,7 +13,7 @@ export class Icon extends View
 		this.resource = args.action || false;//'/apps/icon-explorer-stats'
 		this.action   = args.action || false;//'/apps/icon-explorer'
 
-		this.args.name = args.name || `untitled`;
+		this.args.name = args.name || ``;
 		this.args.path = args.path || `w95`;
 		this.args.size = args.size || `32`;
 		this.args.bits = args.bits || `4`;

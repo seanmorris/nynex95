@@ -12,7 +12,10 @@ let Base = class extends View
 		this.template  = require('./json.tmp');
 
 		this.args.expandIcon = '+';
-		this.args.expanded   = args.expanded || '';
+		this.args.expanded   = args.expanded || 'expanded';
+
+		this.args.tree = this.args.tree || {};
+		this.args.json = this.args.json || {};
 	}
 
 	attached()
@@ -24,16 +27,11 @@ let Base = class extends View
 				return;
 			}
 
-			this.args.tree = v;
-
-			for(const i in this.args.tree)
+			for(const i in v)
 			{
-				if(typeof this.args.tree[i] === 'object')
+				if(typeof v[i] === 'object')
 				{
-					const subTree = this.args.tree[i];
-
-					this.args.tree[i] = new Json({}, this);
-					this.args.tree[i].args.tree = subTree;
+					this.args.json[i] = new Json({}, this);
 				}
 			}
 		});
@@ -46,11 +44,19 @@ let Base = class extends View
 
 	expand(event, key)
 	{
-		console.log(key);
-
 		if(key)
 		{
 			if(!this.args.tree[key])
+			{
+				return;
+			}
+
+			if(!this.args.tree[key].args.tree)
+			{
+				this.args.json[key].args.tree = this.args.tree[key];
+			}
+
+			if(typeof this.args.tree[key] !== 'object')
 			{
 				return;
 			}

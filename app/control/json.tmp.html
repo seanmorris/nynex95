@@ -1,7 +1,14 @@
 <div class = "json-view [[topLevel]]"> <span cv-on = "click:expand(event)" cv-bind = "expandIcon"></span> {
 	<div class = "[[expanded]]">
-		<div class = "json-view-body" cv-each = "tree:value:key">
-			<div><span class ="json-key" cv-on = "click:expand(event, key)">[[key]]:</span><span class ="json-value" data-type = [[value|type]]"">[[value]]</span></div>
+		<div class = "json-view-body" cv-each = "json:value:key">
+			<div data-type = [[value|type]]>
+				<span class ="json-key" cv-on = "click:expand(event, key)">
+					<span>[[key]]</span>:
+				</span>
+				<span class ="json-value">
+					[[value]]
+				</span>
+			</div>
 		</div>
 	</div>
 	}

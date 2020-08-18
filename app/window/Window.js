@@ -29,7 +29,7 @@ let Base = class extends View
 		this.template = require('./window.tmp');
 
 		this.args.wid = this.constructor.idInc++;
-		this.args.titleBar = 'lol';
+
 		this.args.titleBar = new TitleBar(this.args, this);
 	}
 

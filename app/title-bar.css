@@ -3,6 +3,7 @@
 }
 
 .title-bar {
+	user-select: none;
 	background-color: #666;
 	color: white;
 	justify-content: space-between;

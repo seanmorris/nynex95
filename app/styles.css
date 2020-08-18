@@ -12,7 +12,6 @@ html, body {
 	box-sizing: border-box;
 	margin: 0px;
 	box-sizing: border-box;
-	user-select: none;
 	display: flex;
 	flex-direction: row;
 	align-items: flex-start;
@@ -68,6 +67,7 @@ html, body, input, button, select {
 }
 
 .scroll {
+	flex: 1;
 	overflow: auto;
 }
 
@@ -111,6 +111,25 @@ html, body, input, button, select {
 	border: 2px solid;
 	border-image: url(/border-inset.png) 2 2 2 2;
 	border-color: #c3c3c3;
+}
+
+.window .editor-toolbar{
+	padding: 0px;
+}
+.window .editor-toolbar::before{
+	margin: 0px;
+}
+.window .editor-toolbar::after{
+	margin: 0px;
+}
+
+.window .editor-toolbar a,
+.window .editor-toolbar i.separator {
+	border-image: url(/border.png) 2 2 2 2 fill;
+}
+
+.CodeMirror {
+	flex: 1;
 }
 
 button {
@@ -269,4 +288,31 @@ label.icon-frame label {
 
 .html-control iframe {
 	flex: 1;
+}
+
+
+[data-type=object] > .json-key > span{
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+
+.phpEditor.loading .scroll {
+	background-image: url(/loading.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.CodeMirror-selectedtext {
+	background-color: #000082 !important;
+	color: white;
+}
+
+.wide {
+	display: flex;
+	flex-grow: 1;
+}
+
+.row.tight > * {
+	margin: 0px;
 }

@@ -23,10 +23,16 @@ export class Desktop extends View
 				action: '/apps/repo-browser'
 				, name: 'Repo Browser'
 				, icon: 73
+				// , path: 'w98'
 			})
 			, new Icon({
 				action: '/apps/nynepad'
 				, name: 'Nynepad'
+				, icon: 60
+			})
+			, new Icon({
+				action: '/apps/nynemark'
+				, name: 'Nynemark'
 				, icon: 60
 			})
 			, new Icon({
@@ -40,14 +46,32 @@ export class Desktop extends View
 				, icon: 61
 			})
 			, new Icon({
+				action: '/apps/php'
+				, name: 'PHP'
+				, icon: 'php'
+				, path: 'apps'
+				, bits: 24
+			})
+			, new Icon({
+				action: '/apps/npm-unpkgr'
+				, name: 'npm-unpkgr'
+				, icon: 'npm'
+				, path: 'apps'
+				, bits: 24
+			})
+			, new Icon({
 				action: '/apps/github'
 				, name: 'GitHub'
-				, icon: 61
+				, icon: 'github'
+				, path: 'apps'
+				, bits: 1
 			})
 			, new Icon({
 				action: '/apps/clippy'
 				, name: 'Summon the Devil'
-				, icon: 3
+				, icon: 'doom-eye'
+				, path: 'apps'
+				, bits: 24
 			})
 		];
 

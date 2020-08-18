@@ -53,8 +53,6 @@ export class RepoBrowser extends Task
 
 			this.window.args.chars = 0;
 
-			console.log(gitHubToken);
-
 			switch(filetype)
 			{
 				case 'md':
@@ -114,5 +112,10 @@ export class RepoBrowser extends Task
 
 			this.window.args.chars = (this.window.args.content||'').length;
 		});
+	}
+
+	expand(event, child)
+	{
+
 	}
 }

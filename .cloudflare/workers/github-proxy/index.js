@@ -1,9 +1,3 @@
-/**
- * Proxies requests to the github API through cloudflare.
- *
- * @TODO: Perform OAuth Secret Exchange.
- */
-
 addEventListener('fetch', event => {
 	const result = handleRequest(event.request);
 
@@ -13,7 +7,7 @@ addEventListener('fetch', event => {
 })
 
 async function handleRequest(request) {
-	const originalUrl = new URL(request.url);
+	const originalUrl = new URL(request.url.replace(/^\/github-proxy//));
 	const githubUrl   = 'https://api.github.com' + originalUrl.pathname;
 
 	const headers = new Headers(request.headers);

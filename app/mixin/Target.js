@@ -7,7 +7,14 @@ export class Target extends Mixin
 {
 	after__constructor()
 	{
-		this[target] = new EventTarget;
+		try
+		{
+			this[target] = new EventTarget;
+		}
+		catch(error)
+		{
+			this[target] = document.createDocumentFragment();
+		}
 	}
 
 	dispatchEvent(...args)
