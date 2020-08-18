@@ -23,6 +23,19 @@ export class RepoBrowser extends Task
 	constructor(taskList)
 	{
 		super(taskList);
+
+		this.current = null;
+
+		this.window.selectParent = (event) => {
+
+			if(!this.current.parent || !(this.current.parent instanceof Folder))
+			{
+				return;
+			}
+
+			this.current.parent.select();
+			this.current.parent.expand(null, null, true);
+		};
 	}
 
 	attached()
@@ -32,12 +45,16 @@ export class RepoBrowser extends Task
 
 		this.window.classes['repo-browser'] = true;
 
-		const folder = new Folder({browser:this});
+		const folder = new Folder({
+			expanded: true
+			, browser: this
+			, url:   'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now()
+		}, this.window);
 
 		this.window.args.files = this.window.args.files || [];
 		this.window.args.files.push(folder);
 
-		folder.expand();
+		folder.select();
 
 		this.window.args.bindTo('filename', v => {
 
@@ -50,6 +67,11 @@ export class RepoBrowser extends Task
 				this.window.args.control.remove();
 			}
 
+			if(!v)
+			{
+				return;
+			}
+
 			this.window.args.filetype = filetype || '';
 
 			this.window.args.chars = 0;
@@ -57,27 +79,11 @@ export class RepoBrowser extends Task
 			switch(filetype)
 			{
 				case 'md':
+				case 'html':
 					this.window.args.control = new HtmlControl(
-						{ srcdoc: 'loading...' }
+						{srcdoc:this.window.args.content}
 						, this
 					);
-
-					const url = this.window.args.meta.url + '&api=json&t=' + Date.now();
-
-					const headers = {
-						accept: 'application/vnd.github.v3.html+json'
-					};
-
-					if(gitHubToken)
-					{
-						headers.Authorization = `token ${gitHubToken.access_token}`;
-					}
-
-					console.log(headers);
-
-					fetch(url, {headers}).then(r=>r.text())
-						.then(r=>this.window.args.control.args.srcdoc = r)
-						.catch(error => this.window.args.control.args.srcdoc = error);
 
 					break;
 
@@ -88,7 +94,7 @@ export class RepoBrowser extends Task
 				case 'jpeg':
 				case 'webp':
 					this.window.args.control = new ImageControl(
-						{src:this.window.args.meta.download_url}
+						{src:this.window.args.url}
 						, this
 					);
 					break;
@@ -97,7 +103,9 @@ export class RepoBrowser extends Task
 					this.window.args.control = new JsonControl(
 						{
 							expanded: 'expanded'
-							, tree: JSON.parse(this.window.args.content)
+							, tree: this.window.args.content
+								? JSON.parse(this.window.args.content)
+								: []
 						}
 						, this
 					);
@@ -113,10 +121,5 @@ export class RepoBrowser extends Task
 
 			this.window.args.chars = (this.window.args.content||'').length;
 		});
-	}
-
-	expand(event, child)
-	{
-
 	}
 }

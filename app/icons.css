@@ -15,7 +15,7 @@
 }
 
 [data-role=icon-list]:not(.tight) [tabindex] {
-	width: 112px;
+	width: 128px;
 	min-height: 96px;
 }
 

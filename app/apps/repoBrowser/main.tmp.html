@@ -3,7 +3,12 @@
 		<div class = "resize">[[file]]</div>
 	</div>
 	<div class = "frame rows inset content">
-		<div class = "pane">File: [[filename]]</div>
+		<div class = "row tight scroll-header">
+			<button cv-on = "click:selectParent(event);" class = "tight">
+				<img src = "/ui/dir-up.png" />
+			</button>
+			<label class = "pane wide left-align">File: [[filename]]</label>
+		</div>
 		[[control]]
 	</div>
 </div>

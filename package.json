@@ -11,7 +11,7 @@
     "postinstall": "cp node_modules/php-wasm/php-web.* app/assets/"
   },
   "dependencies": {
-    "curvature": "^0.0.59",
+    "curvature": "^0.0.60",
     "php-wasm": "^0.0.1",
     "simplemde": "^1.11.2"
   },

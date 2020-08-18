@@ -7,17 +7,34 @@ import { Icons as IconControl } from '../../control/Icons';
 
 export class Folder extends View
 {
-	constructor(args = {})
+	constructor(args = {}, parent = null)
 	{
-		super(args);
+		super(args, parent);
 
-		this.args.expanded = false;
+		this.files = {};
+
+		this.args.expanded = args.expanded;
 
 		this.args.files = [];
 
-		this.args.icon = args.icon || '/w95/4-16-4bit.png';
-		this.args.name = args.name || 'Root';
-		this.args.url  = args.url  || 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now();
+		if(args.file && args.file.type === 'file')
+		{
+			this.args.icon = '/w95/60-16-4bit.png';
+		}
+		else
+		{
+			this.args.icon = '/w95/4-16-4bit.png';
+
+			if(this.args.expanded)
+			{
+				this.args.icon = '/w95/5-16-4bit.png';
+			}
+		}
+
+		this.args.name = args.name || '.';
+		this.args.url  = args.url  || '';
+		this.args.file = args.file || null;
+		// this.args.url  = args.url  || 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now();
 		// this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
 		// this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
 		this.template  = require('./folder.tmp');
@@ -25,58 +42,89 @@ export class Folder extends View
 
 	select(event, child)
 	{
-		console.log(event);
 		if(event)
 		{
 			event.stopImmediatePropagation();
 			event.stopPropagation();
 		}
 
-		const url = this.args.url;
+		this.args.browser.current = this;
 
-		const headers = {};
-		const gitHubToken = GitHub.getToken();
+		this.populate(this.args.url).then((files)=>{
 
-		if(gitHubToken && gitHubToken.access_token)
-		{
-			headers.Authorization = `token ${gitHubToken.access_token}`;
-		}
-
-		fetch(url, {headers}).then(r => r.json()).then(files => {
-
-			console.log(files);
-
-			if(Array.isArray(files))
+			if(!this.args.expanded)
 			{
-				const icons = files.map((file, key) => {
-					// const url  = file.url;
-					const name = file.name;
-					const img  = file.type === 'dir' ? 4 : 60;
-					const action = () => {
-						this.expand(event, file);
-					};
-
-					const icon = new Icon({icon:img, name});
-
-					return icon;
-				});
-
-				const iconList = new IconControl({icons});
-
-				this.args.browser.window.args.filename = this.args.name + ' [directory]';
-				this.args.browser.window.args.control  = iconList;
+				return;
 			}
 
+			if(!Array.isArray(files))
+			{
+				return;
+			}
+
+			const iconList = new IconControl({}, this);
+
+			const icons = files.map((file, key) => {
+				const name = file.name;
+				const action = () => {
+
+					if(file.type === 'dir')
+					{
+						if(this.files[name])
+						{
+							this.files[name].expand(event, child, true);
+							this.files[name].select();
+
+							return;
+						}
+					}
+					else if(file.download_url)
+					{
+						this.showControl(file);
+					}
+				};
+
+				const icon = new Icon({icon:file.type === 'dir' ? 4:60, name, action});
+
+				this.onTimeout(key * 20, () => {
+					iconList.args.icons.push(icon);
+				});
+
+				return icon;
+			});
+
+			// iconList.args.icons = icons;
+
+			this.args.browser.window.args.filename = this.args.name;
+			this.args.browser.window.args.control = iconList;
 		});
 	}
 
-	expand(event, child)
+	expand(event, child, open = undefined)
 	{
-		console.log(event);
+		if(this.args.file && this.args.file.type === 'file')
+		{
+			this.showControl(this.args.file);
+			return;
+		}
+
 		if(event)
 		{
 			event.stopImmediatePropagation();
 			event.stopPropagation();
+		}
+
+		if(open === true)
+		{
+			this.args.expanded = true;
+			this.args.icon     = '/w95/5-16-4bit.png';
+			return;
+		}
+		else if(open === false)
+		{
+			this.args.expanded = false;
+			this.args.icon     = '/w95/4-16-4bit.png';
+			return;
 		}
 
 		if(this.args.expanded)
@@ -86,90 +134,126 @@ export class Folder extends View
 			return;
 		}
 
-		if(this.args.files.length)
-		{
-			this.args.icon = '/w95/5-16-4bit.png';
-			this.args.expanded = true;
-			return;
-		}
+		this.args.icon     = '/w95/5-16-4bit.png';
+		this.args.expanded = true;
+	}
+
+	showControl(file)
+	{
+		const name = file.name;
+		const type = name.split('.').pop();
+
+		this.args.browser.window.args.filename = '';
+		this.args.browser.window.args.content  = 'loading...';
+		this.args.browser.window.args.url      = url;
+
+		const gitHubToken = GitHub.getToken();
 
 		const headers = {};
+
+		const renderable = (type === 'md' || type === 'html');
+
+		if(type === 'md')
+		{
+			headers.Accept = 'application/vnd.github.v3.html+json';
+		}
+
+		if(type === 'html')
+		{
+			headers.Accept = 'application/vnd.github.v3.raw+json';
+		}
+
+		if(renderable && gitHubToken && gitHubToken.access_token)
+		{
+			// headers.Authorization = `token ${gitHubToken.access_token}`;
+		}
+
+		const url = renderable
+			? file.url
+			: file.download_url;
+
+		console.log(type);
+
+		this.args.browser.window.args.url = url;
+
+		fetch(url, {headers}).then(r => r.text()).then(body => {
+
+			this.args.browser.window.args.content  = body;
+			this.args.browser.window.args.filename = file.name;
+
+		});
+	}
+
+	populate(url)
+	{
+		if(this.populating)
+		{
+			return this.populating;
+		}
+
 		const gitHubToken = GitHub.getToken();
+
+		const headers = {
+			accept: 'application/vnd.github.v3.json'
+		};
 
 		if(gitHubToken && gitHubToken.access_token)
 		{
-			headers.Authorization = `token ${gitHubToken.access_token}`;
+			headers.authorization = `token ${gitHubToken.access_token}`;
 		}
 
-		const url = this.args.url;
+		this.args.files = [];
 
-		fetch(url, {headers}).then(r => r.json()).then(files => {
-
-			if(!Array.isArray(files))
+		return this.populating = fetch(url, {headers}).then(r => r.json()).then(files => {
+			if(Array.isArray(files))
 			{
-				this.args.browser.window.args.content  = '';
-				// this.args.browser.window.args.filename = '';
-				this.args.browser.window.args.filename = files.name;
-				this.args.browser.window.args.content  = 'loading...';
+				this.dir = true;
 
-				if(files.download_url)
-				{
-					const url = files.download_url + (files.download_url.match(/\?/)
-						? '&t='
-						: '?t='
-					) + Date.now();
+				files.sort((a, b) => {
 
-					fetch(url).then(r => r.text()).then(body => {
+					if(a.type !== 'dir' && b.type !== 'dir')
+					{
+						return 0;
+					}
 
-						this.args.browser.window.args.content  = '';
-						this.args.browser.window.args.filename = '';
+					if(a.type !== 'dir')
+					{
+						return 1;
+					}
 
-						this.args.browser.window.args.meta     = files;
-						this.args.browser.window.args.content  = body;
+					if(b.type !== 'dir')
+					{
+						return -1;
+					}
+				});
 
-					});
-				}
+				files.map((file, key) => {
+					const name = file.name;
+
+					const img  = file.type === 'dir'
+						? '/w95/4-16-4bit.png'
+						: '/w95/60-16-4bit.png';
+
+					const folder = new Folder({
+						browser: this.args.browser
+						, url: file.url
+						, name
+						, icon: img
+						, file
+					}, this);
+
+					this.files[name] = folder;
+
+					this.onTimeout(key * 20, () => this.args.files.push(folder));
+
+				});
+
+				return files;
 			}
 
-			files.sort((a, b) => {
 
-				if(a.type !== 'dir' && b.type !== 'dir')
-				{
-					return 0;
-				}
+			this.dir = false;
 
-				if(a.type !== 'dir')
-				{
-					return 1;
-				}
-
-				if(b.type !== 'dir')
-				{
-					return -1;
-				}
-
-			});
-
-			this.args.files = [];
-
-			files.map((file, key) => {
-				const browser = this.args.browser;
-
-				const url  = file.url;
-				const name = file.name;
-				const icon = file.type === 'dir'
-					? '/w95/4-16-4bit.png'
-					: '/w95/60-16-4bit.png';
-
-				const folder = new Folder({browser, url, name, icon});
-
-				this.onTimeout(key * 15, ()=>{
-					this.args.files.push(folder);
-				});
-			});
-
-			this.args.icon = '/w95/5-16-4bit.png';
-			this.args.expanded = true;
 		});
 	}
 }

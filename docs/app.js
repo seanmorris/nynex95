@@ -5566,15 +5566,29 @@ var Folder = /*#__PURE__*/function (_View) {
     var _this;
 
     var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var parent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
     _classCallCheck(this, Folder);
 
-    _this = _super.call(this, args);
-    _this.args.expanded = false;
+    _this = _super.call(this, args, parent);
+    _this.files = {};
+    _this.args.expanded = args.expanded;
     _this.args.files = [];
-    _this.args.icon = args.icon || '/w95/4-16-4bit.png';
-    _this.args.name = args.name || 'Root';
-    _this.args.url = args.url || 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now(); // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+
+    if (args.file && args.file.type === 'file') {
+      _this.args.icon = '/w95/60-16-4bit.png';
+    } else {
+      _this.args.icon = '/w95/4-16-4bit.png';
+
+      if (_this.args.expanded) {
+        _this.args.icon = '/w95/5-16-4bit.png';
+      }
+    }
+
+    _this.args.name = args.name || '.';
+    _this.args.url = args.url || '';
+    _this.args.file = args.file || null; // this.args.url  = args.url  || 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now();
+    // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
     // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
 
     _this.template = require('./folder.tmp');
@@ -5586,63 +5600,79 @@ var Folder = /*#__PURE__*/function (_View) {
     value: function select(event, child) {
       var _this2 = this;
 
-      console.log(event);
-
       if (event) {
         event.stopImmediatePropagation();
         event.stopPropagation();
       }
 
-      var url = this.args.url;
-      var headers = {};
-
-      var gitHubToken = _GitHub.GitHub.getToken();
-
-      if (gitHubToken && gitHubToken.access_token) {
-        headers.Authorization = "token ".concat(gitHubToken.access_token);
-      }
-
-      fetch(url, {
-        headers: headers
-      }).then(function (r) {
-        return r.json();
-      }).then(function (files) {
-        console.log(files);
-
-        if (Array.isArray(files)) {
-          var icons = files.map(function (file, key) {
-            // const url  = file.url;
-            var name = file.name;
-            var img = file.type === 'dir' ? 4 : 60;
-
-            var action = function action() {
-              _this2.expand(event, file);
-            };
-
-            var icon = new _Icon.Icon({
-              icon: img,
-              name: name
-            });
-            return icon;
-          });
-          var iconList = new _Icons.Icons({
-            icons: icons
-          });
-          _this2.args.browser.window.args.filename = _this2.args.name + ' [directory]';
-          _this2.args.browser.window.args.control = iconList;
+      this.args.browser.current = this;
+      this.populate(this.args.url).then(function (files) {
+        if (!_this2.args.expanded) {
+          return;
         }
+
+        if (!Array.isArray(files)) {
+          return;
+        }
+
+        var iconList = new _Icons.Icons({}, _this2);
+        var icons = files.map(function (file, key) {
+          var name = file.name;
+
+          var action = function action() {
+            if (file.type === 'dir') {
+              if (_this2.files[name]) {
+                _this2.files[name].expand(event, child, true);
+
+                _this2.files[name].select();
+
+                return;
+              }
+            } else if (file.download_url) {
+              _this2.showControl(file);
+            }
+          };
+
+          var icon = new _Icon.Icon({
+            icon: file.type === 'dir' ? 4 : 60,
+            name: name,
+            action: action
+          });
+
+          _this2.onTimeout(key * 20, function () {
+            iconList.args.icons.push(icon);
+          });
+
+          return icon;
+        }); // iconList.args.icons = icons;
+
+        _this2.args.browser.window.args.filename = _this2.args.name;
+        _this2.args.browser.window.args.control = iconList;
       });
     }
   }, {
     key: "expand",
     value: function expand(event, child) {
-      var _this3 = this;
+      var open = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
-      console.log(event);
+      if (this.args.file && this.args.file.type === 'file') {
+        this.showControl(this.args.file);
+        return;
+      }
 
       if (event) {
         event.stopImmediatePropagation();
         event.stopPropagation();
+      }
+
+      if (open === true) {
+        this.args.expanded = true;
+        this.args.icon = '/w95/5-16-4bit.png';
+        return;
+      } else if (open === false) {
+        this.args.expanded = false;
+        this.args.icon = '/w95/4-16-4bit.png';
+        return;
       }
 
       if (this.args.expanded) {
@@ -5651,78 +5681,108 @@ var Folder = /*#__PURE__*/function (_View) {
         return;
       }
 
-      if (this.args.files.length) {
-        this.args.icon = '/w95/5-16-4bit.png';
-        this.args.expanded = true;
-        return;
-      }
+      this.args.icon = '/w95/5-16-4bit.png';
+      this.args.expanded = true;
+    }
+  }, {
+    key: "showControl",
+    value: function showControl(file) {
+      var _this3 = this;
 
-      var headers = {};
+      var name = file.name;
+      var type = name.split('.').pop();
+      this.args.browser.window.args.filename = '';
+      this.args.browser.window.args.content = 'loading...';
+      this.args.browser.window.args.url = url;
 
       var gitHubToken = _GitHub.GitHub.getToken();
 
-      if (gitHubToken && gitHubToken.access_token) {
-        headers.Authorization = "token ".concat(gitHubToken.access_token);
+      var headers = {};
+      var renderable = type === 'md' || type === 'html';
+
+      if (type === 'md') {
+        headers.Accept = 'application/vnd.github.v3.html+json';
       }
 
-      var url = this.args.url;
+      if (type === 'html') {
+        headers.Accept = 'application/vnd.github.v3.raw+json';
+      }
+
+      if (renderable && gitHubToken && gitHubToken.access_token) {// headers.Authorization = `token ${gitHubToken.access_token}`;
+      }
+
+      var url = renderable ? file.url : file.download_url;
+      console.log(type);
+      this.args.browser.window.args.url = url;
       fetch(url, {
+        headers: headers
+      }).then(function (r) {
+        return r.text();
+      }).then(function (body) {
+        _this3.args.browser.window.args.content = body;
+        _this3.args.browser.window.args.filename = file.name;
+      });
+    }
+  }, {
+    key: "populate",
+    value: function populate(url) {
+      var _this4 = this;
+
+      if (this.populating) {
+        return this.populating;
+      }
+
+      var gitHubToken = _GitHub.GitHub.getToken();
+
+      var headers = {
+        accept: 'application/vnd.github.v3.json'
+      };
+
+      if (gitHubToken && gitHubToken.access_token) {
+        headers.authorization = "token ".concat(gitHubToken.access_token);
+      }
+
+      this.args.files = [];
+      return this.populating = fetch(url, {
         headers: headers
       }).then(function (r) {
         return r.json();
       }).then(function (files) {
-        if (!Array.isArray(files)) {
-          _this3.args.browser.window.args.content = ''; // this.args.browser.window.args.filename = '';
+        if (Array.isArray(files)) {
+          _this4.dir = true;
+          files.sort(function (a, b) {
+            if (a.type !== 'dir' && b.type !== 'dir') {
+              return 0;
+            }
 
-          _this3.args.browser.window.args.filename = files.name;
-          _this3.args.browser.window.args.content = 'loading...';
+            if (a.type !== 'dir') {
+              return 1;
+            }
 
-          if (files.download_url) {
-            var _url = files.download_url + (files.download_url.match(/\?/) ? '&t=' : '?t=') + Date.now();
+            if (b.type !== 'dir') {
+              return -1;
+            }
+          });
+          files.map(function (file, key) {
+            var name = file.name;
+            var img = file.type === 'dir' ? '/w95/4-16-4bit.png' : '/w95/60-16-4bit.png';
+            var folder = new Folder({
+              browser: _this4.args.browser,
+              url: file.url,
+              name: name,
+              icon: img,
+              file: file
+            }, _this4);
+            _this4.files[name] = folder;
 
-            fetch(_url).then(function (r) {
-              return r.text();
-            }).then(function (body) {
-              _this3.args.browser.window.args.content = '';
-              _this3.args.browser.window.args.filename = '';
-              _this3.args.browser.window.args.meta = files;
-              _this3.args.browser.window.args.content = body;
+            _this4.onTimeout(key * 20, function () {
+              return _this4.args.files.push(folder);
             });
-          }
+          });
+          return files;
         }
 
-        files.sort(function (a, b) {
-          if (a.type !== 'dir' && b.type !== 'dir') {
-            return 0;
-          }
-
-          if (a.type !== 'dir') {
-            return 1;
-          }
-
-          if (b.type !== 'dir') {
-            return -1;
-          }
-        });
-        _this3.args.files = [];
-        files.map(function (file, key) {
-          var browser = _this3.args.browser;
-          var url = file.url;
-          var name = file.name;
-          var icon = file.type === 'dir' ? '/w95/4-16-4bit.png' : '/w95/60-16-4bit.png';
-          var folder = new Folder({
-            browser: browser,
-            url: url,
-            name: name,
-            icon: icon
-          });
-
-          _this3.onTimeout(key * 15, function () {
-            _this3.args.files.push(folder);
-          });
-        });
-        _this3.args.icon = '/w95/5-16-4bit.png';
-        _this3.args.expanded = true;
+        _this4.dir = false;
       });
     }
   }]);
@@ -5807,6 +5867,18 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
 
     _defineProperty(_assertThisInitialized(_this), "template", require('./main.tmp'));
 
+    _this.current = null;
+
+    _this.window.selectParent = function (event) {
+      if (!_this.current.parent || !(_this.current.parent instanceof _Folder.Folder)) {
+        return;
+      }
+
+      _this.current.parent.select();
+
+      _this.current.parent.expand(null, null, true);
+    };
+
     return _this;
   }
 
@@ -5819,11 +5891,13 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
       this.window.args.chars = '';
       this.window.classes['repo-browser'] = true;
       var folder = new _Folder.Folder({
-        browser: this
-      });
+        expanded: true,
+        browser: this,
+        url: 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now()
+      }, this.window);
       this.window.args.files = this.window.args.files || [];
       this.window.args.files.push(folder);
-      folder.expand();
+      folder.select();
       this.window.args.bindTo('filename', function (v) {
         var gitHubToken = _GitHub.GitHub.getToken();
 
@@ -5833,33 +5907,19 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
           _this2.window.args.control.remove();
         }
 
+        if (!v) {
+          return;
+        }
+
         _this2.window.args.filetype = filetype || '';
         _this2.window.args.chars = 0;
 
         switch (filetype) {
           case 'md':
+          case 'html':
             _this2.window.args.control = new _Html.Html({
-              srcdoc: 'loading...'
+              srcdoc: _this2.window.args.content
             }, _this2);
-            var url = _this2.window.args.meta.url + '&api=json&t=' + Date.now();
-            var headers = {
-              accept: 'application/vnd.github.v3.html+json'
-            };
-
-            if (gitHubToken) {
-              headers.Authorization = "token ".concat(gitHubToken.access_token);
-            }
-
-            console.log(headers);
-            fetch(url, {
-              headers: headers
-            }).then(function (r) {
-              return r.text();
-            }).then(function (r) {
-              return _this2.window.args.control.args.srcdoc = r;
-            })["catch"](function (error) {
-              return _this2.window.args.control.args.srcdoc = error;
-            });
             break;
 
           case 'ico':
@@ -5869,14 +5929,14 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
           case 'jpeg':
           case 'webp':
             _this2.window.args.control = new _Image.Image({
-              src: _this2.window.args.meta.download_url
+              src: _this2.window.args.url
             }, _this2);
             break;
 
           case 'json':
             _this2.window.args.control = new _Json.Json({
               expanded: 'expanded',
-              tree: JSON.parse(_this2.window.args.content)
+              tree: _this2.window.args.content ? JSON.parse(_this2.window.args.content) : []
             }, _this2);
             break;
 
@@ -5890,9 +5950,6 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
         _this2.window.args.chars = (_this2.window.args.content || '').length;
       });
     }
-  }, {
-    key: "expand",
-    value: function expand(event, child) {}
   }]);
 
   return RepoBrowser;
@@ -5902,11 +5959,11 @@ exports.RepoBrowser = RepoBrowser;
 });
 
 ;require.register("apps/repoBrowser/folder.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:select(event, file);dblclick:expand(event, file)\" tabindex=\"0\">\n\t\t<img src = \"[[icon]]\" loading=lazy />\n\t\t<label>[[name]]</label>\n\t</span>\n\t<span cv-if = \"expanded\">\n\t\t<div class = \"sub\" cv-each = \"files:file:f\">\n\t\t\t[[file]]\n\t\t</div>\n\t</span>\n</div>\n"
+module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:select(event, file);dblclick:expand(event, file);\" tabindex=\"0\" cv-ref = \"focus::\">\n\t\t<img src = \"[[icon]]\" loading=lazy />\n\t\t<label>[[name]]</label>\n\t</span>\n\t<span cv-if = \"expanded\">\n\t\t<div class = \"sub\" cv-each = \"files:file:f\">\n\t\t\t[[file]]\n\t\t</div>\n\t</span>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"inset treeview\">\n\t\t<div class = \"resize\">[[file]]</div>\n\t</div>\n\t<div class = \"frame rows inset content\">\n\t\t<div class = \"pane\">File: [[filename]]</div>\n\t\t[[control]]\n\t</div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\">type: [[filetype]] size: [[chars]]</div>\n</div>\n"
+module.exports = "<div class = \"frame cols liquid\">\n\t<div cv-each = \"files:file:f\" class = \"inset treeview\">\n\t\t<div class = \"resize\">[[file]]</div>\n\t</div>\n\t<div class = \"frame rows inset content\">\n\t\t<div class = \"row tight scroll-header\">\n\t\t\t<button cv-on = \"click:selectParent(event);\" class = \"tight\">\n\t\t\t\t<img src = \"/ui/dir-up.png\" />\n\t\t\t</button>\n\t\t\t<label class = \"pane wide left-align\">File: [[filename]]</label>\n\t\t</div>\n\t\t[[control]]\n\t</div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\">type: [[filetype]] size: [[chars]]</div>\n</div>\n"
 });
 
 ;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {
@@ -6089,6 +6146,7 @@ var Icons = /*#__PURE__*/function (_View) {
     _classCallCheck(this, Icons);
 
     _this = _super.call(this, args, parent);
+    _this.args.icons = args.icons || [];
     _this.template = require('./icons.tmp');
     return _this;
   }
@@ -6345,7 +6403,7 @@ module.exports = "<div class = \"html-control main-content\">\n\t<iframe\n\t\tcl
 });
 
 ;require.register("control/icons.tmp.html", function(exports, require, module) {
-module.exports = "<div data-role=\"icon-list\" cv-each = \"icons:icon:i\">[[icon]]</div>\n"
+module.exports = "<div class = \"icon-control main-area white\" data-role=\"icon-list\" cv-each = \"icons:icon:i\">[[icon]]</div>\n"
 });
 
 ;require.register("control/image.tmp.html", function(exports, require, module) {
@@ -6357,7 +6415,7 @@ module.exports = "<div class = \"json-view [[topLevel]]\"> <span cv-on = \"click
 });
 
 ;require.register("control/plaintext.tmp.html", function(exports, require, module) {
-module.exports = "<pre class = \"plaintext-control white inset main-content\">[[content]]</pre>\n"
+module.exports = "<pre class = \"plaintext-control white main-content\">[[content]]</pre>\n"
 });
 
 ;require.register("desktop/Desktop.js", function(exports, require, module) {

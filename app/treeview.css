@@ -3,7 +3,6 @@
 
 .treeview,
 .treeview label {
-	padding: 0.125em;
 	display: block;
 	/*flex-wrap: wrap;*/
 	background-color: white;
@@ -67,6 +66,16 @@
 	align-items: center;
 }
 
+.treeview .folder > span > img {
+	padding: 0.25em;
+}
+
 .treeview .folder .sub {
 	margin-left: 1em;
+}
+
+.treeview span:focus,
+.treeview span:focus label{
+	background-color: #000082;
+	color: white;
 }

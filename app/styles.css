@@ -152,6 +152,10 @@ button {
 	min-width: 120px;
 }
 
+.window button.tight {
+	min-width: initial;
+}
+
 button:active {
 	outline-offset: -5px;
 	border-image: url(/border-depressed.png) 2 3 3 2 fill;
@@ -234,6 +238,10 @@ label.icon-frame label {
 .repo-browser .treeview .content {
 	/*display: flex;
 	flex: 1;*/
+}
+
+.repo-browser .treeview > .resize > .folder {
+	min-width: 6em;
 }
 
 .repo-browser .treeview .resize {
@@ -326,4 +334,14 @@ label.icon-frame label {
 .phpEditor textarea {
 	resize: vertical;
 	align-self: stretch;
+}
+
+.scroll-header {
+	position: sticky;
+	top: 0px;
+}
+
+.left-align {
+	text-align: left;
+	align-items: flex-start;
 }
