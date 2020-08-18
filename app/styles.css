@@ -308,7 +308,7 @@ label.icon-frame label {
 	color: white;
 }
 
-.wide {
+.wide:not(td):not(th) {
 	display: flex;
 	flex-grow: 1;
 }

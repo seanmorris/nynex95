@@ -14,7 +14,7 @@ console.log(SimpleMDE);
 export class Nynemark extends Task
 {
 	title    = 'Nynemark 95';
-	icon     = '/w95/60-16-4bit.png';
+	icon     = '/w98/document-32-4bit.png';
 	template = require('./main.tmp');
 
 	constructor(taskList)

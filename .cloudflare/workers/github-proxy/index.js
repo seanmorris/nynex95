@@ -29,12 +29,12 @@ async function handleRequest(request) {
 		headers.set('Access-Control-Allow-Origin', '*');
 		headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
-		const rawBody = responseText.replace(/api\.github\.com/g, originalUrl.host);
+		const rawBody = responseText.replace(/api\.github\.com/g, originalUrl.host + '/github-proxy');
 
 		if(originalUrl.searchParams.get('api') == 'json-async')
 		{
-			headers.set('Content-Type',  'text/event-stream');
 			headers.set('Cache-Control', 'no-cache');
+			headers.set('Content-Type',  'text/event-stream');
 			headers.set('Connection',    'keep-alive');
 
 			const { readable, writable } = new TransformStream();

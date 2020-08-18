@@ -69,11 +69,21 @@ export class NpmUnpkgr extends Task
 				this.window.args.icons = results.map((packageData, index)=>{
 
 					return new Icon({
-						icon: 62, size: 32, name: packageData.name
+						icon: 'file_gears'
+						, size: 48
+						, path: 'w98'
+						, name: packageData.name
 						, action: () => Object.assign(this.window.args, packageData)
 					});
 
 				});
+
+				this.window.args.icons.push(new Icon({
+					path: 'w98'
+					, size: 48
+					, icon: 'directory_program_group'
+					, name: 'more'
+				}))
 
 			});
 

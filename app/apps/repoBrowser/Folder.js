@@ -108,7 +108,6 @@ export class Folder extends View
 				this.onTimeout(key * 15, ()=>{
 					this.args.files.push(folder);
 				});
-
 			});
 
 			this.args.icon = '/w95/5-16-4bit.png';

@@ -33,7 +33,8 @@ export class Desktop extends View
 			, new Icon({
 				action: '/apps/nynemark'
 				, name: 'Nynemark'
-				, icon: 60
+				, icon: 'document'
+				, path: 'w98'
 			})
 			, new Icon({
 				action: '/apps/window'

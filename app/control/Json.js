@@ -11,8 +11,13 @@ let Base = class extends View
 
 		this.template  = require('./json.tmp');
 
-		this.args.expandIcon = '+';
-		this.args.expanded   = args.expanded || 'expanded';
+		this.args.expanded   = args.expanded === undefined
+			? 'expanded'
+			: '';
+
+		this.args.expandIcon = this.args.expanded
+			? '+'
+			: 'x';
 
 		this.args.tree = this.args.tree || {};
 		this.args.json = this.args.json || {};
@@ -27,11 +32,17 @@ let Base = class extends View
 				return;
 			}
 
+			console.log(v);
+
 			for(const i in v)
 			{
 				if(typeof v[i] === 'object')
 				{
-					this.args.json[i] = new Json({}, this);
+					this.args.json[i] = new Json({expanded: ''}, this);
+				}
+				else
+				{
+					this.args.json[i] = v[i];
 				}
 			}
 		});
@@ -39,21 +50,18 @@ let Base = class extends View
 		if(!this.parent || !(this.parent instanceof Json))
 		{
 			this.args.topLevel = 'top-level main-content';
+
+			this.expand();
 		}
 	}
 
-	expand(event, key)
+	expand(event, key = null)
 	{
-		if(key)
+		if(key !== null)
 		{
 			if(!this.args.tree[key])
 			{
 				return;
-			}
-
-			if(!this.args.tree[key].args.tree)
-			{
-				this.args.json[key].args.tree = this.args.tree[key];
 			}
 
 			if(typeof this.args.tree[key] !== 'object')
@@ -61,7 +69,11 @@ let Base = class extends View
 				return;
 			}
 
-			this.args.tree[key].expand(event);
+			let count = 0;
+
+			this.args.json[key].args.tree = this.args.tree[key];
+
+			this.args.json[key].expand(event);
 
 			return;
 		}
