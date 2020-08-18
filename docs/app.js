@@ -682,7 +682,7 @@ var Bindable = /*#__PURE__*/function () {
       };
 
       var get = function get(target, key) {
-        if (key === Ref || key === 'isBound') {
+        if (key === Ref || key === 'isBound' || key === 'bindTo') {
           return target[key];
         }
 
@@ -865,7 +865,9 @@ var Bindable = /*#__PURE__*/function () {
     key: "wrapIdleCallback",
     value: function wrapIdleCallback(callback) {
       return function (v, k, t, d, p) {
-        requestIdleCallback(function () {
+        // Compatibility for Safari 08/2020
+        var req = window.requestIdleCallback || requestAnimationFrame;
+        req(function () {
           return callback(v, k, t, d, p);
         });
       };
@@ -2232,7 +2234,10 @@ var View = /*#__PURE__*/function () {
           return;
         }
 
-        callback(Date.now());
+        if (!_this3.paused) {
+          callback(Date.now());
+        }
+
         requestAnimationFrame(c);
       };
 
@@ -4801,6 +4806,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.GitHub = void 0;
 
+var _Icon = require("../../icon/Icon");
+
+var _Home = require("../../home/Home");
+
 var _Task2 = require("../../task/Task");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -4849,6 +4858,8 @@ var GitHub = /*#__PURE__*/function (_Task) {
 
     _defineProperty(_assertThisInitialized(_this), "title", 'GitHub Login');
 
+    _defineProperty(_assertThisInitialized(_this), "template", require('./main.tmp'));
+
     return _this;
   }
 
@@ -4858,24 +4869,52 @@ var GitHub = /*#__PURE__*/function (_Task) {
       var _this2 = this;
 
       var state = Math.random().toString(36);
-      return new Promise(function () {
-        _this2.loginWindow = window.open('https://github.com/login/oauth/authorize' + '?redirect_uri=https://nynex.unholysh.it/github-auth/accept' + '&client_id=7150d20fb5a11fe1d332' + '&scope=public_repo' + '&state=' + state, "github-login-".concat(_this2.tid), "left=100,top=100,width=750,height=500,resizable=0,scrollbars=0,location=0,menubar=0,toolbar=0,status=0");
-        window.addEventListener('message', function (event) {
-          console.log(event.data);
-          GitHub.setToken(event.data);
 
-          _this2.loginWindow.close();
-        }, false);
+      var messageListener = function messageListener(event) {
+        GitHub.setToken(event.data);
+        var token = GitHub.getToken();
+        console.log(token);
 
-        var loop = _this2.window.onInterval(100, function () {
-          if (!_this2.loginWindow.closed) {
-            return;
-          }
+        if (token.access_token) {
+          _this2.trayIcon = _this2.trayIcon || new _Icon.Icon({
+            icon: 'github',
+            path: 'apps',
+            bits: 1,
+            size: 16,
+            action: function action() {
+              GitHub.setToken('{}');
 
-          clearInterval(loop);
+              _Home.Home.instance().tray.remove(_this2.trayIcon);
+            }
+          });
 
-          _this2.window.close();
+          _Home.Home.instance().tray.add(_this2.trayIcon);
+
+          _this2.trayIcon.flicker();
+        } else {}
+
+        _this2.loginWindow.close();
+      };
+
+      return new Promise(function (accept, reject) {
+        _this2.window.onTimeout(1500, function () {
+          _this2.loginWindow = window.open('https://github.com/login/oauth/authorize' + '?redirect_uri=https://nynex.unholysh.it/github-auth/accept' + '&client_id=7150d20fb5a11fe1d332' + '&scope=public_repo' + '&state=' + state, "github-login-".concat(_this2.tid), "left=100,top=100,width=750,height=500,resizable=0,scrollbars=0,location=0,menubar=0,toolbar=0,status=0");
+          window.addEventListener('message', messageListener, false);
+
+          var loop = _this2.window.onInterval(100, function () {
+            if (!_this2.loginWindow.closed) {
+              return;
+            }
+
+            clearInterval(loop);
+
+            _this2.window.close();
+
+            accept();
+          });
         });
+      })["finally"](function () {
+        window.removeEventListener('message', messageListener, false);
       });
     }
   }, {
@@ -4907,6 +4946,10 @@ var GitHub = /*#__PURE__*/function (_Task) {
 }(_Task2.Task);
 
 exports.GitHub = GitHub;
+});
+
+;require.register("apps/gitHub/main.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \" liquid inset main-content image-control\">\n\t<img src = \"/loading.gif\" />\n\tLogging into github...\n</div>\n"
 });
 
 ;require.register("apps/iconExplorer/IconExplorer.js", function(exports, require, module) {
@@ -5448,7 +5491,7 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
       });
     };
 
-    _this.window.args.input = "<?php\n\nclass HelloWorld\n{\n    public function __toString()\n    {\n        return \"Hello, world!\";\n    }\n}\n\nprint new HelloWorld;";
+    _this.window.args.input = "<?php\n\nclass HelloWorld\n{\n    public function __toString()\n    {\n        return \"Hello, world!\";\n    }\n}\n\nprint new HelloWorld;\n\n//phpinfo();\n";
     return _possibleConstructorReturn(_this, _Bindable.Bindable.make(_assertThisInitialized(_this)));
   }
 
@@ -5471,7 +5514,7 @@ exports.PhpEditor = PhpEditor;
 });
 
 ;require.register("apps/phpEditor/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame liquid\">\n\t<textarea spellcheck=\"false\" cv-bind = \"input\" class = \"inset liquid\"></textarea>\n</div>\n\n<div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div>\n\n<div class = \"row\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
+module.exports = "<div class = \"row tight inset\">\n\t<textarea rows = \"14\" spellcheck=\"false\" cv-bind = \"input\" class = \"wide\"></textarea>\n</div>\n\n<div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div>\n\n<div class = \"row inset\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/Folder.js", function(exports, require, module) {
@@ -5487,6 +5530,10 @@ var _View2 = require("curvature/base/View");
 var _Bindable = require("curvature/base/Bindable");
 
 var _GitHub = require("../gitHub/GitHub");
+
+var _Icon = require("../../icon/Icon");
+
+var _Icons = require("../../control/Icons");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -5535,9 +5582,68 @@ var Folder = /*#__PURE__*/function (_View) {
   }
 
   _createClass(Folder, [{
+    key: "select",
+    value: function select(event, child) {
+      var _this2 = this;
+
+      console.log(event);
+
+      if (event) {
+        event.stopImmediatePropagation();
+        event.stopPropagation();
+      }
+
+      var url = this.args.url;
+      var headers = {};
+
+      var gitHubToken = _GitHub.GitHub.getToken();
+
+      if (gitHubToken && gitHubToken.access_token) {
+        headers.Authorization = "token ".concat(gitHubToken.access_token);
+      }
+
+      fetch(url, {
+        headers: headers
+      }).then(function (r) {
+        return r.json();
+      }).then(function (files) {
+        console.log(files);
+
+        if (Array.isArray(files)) {
+          var icons = files.map(function (file, key) {
+            // const url  = file.url;
+            var name = file.name;
+            var img = file.type === 'dir' ? 4 : 60;
+
+            var action = function action() {
+              _this2.expand(event, file);
+            };
+
+            var icon = new _Icon.Icon({
+              icon: img,
+              name: name
+            });
+            return icon;
+          });
+          var iconList = new _Icons.Icons({
+            icons: icons
+          });
+          _this2.args.browser.window.args.filename = _this2.args.name + ' [directory]';
+          _this2.args.browser.window.args.control = iconList;
+        }
+      });
+    }
+  }, {
     key: "expand",
     value: function expand(event, child) {
-      var _this2 = this;
+      var _this3 = this;
+
+      console.log(event);
+
+      if (event) {
+        event.stopImmediatePropagation();
+        event.stopPropagation();
+      }
 
       if (this.args.expanded) {
         this.args.icon = '/w95/4-16-4bit.png';
@@ -5566,22 +5672,23 @@ var Folder = /*#__PURE__*/function (_View) {
         return r.json();
       }).then(function (files) {
         if (!Array.isArray(files)) {
-          _this2.args.browser.window.args.content = '';
-          _this2.args.browser.window.args.filename = '';
-          _this2.args.browser.window.args.content = 'loading...';
+          _this3.args.browser.window.args.content = ''; // this.args.browser.window.args.filename = '';
 
-          var _url = files.download_url + (files.download_url.match(/\?/) ? '&t=' : '?t=') + Date.now();
+          _this3.args.browser.window.args.filename = files.name;
+          _this3.args.browser.window.args.content = 'loading...';
 
-          fetch(_url).then(function (r) {
-            return r.text();
-          }).then(function (body) {
-            _this2.args.browser.window.args.content = '';
-            _this2.args.browser.window.args.filename = '';
-            _this2.args.browser.window.args.meta = files;
-            _this2.args.browser.window.args.content = body;
-            _this2.args.browser.window.args.filename = files.name;
-          });
-          return;
+          if (files.download_url) {
+            var _url = files.download_url + (files.download_url.match(/\?/) ? '&t=' : '?t=') + Date.now();
+
+            fetch(_url).then(function (r) {
+              return r.text();
+            }).then(function (body) {
+              _this3.args.browser.window.args.content = '';
+              _this3.args.browser.window.args.filename = '';
+              _this3.args.browser.window.args.meta = files;
+              _this3.args.browser.window.args.content = body;
+            });
+          }
         }
 
         files.sort(function (a, b) {
@@ -5597,9 +5704,9 @@ var Folder = /*#__PURE__*/function (_View) {
             return -1;
           }
         });
-        _this2.args.files = [];
+        _this3.args.files = [];
         files.map(function (file, key) {
-          var browser = _this2.args.browser;
+          var browser = _this3.args.browser;
           var url = file.url;
           var name = file.name;
           var icon = file.type === 'dir' ? '/w95/4-16-4bit.png' : '/w95/60-16-4bit.png';
@@ -5610,12 +5717,12 @@ var Folder = /*#__PURE__*/function (_View) {
             icon: icon
           });
 
-          _this2.onTimeout(key * 15, function () {
-            _this2.args.files.push(folder);
+          _this3.onTimeout(key * 15, function () {
+            _this3.args.files.push(folder);
           });
         });
-        _this2.args.icon = '/w95/5-16-4bit.png';
-        _this2.args.expanded = true;
+        _this3.args.icon = '/w95/5-16-4bit.png';
+        _this3.args.expanded = true;
       });
     }
   }]);
@@ -5647,6 +5754,8 @@ var _Bindable = require("curvature/base/Bindable");
 var _GitHub = require("../gitHub/GitHub");
 
 var _Folder = require("./Folder");
+
+var _Icons = require("../../control/Icons");
 
 var _Html = require("../../control/Html");
 
@@ -5793,7 +5902,7 @@ exports.RepoBrowser = RepoBrowser;
 });
 
 ;require.register("apps/repoBrowser/folder.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event, file)\" tabindex=\"0\">\n\t\t<img src = \"[[icon]]\" loading=lazy />\n\t\t<label>[[name]]</label>\n\t</span>\n\t<span cv-if = \"expanded\">\n\t\t<div class = \"sub\" cv-each = \"files:file:f\">\n\t\t\t[[file]]\n\t\t</div>\n\t</span>\n</div>\n"
+module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:select(event, file);dblclick:expand(event, file)\" tabindex=\"0\">\n\t\t<img src = \"[[icon]]\" loading=lazy />\n\t\t<label>[[name]]</label>\n\t</span>\n\t<span cv-if = \"expanded\">\n\t\t<div class = \"sub\" cv-each = \"files:file:f\">\n\t\t\t[[file]]\n\t\t</div>\n\t</span>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
@@ -5939,6 +6048,57 @@ var Html = /*#__PURE__*/function (_View) {
 exports.Html = Html;
 });
 
+;require.register("control/Icons.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Icons = void 0;
+
+var _View2 = require("curvature/base/View");
+
+var _Home = require("../home/Home");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Icons = /*#__PURE__*/function (_View) {
+  _inherits(Icons, _View);
+
+  var _super = _createSuper(Icons);
+
+  function Icons(args, parent) {
+    var _this;
+
+    _classCallCheck(this, Icons);
+
+    _this = _super.call(this, args, parent);
+    _this.template = require('./icons.tmp');
+    return _this;
+  }
+
+  return Icons;
+}(_View2.View);
+
+exports.Icons = Icons;
+});
+
 ;require.register("control/Image.js", function(exports, require, module) {
 "use strict";
 
@@ -6038,6 +6198,8 @@ var Base = /*#__PURE__*/function (_View) {
 
     _this = _super.call(this, args, parent);
     _this.template = require('./json.tmp');
+    _this.args.openBracket = '{';
+    _this.args.closeBracket = '}';
     _this.args.expanded = args.expanded === undefined ? 'expanded' : '';
     _this.args.expandIcon = _this.args.expanded ? '+' : 'x';
     _this.args.tree = _this.args.tree || {};
@@ -6055,7 +6217,10 @@ var Base = /*#__PURE__*/function (_View) {
           return;
         }
 
-        console.log(v);
+        if (Array.isArray(v)) {
+          _this2.args.openBracket = '[';
+          _this2.args.closeBracket = ']';
+        }
 
         for (var i in v) {
           if (_typeof(v[i]) === 'object') {
@@ -6179,12 +6344,16 @@ exports.Plaintext = Plaintext;
 module.exports = "<div class = \"html-control main-content\">\n\t<iframe\n\t\tclass = \"inset white\"\n\t\tsrcdoc = \"[[srcdoc]]\"></iframe>\n</div>\n"
 });
 
+;require.register("control/icons.tmp.html", function(exports, require, module) {
+module.exports = "<div data-role=\"icon-list\" cv-each = \"icons:icon:i\">[[icon]]</div>\n"
+});
+
 ;require.register("control/image.tmp.html", function(exports, require, module) {
 module.exports = "<div class = \"image-control main-content\">\n\t<img class = \"inset white padded\" cv-attr = \"src:src\" />\n</div>\n\n"
 });
 
 ;require.register("control/json.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"json-view [[topLevel]]\"> <span cv-on = \"click:expand(event)\" cv-bind = \"expandIcon\"></span> {\n\t<div class = \"[[expanded]]\">\n\t\t<div class = \"json-view-body\" cv-each = \"json:value:key\">\n\t\t\t<div data-type = [[value|type]]>\n\t\t\t\t<span class =\"json-key\" cv-on = \"click:expand(event, key)\">\n\t\t\t\t\t<span>[[key]]</span>:\n\t\t\t\t</span>\n\t\t\t\t<span class =\"json-value\">\n\t\t\t\t\t[[value]]\n\t\t\t\t</span>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t}\n</div>\n"
+module.exports = "<div class = \"json-view [[topLevel]]\"> <span cv-on = \"click:expand(event)\"><u cv-if = \"topLevel\">&nbsp;</u> [[expandIcon]]</span> [[openBracket]]\n\t<div class = \"[[expanded]]\">\n\t\t<div class = \"json-view-body\" cv-each = \"json:value:key\">\n\t\t\t<div data-type = [[value|type]]>\n\t\t\t\t<span class =\"json-key\" cv-on = \"click:expand(event, key)\">\n\t\t\t\t\t<span>[[key]]</span>:\n\t\t\t\t</span>\n\t\t\t\t<span class =\"json-value\">\n\t\t\t\t\t[[value]]\n\t\t\t\t</span>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t[[closeBracket]]\n</div>\n"
 });
 
 ;require.register("control/plaintext.tmp.html", function(exports, require, module) {
@@ -6270,8 +6439,6 @@ var Desktop = /*#__PURE__*/function (_View) {
       name: 'Task Manager',
       icon: 61
     })];
-
-    http: //localhost:3333/w95/60-16-4bit.png
     _this.args.endIcons = [new _Icon.Icon({
       action: '/apps/nynex-help',
       name: 'What\'s Nynex?',
@@ -6310,7 +6477,6 @@ var Desktop = /*#__PURE__*/function (_View) {
     // 	// console.log(this.windows.list);
     // });
     // this.args.windows = this.windows.list;
-
 
     return _this;
   }
@@ -6429,6 +6595,8 @@ var Home = /*#__PURE__*/function (_View) {
       y: 50
     };
     _this.args.desktop = new _Desktop.Desktop({}, _assertThisInitialized(_this));
+    _this.tasks = new _Bag.Bag();
+    _this.tray = new _Bag.Bag();
     _this.windows = new _Bag.Bag(function (i, s, a) {
       if (a !== _Bag.Bag.ITEM_ADDED) {
         return;
@@ -6441,15 +6609,16 @@ var Home = /*#__PURE__*/function (_View) {
       _this.open.y += 80;
       _this.open.x %= window.innerWidth;
       _this.open.y %= window.innerHeight - 128;
-    });
-    _this.tasks = new _Bag.Bag(); // this.windows.type = Window;
+    }); // this.windows.type = Window;
     // this.tasks.type   = Task;
 
     var taskBar = new _TaskBar.TaskBar({
-      tasks: _this.tasks.list
+      tasks: _this.tasks.list,
+      tray: _this.tray.list
     });
-    _this.args.windows = _this.windows.list;
-    _this.args.tasks = _this.tasks.list;
+    _this.args.windows = _this.windows.list; // this.args.tasks    = this.tasks.list;
+    // this.args.tray     = this.tray.list;
+
     _this.args.taskBar = taskBar;
     return _this;
   }
@@ -6566,6 +6735,7 @@ var Icon = /*#__PURE__*/function (_View) {
       idle: 1
     });
 
+    _this.args.blinking = '';
     return _this;
   }
 
@@ -6584,6 +6754,47 @@ var Icon = /*#__PURE__*/function (_View) {
           break;
       }
     }
+  }, {
+    key: "blink",
+    value: function blink() {
+      var _this2 = this;
+
+      this.args.blinking = 'blinking';
+      this.onTimeout(100, function () {
+        _this2.args.blinking = '';
+      });
+    }
+  }, {
+    key: "flicker",
+    value: function flicker() {
+      var _this3 = this;
+
+      this.args.blinking = 'blinking';
+      var flickerSlow = this.onInterval(50, function () {
+        _this3.args.blinking = _this3.args.blinking ? '' : 'blinking';
+      });
+      this.onTimeout(250, function () {
+        clearInterval(flickerSlow);
+        _this3.args.blinking = '';
+
+        var flickerFast = _this3.onInterval(25, function () {
+          _this3.args.blinking = _this3.args.blinking ? '' : 'blinking';
+        });
+
+        _this3.onTimeout(250, function () {
+          clearInterval(flickerFast);
+          _this3.args.blinking = '';
+
+          var flickerFrame = _this3.onFrame(function () {
+            _this3.args.blinking = _this3.args.blinking ? '' : 'blinking';
+          });
+
+          _this3.onTimeout(500, function () {
+            flickerFrame();
+          });
+        });
+      });
+    }
   }]);
 
   return Icon;
@@ -6593,7 +6804,7 @@ exports.Icon = Icon;
 });
 
 ;require.register("icon/icon.tmp.html", function(exports, require, module) {
-module.exports = "<div cv-on = \":dblclick(event):c\" tabindex=\"0\">\n\t<img cv-attr = \"src:src\" />\n\t<label>[[name]]</label>\n</div>\n"
+module.exports = "<div class = \"[[blinking]]\" cv-on = \"click:blink(event);:dblclick(event):c;\" tabindex=\"0\">\n\t<img cv-attr = \"src:src\" />\n\t<label>[[name]]</label>\n</div>\n"
 });
 
 ;require.register("initialize.js", function(exports, require, module) {
@@ -7145,7 +7356,7 @@ exports.TaskBar = TaskBar;
 });
 
 ;require.register("task/taskBar.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"task-bar pane\">\n\t<div class = \"start\">\n\t\t<button>\n\t\t\t<img class = \"icon16\" src = \"/w98/windows-16-4bit.png\" />\n\t\t\t<div>Start</div>\n\t\t</button>\n\t\t<div class = \"pane\">\n\t\t\t<div class = \"brand-stripe\">\n\t\t\t\t<img src = \"/nynex95-logo.svg\">\n\t\t\t</div>\n\t\t\t<ul>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/20-32-4bit.png\" />\n\t\t\t\t\t<label tabindex = \"0\">Programs</label>\n\t\t\t\t\t<img class = \"expand\" src = \"/arrow-expand.png\" />\n\n\t\t\t\t\t<ul class = \"pane\">\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tAccessories\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tGames\n\t\t\t\t\t\t\t<ul class = \"pane\">\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Foo</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Bar</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Baz</li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tStartup\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t</ul>\n\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/21-32-4bit.png\" />\n\t\t\t\t\tDocuments\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/22-32-4bit.png\" />\n\t\t\t\t\tSettings\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/23-32-4bit.png\" />\n\t\t\t\t\tFind\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/24-32-4bit.png\" />\n\t\t\t\t\tHelp\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/25-32-4bit.png\" />\n\t\t\t\t\tRun...\n\t\t\t\t</li>\n\t\t\t\t<hr />\n\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/28-32-4bit.png\" />\n\t\t\t\t\tShutdown...\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\n\t<div class = \"quickstart\">\n\t</div>\n\n\t<div class = \"task-list\" data-count = \"[[taskCount]]\" cv-each = \"tasks:task:t\">\n\t\t<button cv-on = \"click:activate(event,task);dblclick:doubleTap(event,task);\">\n\t\t\t<img class = \"icon16\" cv-attr = \"src:task.icon\" />\n\t\t\t[[task.title]]\n\t\t</button>\n\t</div>\n\n\t<div class = \"spacer\">\n\t</div>\n\n\t<div class = \"tray inset\">\n\t\t[[hh]]:[[mm]]:[[ss]]\n\t</div>\n</div>\n"
+module.exports = "<div class = \"task-bar pane\">\n\t<div class = \"start\">\n\t\t<button>\n\t\t\t<img class = \"icon16\" src = \"/w98/windows-16-4bit.png\" />\n\t\t\t<div>Start</div>\n\t\t</button>\n\t\t<div class = \"pane\">\n\t\t\t<div class = \"brand-stripe\">\n\t\t\t\t<img src = \"/nynex95-logo.svg\">\n\t\t\t</div>\n\t\t\t<ul>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/20-32-4bit.png\" />\n\t\t\t\t\t<label tabindex = \"0\">Programs</label>\n\t\t\t\t\t<img class = \"expand\" src = \"/arrow-expand.png\" />\n\n\t\t\t\t\t<ul class = \"pane\">\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tAccessories\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tGames\n\t\t\t\t\t\t\t<ul class = \"pane\">\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Foo</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Bar</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Baz</li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tStartup\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t</ul>\n\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/21-32-4bit.png\" />\n\t\t\t\t\tDocuments\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/22-32-4bit.png\" />\n\t\t\t\t\tSettings\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/23-32-4bit.png\" />\n\t\t\t\t\tFind\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/24-32-4bit.png\" />\n\t\t\t\t\tHelp\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/25-32-4bit.png\" />\n\t\t\t\t\tRun...\n\t\t\t\t</li>\n\t\t\t\t<hr />\n\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/28-32-4bit.png\" />\n\t\t\t\t\tShutdown...\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\n\t<div class = \"quickstart\">\n\t</div>\n\n\t<div class = \"task-list\" data-count = \"[[taskCount]]\" cv-each = \"tasks:task:t\">\n\t\t<button cv-on = \"click:activate(event,task);dblclick:doubleTap(event,task);\">\n\t\t\t<img class = \"icon16\" cv-attr = \"src:task.icon\" />\n\t\t\t[[task.title]]\n\t\t</button>\n\t</div>\n\n\t<div class = \"spacer\">\n\t</div>\n\n\t<div class = \"tray inset\">\n\t\t<div data-role=\"icon-list\" class = \"tray tight\" cv-each = \"tray:trayItem:t\">\n\t\t\t[[trayItem]]\n\t\t</div>\n\t\t[[hh]]:[[mm]]:[[ss]]\n\t</div>\n</div>\n"
 });
 
 ;require.register("window/MenuBar.js", function(exports, require, module) {

@@ -276,6 +276,7 @@ label.icon-frame label {
 }
 
 .image-control.main-content img {
+	padding: 1em;
 }
 
 .plaintext-control {
@@ -320,4 +321,9 @@ label.icon-frame label {
 
 .row.tight > * {
 	margin: 0px;
+}
+
+.phpEditor textarea {
+	resize: vertical;
+	align-self: stretch;
 }

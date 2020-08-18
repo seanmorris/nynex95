@@ -52,6 +52,8 @@ export class Home extends View
 
 		this.args.desktop = new Desktop({}, this);
 
+		this.tasks   = new Bag();
+		this.tray    = new Bag();
 		this.windows = new Bag((i,s,a) => {
 
 			if(a !== Bag.ITEM_ADDED)
@@ -71,15 +73,18 @@ export class Home extends View
 			this.open.y %= (window.innerHeight - 128);
 		});
 
-		this.tasks   = new Bag();
 
 		// this.windows.type = Window;
 		// this.tasks.type   = Task;
 
-		const taskBar = new TaskBar({tasks: this.tasks.list});
+		const taskBar = new TaskBar({
+			tasks:  this.tasks.list
+			, tray: this.tray.list
+		});
 
 		this.args.windows  = this.windows.list;
-		this.args.tasks    = this.tasks.list;
+		// this.args.tasks    = this.tasks.list;
+		// this.args.tray     = this.tray.list;
 
 		this.args.taskBar  = taskBar;
 	}

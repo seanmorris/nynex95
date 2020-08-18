@@ -47,7 +47,7 @@ export class Desktop extends View
 				, icon: 61
 			})
 		];
-http://localhost:3333/w95/60-16-4bit.png
+
 		this.args.endIcons = [
 			new Icon({
 				action: '/apps/nynex-help'

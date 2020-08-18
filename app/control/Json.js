@@ -11,6 +11,9 @@ let Base = class extends View
 
 		this.template  = require('./json.tmp');
 
+		this.args.openBracket  = '{';
+		this.args.closeBracket = '}';
+
 		this.args.expanded   = args.expanded === undefined
 			? 'expanded'
 			: '';
@@ -32,7 +35,11 @@ let Base = class extends View
 				return;
 			}
 
-			console.log(v);
+			if(Array.isArray(v))
+			{
+				this.args.openBracket  = '[';
+				this.args.closeBracket = ']';
+			}
 
 			for(const i in v)
 			{

@@ -11,13 +11,20 @@
 	flex-direction: column;
 	align-items: flex-end;
 	margin: 0em;
+	word-break: break-word;
+}
+
+[data-role=icon-list]:not(.tight) [tabindex] {
 	width: 112px;
 	min-height: 96px;
-	word-break: break-word;
 }
 
 [data-role=icon-list] div:focus {
 	outline-style: none;
+}
+
+[data-role=icon-list] label:empty {
+	display: none;
 }
 
 [data-role=icon-list] label {
@@ -69,4 +76,8 @@ label > img {
 .icon32 {
 	width: 32px;
 	height: 32px;
+}
+
+[data-role=icon-list] div.blinking {
+	opacity: 0;
 }

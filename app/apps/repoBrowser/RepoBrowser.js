@@ -8,7 +8,8 @@ import { Bindable } from 'curvature/base/Bindable';
 import { GitHub } from '../gitHub/GitHub';
 
 import { Folder } from './Folder';
-import { Html as HtmlControl } from '../../control/Html';
+import { Icons as IconControl } from '../../control/Icons';
+import { Html as HtmlControl }  from '../../control/Html';
 import { Json as JsonControl } from '../../control/Json';
 import { Image as ImageControl } from '../../control/Image';
 import { Plaintext as PlaintextControl } from '../../control/Plaintext';

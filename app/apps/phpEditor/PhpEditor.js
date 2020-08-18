@@ -62,7 +62,10 @@ class HelloWorld
     }
 }
 
-print new HelloWorld;`;
+print new HelloWorld;
+
+//phpinfo();
+`;
 
 		return Bindable.make(this);
 	}

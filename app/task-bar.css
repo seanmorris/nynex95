@@ -42,7 +42,7 @@
 }
 
 .task-bar .brand-stripe img {
-	height: 180px;
+	height: 256px;
 	margin-top: auto;
 }
 
@@ -147,10 +147,13 @@
 }
 
 
-.task-bar .tray {
+.task-bar .tray:not(:empty) {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	padding-left: 0.5em;
+	padding-left: 0.25em;
 	padding-right: 0.5em;
+}
+.tray [data-role=icon-list] div:focus img {
+	filter: brightness(110%);
 }

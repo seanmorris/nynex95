@@ -157,13 +157,20 @@
 	flex-direction: column;
 	align-items: flex-end;
 	margin: 0em;
+	word-break: break-word;
+}
+
+[data-role=icon-list]:not(.tight) [tabindex] {
 	width: 112px;
 	min-height: 96px;
-	word-break: break-word;
 }
 
 [data-role=icon-list] div:focus {
 	outline-style: none;
+}
+
+[data-role=icon-list] label:empty {
+	display: none;
 }
 
 [data-role=icon-list] label {
@@ -215,6 +222,10 @@ label > img {
 .icon32 {
 	width: 32px;
 	height: 32px;
+}
+
+[data-role=icon-list] div.blinking {
+	opacity: 0;
 }
 
 .menu-bar {
@@ -592,6 +603,7 @@ label.icon-frame label {
 }
 
 .image-control.main-content img {
+	padding: 1em;
 }
 
 .plaintext-control {
@@ -638,6 +650,11 @@ label.icon-frame label {
 	margin: 0px;
 }
 
+.phpEditor textarea {
+	resize: vertical;
+	align-self: stretch;
+}
+
 .task-bar {
 	display: flex;
 	flex-direction: row;
@@ -682,7 +699,7 @@ label.icon-frame label {
 }
 
 .task-bar .brand-stripe img {
-	height: 180px;
+	height: 256px;
 	margin-top: auto;
 }
 
@@ -787,12 +804,15 @@ label.icon-frame label {
 }
 
 
-.task-bar .tray {
+.task-bar .tray:not(:empty) {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	padding-left: 0.5em;
+	padding-left: 0.25em;
 	padding-right: 0.5em;
+}
+.tray [data-role=icon-list] div:focus img {
+	filter: brightness(110%);
 }
 
 .window.focused .title-bar {

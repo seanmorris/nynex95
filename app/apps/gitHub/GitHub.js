@@ -1,8 +1,12 @@
+import { Icon } from '../../icon/Icon';
+import { Home } from '../../home/Home';
 import { Task } from '../../task/Task';
 
 export class GitHub extends Task
 {
-	title = 'GitHub Login';
+	title    = 'GitHub Login';
+	template = require('./main.tmp');
+
 
 	static setToken(token)
 	{
@@ -22,37 +26,73 @@ export class GitHub extends Task
 	{
 		const state = ( Math.random() ).toString(36);
 
-		return new Promise(() => {
+		const messageListener = event => {
 
-			this.loginWindow = window.open(
-				'https://github.com/login/oauth/authorize'
-					+ '?redirect_uri=https://nynex.unholysh.it/github-auth/accept'
-					+ '&client_id=7150d20fb5a11fe1d332'
-					+ '&scope=public_repo'
-					+ '&state=' + state
-				, `github-login-${this.tid}`
-				, `left=100,top=100,width=750,height=500,resizable=0,scrollbars=0,location=0,menubar=0,toolbar=0,status=0`
-			);
+			GitHub.setToken(event.data);
 
-			window.addEventListener('message', event => {
+			const token = GitHub.getToken();
 
-				console.log(event.data);
-				GitHub.setToken(event.data);
+			console.log(token);
 
-				this.loginWindow.close();
+			if(token.access_token)
+			{
+				this.trayIcon = this.trayIcon || new Icon({
+					icon: 'github'
+					, path: 'apps'
+					, bits: 1
+					, size: 16
+					, action: () => {
+						GitHub.setToken('{}');
+						Home.instance().tray.remove(this.trayIcon);
+					}
+				});
 
-			}, false);
+				Home.instance().tray.add(this.trayIcon);
 
-			const loop = this.window.onInterval(100, () => {
-				if(!this.loginWindow.closed)
-				{
-					return;
-				}
+				this.trayIcon.flicker();
+			}
+			else
+			{
 
-				clearInterval(loop);
+			}
 
-				this.window.close();
+			this.loginWindow.close();
+
+		};
+
+		return new Promise((accept,reject) => {
+
+			this.window.onTimeout(1500, () => {
+				this.loginWindow = window.open(
+					'https://github.com/login/oauth/authorize'
+						+ '?redirect_uri=https://nynex.unholysh.it/github-auth/accept'
+						+ '&client_id=7150d20fb5a11fe1d332'
+						+ '&scope=public_repo'
+						+ '&state=' + state
+					, `github-login-${this.tid}`
+					, `left=100,top=100,width=750,height=500,resizable=0,scrollbars=0,location=0,menubar=0,toolbar=0,status=0`
+				);
+
+				window.addEventListener('message', messageListener, false);
+
+				const loop = this.window.onInterval(100, () => {
+					if(!this.loginWindow.closed)
+					{
+						return;
+					}
+
+					clearInterval(loop);
+
+					this.window.close();
+
+					accept();
+				});
 			});
+
+		}).finally(()=>{
+
+			window.removeEventListener('message', messageListener, false);
+
 		});
 	}
 

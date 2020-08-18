@@ -31,6 +31,8 @@ export class Icon extends View
 			this.args.src = path;
 
 		}, {idle: 1});
+
+		this.args.blinking = '';
 	}
 
 	dblclick(event)
@@ -49,5 +51,59 @@ export class Icon extends View
 
 		}
 
+	}
+
+	blink()
+	{
+		this.args.blinking = 'blinking';
+
+		this.onTimeout(100, () => {
+
+			this.args.blinking = '';
+
+		});
+	}
+
+	flicker()
+	{
+		this.args.blinking = 'blinking';
+
+		const flickerSlow = this.onInterval(50, () => {
+			this.args.blinking = this.args.blinking
+				? ''
+				: 'blinking';
+		});
+
+		this.onTimeout(250, () => {
+
+			clearInterval(flickerSlow);
+
+			this.args.blinking = '';
+
+			const flickerFast = this.onInterval(25, () => {
+				this.args.blinking = this.args.blinking
+					? ''
+					: 'blinking';
+			});
+
+			this.onTimeout(250, () => {
+
+				clearInterval(flickerFast);
+
+				this.args.blinking = '';
+
+				const flickerFrame = this.onFrame(() => {
+					this.args.blinking = this.args.blinking
+						? ''
+						: 'blinking';
+				});
+
+				this.onTimeout(500, () => {
+					flickerFrame();
+				});
+			});
+
+
+		});
 	}
 }
