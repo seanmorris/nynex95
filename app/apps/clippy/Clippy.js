@@ -19,6 +19,7 @@ export class Clippy extends Task
 		this.yFrame = 0;
 
 		this.window.maximize = () => {};
+		this.window.classes.focused = false;
 
 		this.window.ruleSet.add('.clippy', tag =>{
 

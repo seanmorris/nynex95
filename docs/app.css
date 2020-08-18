@@ -41,14 +41,15 @@
 	bottom: 0px;
 	min-width: 100%;
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	align-items: flex-start;
 	justify-content: space-between;
-	flex-wrap: wrap;
 }
 
 .desktop [data-role=icon-list] {
-	display: contents;
+	flex-direction: column;
+	flex-direction: wrap;
+	max-height: 100%;
 }
 
 .desktop [data-role=icon-list] [tabindex] {
@@ -70,7 +71,13 @@
 }
 
 .desktop [data-role=icon-list] div:focus label {
-	/*background-color: rgba(0,0,0,0.5);*/
+	text-shadow: none;
+}
+
+
+.desktop [data-role=icon-list]:last-child {
+	flex-direction: column;
+	align-self: flex-end;
 }
 
 .gridview {
@@ -150,8 +157,8 @@
 	flex-direction: column;
 	align-items: flex-end;
 	margin: 0em;
-	width: 96px;
-	min-height: 64px;
+	width: 112px;
+	min-height: 96px;
 	word-break: break-word;
 }
 
@@ -324,6 +331,11 @@ html, body {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-start;
+	user-select: none;
+}
+
+textarea, input, [contenteditable] {
+	user-select: initial;
 }
 
 body {
@@ -997,7 +1009,7 @@ label.icon-frame label {
 	position: absolute;
 	pointer-events: initial;
 	height: 520px;
-	width: 628px;
+	width: 620px;
 	overflow: hidden;
 }
 

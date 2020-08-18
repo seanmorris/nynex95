@@ -4739,6 +4739,8 @@ var Clippy = /*#__PURE__*/function (_Task) {
 
     _this.window.maximize = function () {};
 
+    _this.window.classes.focused = false;
+
     _this.window.ruleSet.add('.clippy', function (tag) {
       var el = tag.element;
 
@@ -4788,7 +4790,7 @@ exports.Clippy = Clippy;
 });
 
 ;require.register("apps/clippy/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"clippy\"></div>\n"
+module.exports = "<div cv-on = \"mousedown:grabTitleBar(event);\" class = \"clippy\"></div>\n"
 });
 
 ;require.register("apps/gitHub/GitHub.js", function(exports, require, module) {
@@ -5469,7 +5471,7 @@ exports.PhpEditor = PhpEditor;
 });
 
 ;require.register("apps/phpEditor/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"frame liquid\">\n\t<textarea cv-bind = \"input\" class = \"inset liquid\"></textarea>\n</div>\n\n<div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div>\n\n<div class = \"row\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n\t<div class = \"label inset\">[[charCount]]</div>\n</div>\n"
+module.exports = "<div class = \"frame liquid\">\n\t<textarea spellcheck=\"false\" cv-bind = \"input\" class = \"inset liquid\"></textarea>\n</div>\n\n<div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div>\n\n<div class = \"row\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/Folder.js", function(exports, require, module) {
@@ -5791,7 +5793,7 @@ exports.RepoBrowser = RepoBrowser;
 });
 
 ;require.register("apps/repoBrowser/folder.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event, file)\">\n\t\t<img src = \"[[icon]]\" loading=lazy />\n\t\t<label>[[name]]</label>\n\t</span>\n\t<span cv-if = \"expanded\">\n\t\t<div class = \"sub\" cv-each = \"files:file:f\">\n\t\t\t[[file]]\n\t\t</div>\n\t</span>\n</div>\n"
+module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event, file)\" tabindex=\"0\">\n\t\t<img src = \"[[icon]]\" loading=lazy />\n\t\t<label>[[name]]</label>\n\t</span>\n\t<span cv-if = \"expanded\">\n\t\t<div class = \"sub\" cv-each = \"files:file:f\">\n\t\t\t[[file]]\n\t\t</div>\n\t</span>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
@@ -6201,11 +6203,17 @@ var _Bag = require("curvature/base/Bag");
 
 var _View2 = require("curvature/base/View");
 
+var _Home = require("../home/Home");
+
 var _Icon = require("../icon/Icon");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -6261,36 +6269,65 @@ var Desktop = /*#__PURE__*/function (_View) {
       action: '/apps/task-manager',
       name: 'Task Manager',
       icon: 61
-    }), new _Icon.Icon({
-      action: '/apps/php',
-      name: 'PHP',
-      icon: 'php',
-      path: 'apps',
-      bits: 24
+    })];
+
+    http: //localhost:3333/w95/60-16-4bit.png
+    _this.args.endIcons = [new _Icon.Icon({
+      action: '/apps/nynex-help',
+      name: 'What\'s Nynex?',
+      icon: 'help_book_small',
+      path: 'w98',
+      bits: 4,
+      size: 48
     }), new _Icon.Icon({
       action: '/apps/npm-unpkgr',
       name: 'npm-unpkgr',
       icon: 'npm',
       path: 'apps',
-      bits: 24
+      bits: 24 // , size: 48
+
     }), new _Icon.Icon({
       action: '/apps/github',
       name: 'GitHub',
       icon: 'github',
       path: 'apps',
-      bits: 1
+      bits: 1 // , size: 48
+
     }), new _Icon.Icon({
       action: '/apps/clippy',
       name: 'Summon the Devil',
       icon: 'doom-eye',
       path: 'apps',
       bits: 24
-    })];
-    _this.windows = new _Bag.Bag(function (win, meta, action, index) {// console.log(this.windows.list);
-    });
-    _this.args.windows = _this.windows.list;
+    }), new _Icon.Icon({
+      action: '/apps/php',
+      name: 'Run PHP',
+      icon: 'php',
+      path: 'apps',
+      bits: 24,
+      size: 48
+    })]; // this.windows = new Bag((win, meta, action, index)=>{
+    // 	// console.log(this.windows.list);
+    // });
+    // this.args.windows = this.windows.list;
+
+
     return _this;
   }
+
+  _createClass(Desktop, [{
+    key: "focus",
+    value: function focus(event) {
+      var windows = _Home.Home.instance().windows.items();
+
+      console.log(windows);
+
+      for (var i in windows) {
+        console.log(windows[i]);
+        windows[i].classes.focused = false;
+      }
+    }
+  }]);
 
   return Desktop;
 }(_View2.View);
@@ -6299,7 +6336,7 @@ exports.Desktop = Desktop;
 });
 
 ;require.register("desktop/desktop.tmp.html", function(exports, require, module) {
-module.exports = "<div data-role = \"icon-list\" cv-each = \"icons:icon:i\">[[icon]]</div>\n"
+module.exports = "<div tabindex=\"-1\" class = \"desktop\" cv-on = \":focus(event))\">\n\t<div data-role = \"icon-list\" cv-each = \"icons:icon:i\">\n\t\t[[icon]]\n\t</div>\n\t<div data-role = \"icon-list\" cv-each = \"endIcons:icon:i\">\n\t\t[[icon]]\n\t</div>\n</div>\n"
 });
 
 ;require.register("home/Home.js", function(exports, require, module) {
@@ -6457,7 +6494,7 @@ _defineProperty(Home, "path", {
 });
 
 ;require.register("home/home.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"viewport\">\n\t<div data-role = \"window-host\" cv-each = \"windows:window:w\">[[window]]</div>\n\t<div class = \"desktop\">[[desktop]]</div>\n</div>\n\n[[taskBar]]\n\n<!-- <ul class = \"task-list\" cv-each = \"tasks:task:t\">\n\t<li>[[task.x]]x[[task.y]]x[[task.z]] [[task.title]]</li>\n</ul>\n -->\n"
+module.exports = "<div class = \"viewport\">\n\t<div data-role = \"window-host\" cv-each = \"windows:window:w\">\n\t\t[[window]]\n\t</div>\n\t[[desktop]]\n</div>\n\n[[taskBar]]\n\n<!-- <ul class = \"task-list\" cv-each = \"tasks:task:t\">\n\t<li>[[task.x]]x[[task.y]]x[[task.z]] [[task.title]]</li>\n</ul>\n -->\n"
 });
 
 ;require.register("icon/Icon.js", function(exports, require, module) {

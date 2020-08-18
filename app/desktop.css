@@ -10,14 +10,15 @@
 	bottom: 0px;
 	min-width: 100%;
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	align-items: flex-start;
 	justify-content: space-between;
-	flex-wrap: wrap;
 }
 
 .desktop [data-role=icon-list] {
-	display: contents;
+	flex-direction: column;
+	flex-direction: wrap;
+	max-height: 100%;
 }
 
 .desktop [data-role=icon-list] [tabindex] {
@@ -39,5 +40,11 @@
 }
 
 .desktop [data-role=icon-list] div:focus label {
-	/*background-color: rgba(0,0,0,0.5);*/
+	text-shadow: none;
+}
+
+
+.desktop [data-role=icon-list]:last-child {
+	flex-direction: column;
+	align-self: flex-end;
 }

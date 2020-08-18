@@ -1,6 +1,6 @@
 import { Bag  } from 'curvature/base/Bag';
 import { View } from 'curvature/base/View';
-
+import { Home } from '../home/Home';
 import { Icon } from '../icon/Icon';
 
 export class Desktop extends View
@@ -46,12 +46,16 @@ export class Desktop extends View
 				, name: 'Task Manager'
 				, icon: 61
 			})
-			, new Icon({
-				action: '/apps/php'
-				, name: 'PHP'
-				, icon: 'php'
-				, path: 'apps'
-				, bits: 24
+		];
+http://localhost:3333/w95/60-16-4bit.png
+		this.args.endIcons = [
+			new Icon({
+				action: '/apps/nynex-help'
+				, name: 'What\'s Nynex?'
+				, icon: 'help_book_small'
+				, path: 'w98'
+				, bits: 4
+				, size: 48
 			})
 			, new Icon({
 				action: '/apps/npm-unpkgr'
@@ -59,6 +63,7 @@ export class Desktop extends View
 				, icon: 'npm'
 				, path: 'apps'
 				, bits: 24
+				// , size: 48
 			})
 			, new Icon({
 				action: '/apps/github'
@@ -66,6 +71,7 @@ export class Desktop extends View
 				, icon: 'github'
 				, path: 'apps'
 				, bits: 1
+				// , size: 48
 			})
 			, new Icon({
 				action: '/apps/clippy'
@@ -74,14 +80,35 @@ export class Desktop extends View
 				, path: 'apps'
 				, bits: 24
 			})
+			, new Icon({
+				action: '/apps/php'
+				, name: 'Run PHP'
+				, icon: 'php'
+				, path: 'apps'
+				, bits: 24
+				, size: 48
+			})
 		];
 
-		this.windows = new Bag((win, meta, action, index)=>{
+		// this.windows = new Bag((win, meta, action, index)=>{
 
-			// console.log(this.windows.list);
+		// 	// console.log(this.windows.list);
 
-		});
+		// });
 
-		this.args.windows = this.windows.list;
+		// this.args.windows = this.windows.list;
+	}
+
+	focus(event)
+	{
+		const windows = Home.instance().windows.items();
+
+		console.log(windows);
+
+		for(const i in windows)
+		{
+			console.log(windows[i]);
+			windows[i].classes.focused = false;
+		}
 	}
 }
