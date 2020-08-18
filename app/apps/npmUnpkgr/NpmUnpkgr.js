@@ -28,7 +28,7 @@ export class NpmUnpkgr extends Task
 
 		this.window.search = (event) => {
 
-			const url = `http://npmsearch.com/query?q=${this.window.args.query}&size=64`;
+			const url = `https://npmsearch.com/query?q=${this.window.args.query}&size=64`;
 
 			event.preventDefault();
 
