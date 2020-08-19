@@ -103,25 +103,29 @@ export class Folder extends View
 		}
 
 		this.expanding = new Promise(() => {
-			if(open === true)
+
+			if(this.args.file && this.args.file.type === 'dir')
 			{
-				this.args.expanded = true;
-				this.args.icon     = '/w95/5-16-4bit.png';
-			}
-			else if(open === false)
-			{
-				this.args.expanded = false;
-				this.args.icon     = '/w95/4-16-4bit.png';
-			}
-			else if(this.args.expanded)
-			{
-				this.args.icon = '/w95/4-16-4bit.png';
-				this.args.expanded = false;
-			}
-			else
-			{
-				this.args.icon     = '/w95/5-16-4bit.png';
-				this.args.expanded = true;
+				if(open === true)
+				{
+					this.args.expanded = true;
+					this.args.icon     = '/w95/5-16-4bit.png';
+				}
+				else if(open === false)
+				{
+					this.args.expanded = false;
+					this.args.icon     = '/w95/4-16-4bit.png';
+				}
+				else if(this.args.expanded)
+				{
+					this.args.icon = '/w95/4-16-4bit.png';
+					this.args.expanded = false;
+				}
+				else
+				{
+					this.args.icon     = '/w95/5-16-4bit.png';
+					this.args.expanded = true;
+				}
 			}
 
 			this.populate(this.args.url).then((files)=>{
@@ -255,7 +259,7 @@ export class Folder extends View
 				});
 
 				return new Promise(accept => {
-					this.onTimeout(files.length*20, accept(files));
+					this.onTimeout(files.length*20, () => accept(files));
 				});
 			}
 

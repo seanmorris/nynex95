@@ -80,6 +80,14 @@ html, body, input, button, select {
 	resize: both;
 }
 
+.resize-vert {
+	resize: vertical;
+}
+
+.resize-hor {
+	resize: horizontal;
+}
+
 .white {
 	background-color: white;
 }
@@ -329,13 +337,33 @@ label.icon-frame label {
 
 .row.tight > * {
 	margin: 0px;
+	justify-content: center;
 }
 
+.phpEditor .ace_editor .ace_scroller {
+	background-color: transparent;
+}
+
+.phpEditor .resize-vert {
+	overflow-y: scroll;
+}
+
+.phpEditor .ace_editor,
 .phpEditor textarea {
-	resize: vertical;
-	align-self: stretch;
+	margin: 0px;
+	padding: 1em 0px;
+	flex-grow: 1;
+	height: auto !important;
 }
 
+.over-hide {
+	overflow: hidden;
+}
+
+/*.phpEditor .ace_editor {
+	min-height: 18em;
+}
+*/
 .scroll-header {
 	position: sticky;
 	top: 0px;
@@ -344,4 +372,40 @@ label.icon-frame label {
 .left-align {
 	text-align: left;
 	align-items: flex-start;
+}
+
+.scroll-header {
+	min-height: 24px;
+}
+
+.tight > label {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.ace_line:last-child {
+	background-color: #444;
+	color: white;
+}
+
+.output-line {
+	position:absolute;
+	z-index: 10000;
+	background-color: #000033;
+	color: white;
+	background-blend-mode: color-burn;
+}
+
+.ace_markdown-code-unclosed-string {
+	color: rgba(200,120,120,1);
+	font-weight: bold;
+}
+
+/*.ace_whitespace.ace_xml,*/
+.ace_punctuation.ace_xml-decl.ace_xml,
+.ace_markdown-open-code-tag,
+.ace_markdown-generic-code-tag {
+	opacity: 0.5;
+	display: none;
+
 }

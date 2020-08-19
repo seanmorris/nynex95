@@ -23,6 +23,7 @@
     "auto-reload-brunch": "^2",
     "babel-brunch": "^7.0.1",
     "babel-minify": "^0.5.1",
+    "brace": "^0.11.1",
     "brunch": "^3",
     "clean-css-brunch": "^3",
     "terser-brunch": "^4",

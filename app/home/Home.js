@@ -69,8 +69,8 @@ export class Home extends View
 			this.open.x += 50;
 			this.open.y += 80;
 
-			this.open.x %= window.innerWidth;
-			this.open.y %= (window.innerHeight - 128);
+			this.open.x %= (window.innerWidth / 2);
+			this.open.y %= (window.innerHeight / 2);
 		});
 
 

@@ -53,7 +53,12 @@ export class GitHub extends Task
 			}
 			else
 			{
+				GitHub.setToken('{}');
+				this.trayIcon.flicker();
 
+				setTimeout(750, ()=>{
+					Home.instance().tray.remove(this.trayIcon);
+				});
 			}
 
 			this.loginWindow.close();

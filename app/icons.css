@@ -81,3 +81,8 @@ label > img {
 [data-role=icon-list] div.blinking {
 	opacity: 0;
 }
+
+
+[data-role=icon-list] div.flashing {
+	filter: invert(100%);
+}

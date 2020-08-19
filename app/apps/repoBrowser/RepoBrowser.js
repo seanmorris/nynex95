@@ -40,6 +40,8 @@ export class RepoBrowser extends Task
 
 	attached()
 	{
+		this.window.args.menuBar  = new MenuBar(this.args, this.window);
+
 		this.window.args.filetype = '';
 		this.window.args.chars    = '';
 

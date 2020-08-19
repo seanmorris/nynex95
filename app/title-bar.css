@@ -8,14 +8,17 @@
 	color: white;
 	justify-content: space-between;
 	margin-top: 1px;
-	margin-left: 2px;
-	margin-right: 2px;
+	margin-left: 1px;
+	margin-right: 1px;
+	margin-bottom: 2px;
 	padding: 1px;
 	padding-left: 2px;
 	padding-right: 2px;
 	font-size: initial;
 	display: flex;
 	flex-direction: row;
+	font-size: 12pt;
+	font-family: fixedsys;
 }
 
 .title-bar img {

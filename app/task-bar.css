@@ -124,28 +124,11 @@
 	overflow: hidden;
 }
 
-.task-bar .task-list[data-count="1"] button,
-.task-bar .task-list[data-count="2"] button {
-	width: 50%;
+.task-bar .task-list button {
+	width: 25%;
+	min-width: 12em;
+	max-width: 16em;
 }
-
-.task-bar .task-list[data-count="3"] button {
-	width: 33%;
-}
-
-.task-bar .task-list[data-count="4"] button {
-	width: 33%;
-}
-
-.task-bar .task-list[data-count="5"] button {
-	width: 20%;
-}
-
-
-.task-bar .task-list[data-count="6"] button {
-	width: 16.67%;
-}
-
 
 .task-bar .tray:not(:empty) {
 	display: flex;

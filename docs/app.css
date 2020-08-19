@@ -228,6 +228,11 @@ label > img {
 	opacity: 0;
 }
 
+
+[data-role=icon-list] div.flashing {
+	filter: invert(100%);
+}
+
 .menu-bar {
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -405,6 +410,14 @@ html, body, input, button, select {
 
 .resize {
 	resize: both;
+}
+
+.resize-vert {
+	resize: vertical;
+}
+
+.resize-hor {
+	resize: horizontal;
 }
 
 .white {
@@ -656,13 +669,33 @@ label.icon-frame label {
 
 .row.tight > * {
 	margin: 0px;
+	justify-content: center;
 }
 
+.phpEditor .ace_editor .ace_scroller {
+	background-color: transparent;
+}
+
+.phpEditor .resize-vert {
+	overflow-y: scroll;
+}
+
+.phpEditor .ace_editor,
 .phpEditor textarea {
-	resize: vertical;
-	align-self: stretch;
+	margin: 0px;
+	padding: 1em 0px;
+	flex-grow: 1;
+	height: auto !important;
 }
 
+.over-hide {
+	overflow: hidden;
+}
+
+/*.phpEditor .ace_editor {
+	min-height: 18em;
+}
+*/
 .scroll-header {
 	position: sticky;
 	top: 0px;
@@ -671,6 +704,42 @@ label.icon-frame label {
 .left-align {
 	text-align: left;
 	align-items: flex-start;
+}
+
+.scroll-header {
+	min-height: 24px;
+}
+
+.tight > label {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.ace_line:last-child {
+	background-color: #444;
+	color: white;
+}
+
+.output-line {
+	position:absolute;
+	z-index: 10000;
+	background-color: #000033;
+	color: white;
+	background-blend-mode: color-burn;
+}
+
+.ace_markdown-code-unclosed-string {
+	color: rgba(200,120,120,1);
+	font-weight: bold;
+}
+
+/*.ace_whitespace.ace_xml,*/
+.ace_punctuation.ace_xml-decl.ace_xml,
+.ace_markdown-open-code-tag,
+.ace_markdown-generic-code-tag {
+	opacity: 0.5;
+	display: none;
+
 }
 
 .task-bar {
@@ -799,28 +868,11 @@ label.icon-frame label {
 	overflow: hidden;
 }
 
-.task-bar .task-list[data-count="1"] button,
-.task-bar .task-list[data-count="2"] button {
-	width: 50%;
+.task-bar .task-list button {
+	width: 25%;
+	min-width: 12em;
+	max-width: 16em;
 }
-
-.task-bar .task-list[data-count="3"] button {
-	width: 33%;
-}
-
-.task-bar .task-list[data-count="4"] button {
-	width: 33%;
-}
-
-.task-bar .task-list[data-count="5"] button {
-	width: 20%;
-}
-
-
-.task-bar .task-list[data-count="6"] button {
-	width: 16.67%;
-}
-
 
 .task-bar .tray:not(:empty) {
 	display: flex;
@@ -843,14 +895,17 @@ label.icon-frame label {
 	color: white;
 	justify-content: space-between;
 	margin-top: 1px;
-	margin-left: 2px;
-	margin-right: 2px;
+	margin-left: 1px;
+	margin-right: 1px;
+	margin-bottom: 2px;
 	padding: 1px;
 	padding-left: 2px;
 	padding-right: 2px;
 	font-size: initial;
 	display: flex;
 	flex-direction: row;
+	font-size: 12pt;
+	font-family: fixedsys;
 }
 
 .title-bar img {

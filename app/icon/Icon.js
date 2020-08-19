@@ -64,17 +64,28 @@ export class Icon extends View
 		});
 	}
 
+	flash()
+	{
+		this.args.flashing = 'flashing';
+
+		this.onTimeout(100, () => {
+
+			this.args.flashing = '';
+
+		});
+	}
+
 	flicker()
 	{
 		this.args.blinking = 'blinking';
 
-		const flickerSlow = this.onInterval(50, () => {
+		const flickerSlow = this.onInterval(100, () => {
 			this.args.blinking = this.args.blinking
 				? ''
 				: 'blinking';
 		});
 
-		this.onTimeout(250, () => {
+		this.onTimeout(1250, () => {
 
 			clearInterval(flickerSlow);
 
@@ -86,7 +97,7 @@ export class Icon extends View
 					: 'blinking';
 			});
 
-			this.onTimeout(250, () => {
+			this.onTimeout(500, () => {
 
 				clearInterval(flickerFast);
 
@@ -102,8 +113,47 @@ export class Icon extends View
 					flickerFrame();
 				});
 			});
+		});
+	}
 
+	glimmer()
+	{
+		this.args.flashing = 'flashing';
 
+		const flickerSlow = this.onInterval(180, () => {
+			this.args.flashing = this.args.flashing
+				? ''
+				: 'flashing';
+		});
+
+		this.onTimeout(1400, () => {
+
+			clearInterval(flickerSlow);
+
+			this.args.flashing = '';
+
+			const flickerFast = this.onInterval(20, () => {
+				this.args.flashing = this.args.flashing
+					? ''
+					: 'flashing';
+			});
+
+			this.onTimeout(400, () => {
+
+				clearInterval(flickerFast);
+
+				this.args.flashing = '';
+
+				const flickerFrame = this.onInterval(20, () => {
+					this.args.flashing = this.args.flashing
+						? ''
+						: 'flashing';
+				});
+
+				this.onTimeout(400, () => {
+					clearInterval(flickerFrame);
+				});
+			});
 		});
 	}
 }
