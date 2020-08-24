@@ -36,6 +36,40 @@ export class RepoBrowser extends Task
 			this.current.parent.select();
 			this.current.parent.expand(null, null, true);
 		};
+
+		const gitHubToken = GitHub.getToken();
+		const reposUrl    = 'https://nynex.unholysh.it/github-proxy/user/repos'
+		const headers     = {};
+
+		this.window.args.repoName = 'seanmorris/nynex95';
+
+		if(gitHubToken && gitHubToken.access_token)
+		{
+			headers.Authorization = `token ${gitHubToken.access_token}`;
+		}
+
+		this.window.args.repoIcons = [];
+
+		fetch(reposUrl, {headers}).then(r=>r.json()).then((repos)=>{
+
+			this.window.args.repoIcons = [];
+
+			repos.map(repo => {
+
+				console.log(repo);
+
+				this.window.args.repoIcons.push(new Icon({
+					action: () => {
+						this.window.args.repoName = repo.full_name;
+						this.window.args.repoUrl  = repo.url;
+					}
+					, name:  repo.name
+					, icon: 'network_drive'
+					, path: 'w98'
+					, bits: 4
+				}));
+			});
+		});
 	}
 
 	attached()
@@ -47,16 +81,28 @@ export class RepoBrowser extends Task
 
 		this.window.classes['repo-browser'] = true;
 
-		const folder = new Folder({
-			expanded: true
-			, browser: this
-			, url:   'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now()
-		}, this.window);
+		this.window.args.bindTo('repoUrl', v => {
 
-		this.window.args.files = this.window.args.files || [];
-		this.window.args.files.push(folder);
+			this.window.args.files = [];
 
-		folder.select();
+			if(!v)
+			{
+				return;
+			}
+
+			const folder = new Folder({
+				expanded:  true
+				, browser: this
+				, url:     v + '/contents?ref=master&t=' + Date.now()
+			}, this.window);
+
+			this.window.args.files.push(folder);
+
+			folder.select();
+		});
+
+		this.window.args.repoUrl = 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/';
+
 
 		this.window.args.bindTo('filename', v => {
 

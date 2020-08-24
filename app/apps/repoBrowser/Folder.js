@@ -102,7 +102,7 @@ export class Folder extends View
 			return this.expanding;
 		}
 
-		this.expanding = new Promise(() => {
+		this.expanding = new Promise((accept) => {
 
 			if(this.args.file && this.args.file.type === 'dir')
 			{
@@ -173,16 +173,14 @@ export class Folder extends View
 			headers.Accept = 'application/vnd.github.v3.raw+json';
 		}
 
-		if(renderable && gitHubToken && gitHubToken.access_token)
-		{
-			// headers.Authorization = `token ${gitHubToken.access_token}`;
-		}
+		// if(renderable && gitHubToken && gitHubToken.access_token)
+		// {
+		// 	headers.Authorization = `token ${gitHubToken.access_token}`;
+		// }
 
 		const url = renderable
 			? file.url
 			: file.download_url;
-
-		console.log(type);
 
 		this.args.browser.window.args.url = url;
 

@@ -1,8 +1,16 @@
-<div class = "inset row tight scroll-header">
+<div class = "inset row tight scroll-header outer" tabindex = "-1">
 	<button class = "tight">
 		<img src = "/w95/21-16-4bit.png" />
 	</button>
-	<label class = "pane wide left-align">Repo: seanmorris/nynex95</label>
+	<label class = "pane wide left-align">
+		Repo: [[repoName]]
+		<div class = "pane repos-dropdown">
+			<label>Your Repos:</label>
+			<div class = "scroll inset white" data-role = "icon-list" cv-each = "repoIcons:icon:i">
+				[[icon]]
+			</div>
+		</div>
+	</label>
 </div>
 
 <div class = "frame cols liquid">

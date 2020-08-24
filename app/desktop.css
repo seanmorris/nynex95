@@ -16,8 +16,9 @@
 }
 
 .desktop [data-role=icon-list] {
+	justify-content: space-between;
 	flex-direction: column;
-	flex-direction: wrap;
+	flex-wrap: wrap;
 	max-height: 100%;
 }
 
@@ -45,6 +46,7 @@
 
 
 .desktop [data-role=icon-list]:last-child {
-	flex-direction: column;
+	flex-direction: column-reverse;
 	align-self: flex-end;
+	flex-wrap: wrap-reverse;
 }

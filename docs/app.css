@@ -47,8 +47,9 @@
 }
 
 .desktop [data-role=icon-list] {
+	justify-content: space-between;
 	flex-direction: column;
-	flex-direction: wrap;
+	flex-wrap: wrap;
 	max-height: 100%;
 }
 
@@ -76,8 +77,9 @@
 
 
 .desktop [data-role=icon-list]:last-child {
-	flex-direction: column;
+	flex-direction: column-reverse;
 	align-self: flex-end;
+	flex-wrap: wrap-reverse;
 }
 
 .gridview {
@@ -372,6 +374,7 @@ html, body, input, button, select {
 }
 
 .pane {
+	position: relative;
 	border: 2px solid;
 	border-image: url(/border.png) 2 2 2 2;
 	background-color: #c3c3c3;
@@ -699,15 +702,13 @@ label.icon-frame label {
 .scroll-header {
 	position: sticky;
 	top: 0px;
+	min-height: 24px;
+	z-index: 0;
 }
 
 .left-align {
 	text-align: left;
 	align-items: flex-start;
-}
-
-.scroll-header {
-	min-height: 24px;
 }
 
 .tight > label {
@@ -716,7 +717,7 @@ label.icon-frame label {
 }
 
 .ace_line:last-child {
-	background-color: #444;
+	background-color: #322;
 	color: white;
 }
 
@@ -733,13 +734,31 @@ label.icon-frame label {
 	font-weight: bold;
 }
 
-/*.ace_whitespace.ace_xml,*/
-.ace_punctuation.ace_xml-decl.ace_xml,
-.ace_markdown-open-code-tag,
-.ace_markdown-generic-code-tag {
-	opacity: 0.5;
-	display: none;
+.ace_punctuation.ace_xml-decl.ace_xml {
+	opacity: 1;
+	/*display: none;*/
+}
 
+.repos-dropdown {
+	z-index: 99999999999999999999;
+	position: absolute;
+	top: 100%;
+}
+
+.outer.scroll-header {
+	z-index:  100;
+}
+
+.outer.scroll-header .repos-dropdown {
+	display: none;
+}
+
+.outer.scroll-header .repos-dropdown .scroll{
+	height: 300px;
+}
+.outer:focus .repos-dropdown,
+.outer:focus-within .repos-dropdown {
+	display: block;
 }
 
 .task-bar {

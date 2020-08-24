@@ -34,7 +34,9 @@ export class PhpEditor extends Task
 		this.window.args.input = '<?php ';
 		// this.window.args.input = `\`\`\`php <?php ob_end_flush(); echo "Hello," . PHP_EOL . " world!" ?> \`\`\``;
 
-		const php = new ( require('php-wasm/Php').Php );
+		const Php = require('php-wasm/Php').Php;
+
+		const php = new Php();
 
 		php.addEventListener('ready', () => {
 			this.window.classes.loading = false;
@@ -45,7 +47,9 @@ export class PhpEditor extends Task
 				return;
 			}
 
-			php.run(this.window.args.input + "\n");
+			console.log(this.window.args.input);
+
+			// php.run(this.window.args.input + "\n");
 		});
 
 		this.window.args.output = '';
@@ -57,8 +61,13 @@ export class PhpEditor extends Task
 
 			this.window.args.output = '';
 
-			this.window.onIdle(()=>php.run(this.window.args.input));
+			php.run(this.window.args.input).catch(exitCode => {
 
+				console.log(exitCode);
+
+				php.refresh();
+
+			});
 		};
 
 		this.window.ruleSet.add('textarea', ({element}) => {
@@ -86,32 +95,29 @@ export class PhpEditor extends Task
 					if (Object.prototype.hasOwnProperty.call(rules, stateName))
 					{
 						rules[stateName].unshift({
-							token: 'markdown-generic-code-tag'
+							token:   'markdown-generic-code-tag'
 							, regex: /```/
-							, next: 'start'
+							, next:  'start'
 						});
 
 						rules[stateName].unshift({
-							token: 'markdown-open-code-tag'
+							token:   'markdown-open-code-tag'
 							, regex: /```(\S+)?/
-							, next: 'start'
+							, next:  'start'
 						});
 
+						rules[stateName].unshift({
+							token:   'php-open-tag'
+							, regex: /<\?=/i
+							, next:  'start'
+							, onMatch: (value, state, stack, line) => {
 
-						if(['string.xml', 'string.xml2'].includes(stateName))
-						{
-							rules[stateName].unshift({
-								token: 'markdown-code-unclosed-string'
-								, regex: /(?<=['"])[^'"]+?(?=\`)/
-								, next: 'start'
-								,  onMatch: function(value, state, stack, line) {
+								console.log(value, state, stack, line)
 
-									console.log(value, state, stack, line)
+								return this.token;
+							},
+						});
 
-									return this.token;
-								},
-							});
-						}
 					}
 				}
 
@@ -121,7 +127,6 @@ export class PhpEditor extends Task
 				// force re-highlight whole document
 				editor.session.bgTokenizer.start(0);
 			});
-
 
 			editor.setOptions({
 				autoScrollEditorIntoView: true
@@ -219,7 +224,26 @@ export class PhpEditor extends Task
 						}
 
 
-						this.window.onIdle(()=>php.run(`<?php ${phpCommand};`));
+						this.window.onIdle(()=>php.run(`<?php ${phpCommand};`).then(exitCode => {
+
+							console.log(exitCode);
+
+							if(exitCode)
+							{
+								php.refresh();
+
+								editor.session.insert(
+									{row: lines - 1, column: 0}
+									, "# PHP Error, interpreter refreshed.\n<?php "
+								);
+
+								editor.session.insert(
+									{row: lines - 2, column: 0}
+									, "# "
+								);
+							}
+
+						}));
 					}
 				}
 
@@ -237,11 +261,6 @@ export class PhpEditor extends Task
 				{
 					return;
 				}
-
-				// editor.session.insert(
-				// 	editor.getCursorPosition()
-				// 	, "\n"
-				// );
 
 				this.window.onNextFrame(()=>{
 					editor.gotoLine(lines + 1);
@@ -298,7 +317,8 @@ export class PhpEditor extends Task
 
 				editor.session.insert(
 					editor.getCursorPosition()
-					, "```text " + retVal + " ```\n"
+					, retVal + "\n"
+					// , "```text " + retVal + " ```\n"
 				);
 			});
 
