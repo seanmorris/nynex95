@@ -50,7 +50,7 @@ Module['ready'] = new Promise(function(resolve, reject) {
       } else {
         throw 'using preloaded data can only be done on a web page or in a web worker';
       }
-      var PACKAGE_NAME = '../out/php-web.data';
+      var PACKAGE_NAME = '../../build/php-web.data';
       var REMOTE_PACKAGE_BASE = 'php-web.data';
       if (typeof Module['locateFilePackage'] === 'function' && !Module['locateFile']) {
         Module['locateFile'] = Module['locateFilePackage'];
@@ -182,10 +182,10 @@ Module['ready'] = new Promise(function(resolve, reject) {
             for (var i = 0; i < files.length; ++i) {
               DataRequest.prototype.requests[files[i].filename].onload();
             }
-                Module['removeRunDependency']('datafile_../out/php-web.data');
+                Module['removeRunDependency']('datafile_../../build/php-web.data');
 
       };
-      Module['addRunDependency']('datafile_../out/php-web.data');
+      Module['addRunDependency']('datafile_../../build/php-web.data');
     
       if (!Module.preloadResults) Module.preloadResults = {};
     
@@ -206,7 +206,7 @@ Module['ready'] = new Promise(function(resolve, reject) {
     }
   
    }
-   loadPackage({"files": [{"filename": "/Zend/bench.php", "start": 0, "end": 7634, "audio": 0}], "remote_package_size": 7634, "package_uuid": "52269b74-b363-447a-b4dd-8a189ec50b3f"});
+   loadPackage({"files": [{"filename": "/Zend/bench.php", "start": 0, "end": 7634, "audio": 0}], "remote_package_size": 7634, "package_uuid": "e86d0c19-6771-445f-adbe-d3f704e7d811"});
   
   })();
   
@@ -743,8 +743,8 @@ var wasmMemory;
 // In the wasm backend, we polyfill the WebAssembly object,
 // so this creates a (non-native-wasm) table for us.
 var wasmTable = new WebAssembly.Table({
-  'initial': 5347,
-  'maximum': 5347,
+  'initial': 6717,
+  'maximum': 6717,
   'element': 'anyfunc'
 });
 
@@ -1358,11 +1358,11 @@ function updateGlobalBufferAndViews(buf) {
 }
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 2211552,
+    STACK_BASE = 2296064,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 7454432,
-    DYNAMIC_BASE = 7454432,
-    DYNAMICTOP_PTR = 2211360;
+    STACK_MAX = 7538944,
+    DYNAMIC_BASE = 7538944,
+    DYNAMICTOP_PTR = 2295872;
 
 
 
@@ -1812,10 +1812,14 @@ var tempI64;
 
 // === Body ===
 
-var ASM_CONSTS = [function($0) { const jsRet = String(eval(UTF8ToString($0))); const len = lengthBytesUTF8(jsRet) + 1; const strLoc = _malloc(len); stringToUTF8(jsRet, strLoc, len); return strLoc; },
+var ASM_CONSTS = [function($0, $1) { const target = Module.targets.get($0) || window; const property = UTF8ToString($1); const result = target[property]; console.log('target/prop:', $0, target, property, typeof result, result); if(!result || !['function','object'].includes(typeof result)) { const jsRet = 'OK' + String(result); const len = lengthBytesUTF8(jsRet) + 1; const strLoc = _malloc(len); stringToUTF8(jsRet, strLoc, len); return strLoc; } const jsRet = 'XX'; const len = lengthBytesUTF8(jsRet) + 1; const strLoc = _malloc(len); stringToUTF8(jsRet, strLoc, len); return strLoc; },
+ function($0, $1) { const target = Module.targets.get($0) || window; const property = UTF8ToString($1); const result = target[property]; console.log('target/prop:', $0, target, property, typeof result, result); if(['function','object'].includes(typeof result)) { let index = Module.targets.has(result); if(!index) { index = Module.targets.add(result); } console.log(index); return index; } console.log(0); return 0; },
+ function($0, $1, $2) { const target = Module.targets.get($0) || window; const eventName = UTF8ToString($1); const funcPtr = $2; const options = {}; const callback = () => { Module.ccall( 'exec_callback' , 'number' , ["number"] , [funcPtr] ); }; target.addEventListener(eventName, callback, options); const remover = () => { target.removeEventListener(eventName, callback, options); return $2; }; return Module.callbacks.add(remover); },
+ function($0) { const remover = Module.callbacks.get($0); return remover(); },
+ function($0, $1) { const target = Module.targets.get($0) || document; const querySelector = UTF8ToString($1); const result = target.querySelector(querySelector); if(!result) { return 0; } let index = Module.targets.has(result) || 0; if(!index) { index = Module.targets.add(result); } return index; },
+ function($0) { const jsRet = String(eval(UTF8ToString($0))); const len = lengthBytesUTF8(jsRet) + 1; const strLoc = _malloc(len); stringToUTF8(jsRet, strLoc, len); return strLoc; },
  function($0, $1) { const funcName = UTF8ToString($0); const argJson = UTF8ToString($1); const func = window[funcName]; const args = JSON.parse(argJson || '[]') || []; const jsRet = String(func(...args)); const len = lengthBytesUTF8(jsRet) + 1; const strLoc = _malloc(len); stringToUTF8(jsRet, strLoc, len); return strLoc; },
- function($0, $1) { console.log($0, $1) },
- function($0, $1) { const timeout = Number(UTF8ToString($0)); const funcPtr = $1; console.log(timeout, funcPtr); setTimeout(()=>{ console.log(timeout, funcPtr); Module.ccall( 'exec_callback' , 'number' , ["number"] , [funcPtr] ); console.log(timeout, funcPtr); }, timeout); }];
+ function($0, $1) { const timeout = Number(UTF8ToString($0)); const funcPtr = $1; setTimeout(()=>{ Module.ccall( 'exec_callback' , 'number' , ["number"] , [funcPtr] ); Module.ccall( 'del_callback' , 'number' , ["number"] , [funcPtr] ); }, timeout); }];
 
 function _emscripten_asm_const_iii(code, a0, a1) {
   return ASM_CONSTS[code](a0, a1);
@@ -1825,10 +1829,14 @@ function _emscripten_asm_const_ii(code, a0) {
   return ASM_CONSTS[code](a0);
 }
 
+function _emscripten_asm_const_iiii(code, a0, a1, a2) {
+  return ASM_CONSTS[code](a0, a1, a2);
+}
 
 
 
-// STATICTOP = STATIC_BASE + 2210528;
+
+// STATICTOP = STATIC_BASE + 2295040;
 /* global initializers */  __ATINIT__.push({ func: function() { ___emscripten_environ_constructor() } });
 
 
@@ -1839,7 +1847,7 @@ function _emscripten_asm_const_ii(code, a0) {
 
 
 /* no memory initializer */
-var tempDoublePtr = 2211536;
+var tempDoublePtr = 2296048;
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
   HEAP8[tempDoublePtr] = HEAP8[ptr];
@@ -5507,6 +5515,14 @@ function copyTempDouble(ptr) {
   }
 
   
+  function ___sys_mremap(old_addr, old_size, new_size, flags) {
+      return -48; // never succeed
+    }function ___syscall163(a0,a1,a2,a3,a4
+  ) {
+  return ___sys_mremap(a0,a1,a2,a3,a4);
+  }
+
+  
   function ___sys_poll(fds, nfds, timeout) {try {
   
       var nonzero = 0;
@@ -5699,6 +5715,15 @@ function copyTempDouble(ptr) {
   }
 
   
+  function ___sys_geteuid32(
+  ) {
+  return ___sys_getegid32();
+  }function ___syscall201(
+  ) {
+  return ___sys_geteuid32();
+  }
+
+  
   function ___sys_getgroups32(size, list) {
       if (size < 1) return -28;
       HEAP32[((list)>>2)]=0;
@@ -5706,6 +5731,20 @@ function copyTempDouble(ptr) {
     }function ___syscall205(a0,a1
   ) {
   return ___sys_getgroups32(a0,a1);
+  }
+
+  
+  function ___sys_fchown32(fd, owner, group) {try {
+  
+      FS.fchown(fd, owner, group);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }function ___syscall207(a0,a1,a2
+  ) {
+  return ___sys_fchown32(a0,a1,a2);
   }
 
   
@@ -6373,6 +6412,20 @@ function copyTempDouble(ptr) {
   }
 
   
+  function ___sys_fchmod(fd, mode) {try {
+  
+      FS.fchmod(fd, mode);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return -e.errno;
+  }
+  }function ___syscall94(a0,a1
+  ) {
+  return ___sys_fchmod(a0,a1);
+  }
+
+  
   function _fd_close(fd) {try {
   
       var stream = SYSCALLS.getStreamFromFD(fd);
@@ -6456,6 +6509,23 @@ function copyTempDouble(ptr) {
   }
 
   
+  function _fd_sync(fd) {try {
+  
+      var stream = SYSCALLS.getStreamFromFD(fd);
+      if (stream.stream_ops && stream.stream_ops.fsync) {
+        return -stream.stream_ops.fsync(stream);
+      }
+      return 0; // we can't do anything synchronously; the in-memory FS is already synced to
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return e.errno;
+  }
+  }function ___wasi_fd_sync(a0
+  ) {
+  return _fd_sync(a0);
+  }
+
+  
   function _fd_write(fd, iov, iovcnt, pnum) {try {
   
       var stream = SYSCALLS.getStreamFromFD(fd);
@@ -6486,7 +6556,7 @@ function copyTempDouble(ptr) {
     }
 
   
-  var ___tm_formatted=2211456;
+  var ___tm_formatted=2295968;
   
   
   function _tzset() {
@@ -6811,7 +6881,7 @@ function copyTempDouble(ptr) {
     }
 
   
-  var ___tm_timezone=(stringToUTF8("GMT", 2211440, 4), 2211440);function _gmtime_r(time, tmPtr) {
+  var ___tm_timezone=(stringToUTF8("GMT", 2295952, 4), 2295952);function _gmtime_r(time, tmPtr) {
       var date = new Date(HEAP32[((time)>>2)]*1000);
       HEAP32[((tmPtr)>>2)]=date.getUTCSeconds();
       HEAP32[(((tmPtr)+(4))>>2)]=date.getUTCMinutes();
@@ -6949,6 +7019,18 @@ function copyTempDouble(ptr) {
   ) {
   err('missing function: popen'); abort(-1);
   }
+
+  function _pthread_create() {
+      return 6;
+    }
+
+  function _pthread_join() {}
+
+  function _pthread_mutexattr_destroy() {}
+
+  function _pthread_mutexattr_init() {}
+
+  function _pthread_mutexattr_settype() {}
 
   function _pthread_setcancelstate() { return 0; }
 
@@ -8078,7 +8160,7 @@ function invoke_viiiiii(index,a1,a2,a3,a4,a5,a6) {
 
 var asmGlobalArg = {};
 
-var asmLibraryArg = { "___assert_fail": ___assert_fail, "___buildEnvironment": ___buildEnvironment, "___clock_gettime": ___clock_gettime, "___map_file": ___map_file, "___sys__newselect": ___sys__newselect, "___sys_access": ___sys_access, "___sys_chdir": ___sys_chdir, "___sys_chmod": ___sys_chmod, "___sys_chown32": ___sys_chown32, "___sys_dup": ___sys_dup, "___sys_dup2": ___sys_dup2, "___sys_fcntl64": ___sys_fcntl64, "___sys_fstat64": ___sys_fstat64, "___sys_ftruncate64": ___sys_ftruncate64, "___sys_getcwd": ___sys_getcwd, "___sys_getdents64": ___sys_getdents64, "___sys_getegid32": ___sys_getegid32, "___sys_getgid32": ___sys_getgid32, "___sys_getgroups32": ___sys_getgroups32, "___sys_getpid": ___sys_getpid, "___sys_getrusage": ___sys_getrusage, "___sys_getuid32": ___sys_getuid32, "___sys_ioctl": ___sys_ioctl, "___sys_lchown32": ___sys_lchown32, "___sys_link": ___sys_link, "___sys_lstat64": ___sys_lstat64, "___sys_madvise1": ___sys_madvise1, "___sys_mkdir": ___sys_mkdir, "___sys_mmap2": ___sys_mmap2, "___sys_munmap": ___sys_munmap, "___sys_nice": ___sys_nice, "___sys_open": ___sys_open, "___sys_pipe": ___sys_pipe, "___sys_poll": ___sys_poll, "___sys_read": ___sys_read, "___sys_readlink": ___sys_readlink, "___sys_rename": ___sys_rename, "___sys_rmdir": ___sys_rmdir, "___sys_socketcall": ___sys_socketcall, "___sys_stat64": ___sys_stat64, "___sys_statfs64": ___sys_statfs64, "___sys_symlink": ___sys_symlink, "___sys_umask": ___sys_umask, "___sys_uname": ___sys_uname, "___sys_unlink": ___sys_unlink, "___sys_wait4": ___sys_wait4, "___syscall10": ___syscall10, "___syscall102": ___syscall102, "___syscall114": ___syscall114, "___syscall12": ___syscall12, "___syscall122": ___syscall122, "___syscall142": ___syscall142, "___syscall15": ___syscall15, "___syscall168": ___syscall168, "___syscall183": ___syscall183, "___syscall192": ___syscall192, "___syscall194": ___syscall194, "___syscall195": ___syscall195, "___syscall196": ___syscall196, "___syscall197": ___syscall197, "___syscall198": ___syscall198, "___syscall199": ___syscall199, "___syscall20": ___syscall20, "___syscall200": ___syscall200, "___syscall205": ___syscall205, "___syscall212": ___syscall212, "___syscall219": ___syscall219, "___syscall220": ___syscall220, "___syscall221": ___syscall221, "___syscall268": ___syscall268, "___syscall3": ___syscall3, "___syscall33": ___syscall33, "___syscall34": ___syscall34, "___syscall38": ___syscall38, "___syscall39": ___syscall39, "___syscall40": ___syscall40, "___syscall41": ___syscall41, "___syscall42": ___syscall42, "___syscall5": ___syscall5, "___syscall54": ___syscall54, "___syscall60": ___syscall60, "___syscall63": ___syscall63, "___syscall77": ___syscall77, "___syscall83": ___syscall83, "___syscall85": ___syscall85, "___syscall9": ___syscall9, "___syscall91": ___syscall91, "___wasi_fd_close": ___wasi_fd_close, "___wasi_fd_fdstat_get": ___wasi_fd_fdstat_get, "___wasi_fd_read": ___wasi_fd_read, "___wasi_fd_seek": ___wasi_fd_seek, "___wasi_fd_write": ___wasi_fd_write, "__addDays": __addDays, "__arraySum": __arraySum, "__exit": __exit, "__getExecutableName": __getExecutableName, "__inet_ntop4_raw": __inet_ntop4_raw, "__inet_ntop6_raw": __inet_ntop6_raw, "__inet_pton4_raw": __inet_pton4_raw, "__inet_pton6_raw": __inet_pton6_raw, "__isLeapYear": __isLeapYear, "__memory_base": 1024, "__read_sockaddr": __read_sockaddr, "__table_base": 0, "__write_sockaddr": __write_sockaddr, "_abort": _abort, "_asctime_r": _asctime_r, "_chroot": _chroot, "_clock_gettime": _clock_gettime, "_difftime": _difftime, "_dlclose": _dlclose, "_dlerror": _dlerror, "_dlopen": _dlopen, "_dlsym": _dlsym, "_emscripten_asm_const_ii": _emscripten_asm_const_ii, "_emscripten_asm_const_iii": _emscripten_asm_const_iii, "_emscripten_asm_const_int": _emscripten_asm_const_int, "_emscripten_get_heap_size": _emscripten_get_heap_size, "_emscripten_get_now": _emscripten_get_now, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_resize_heap": _emscripten_resize_heap, "_execl": _execl, "_execle": _execle, "_execvp": _execvp, "_exit": _exit, "_fd_close": _fd_close, "_fd_fdstat_get": _fd_fdstat_get, "_fd_read": _fd_read, "_fd_seek": _fd_seek, "_fd_write": _fd_write, "_flock": _flock, "_fork": _fork, "_getdtablesize": _getdtablesize, "_getenv": _getenv, "_getgrnam": _getgrnam, "_gethostbyaddr": _gethostbyaddr, "_gethostbyname": _gethostbyname, "_gethostbyname_r": _gethostbyname_r, "_getloadavg": _getloadavg, "_getprotobyname": _getprotobyname, "_getprotobynumber": _getprotobynumber, "_getpwnam": _getpwnam, "_getpwuid": _getpwuid, "_gettimeofday": _gettimeofday, "_gmtime_r": _gmtime_r, "_kill": _kill, "_llvm_bswap_i64": _llvm_bswap_i64, "_llvm_log10_f32": _llvm_log10_f32, "_llvm_log10_f64": _llvm_log10_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_localtime_r": _localtime_r, "_longjmp": _longjmp, "_mktime": _mktime, "_nanosleep": _nanosleep, "_popen": _popen, "_pthread_setcancelstate": _pthread_setcancelstate, "_putenv": _putenv, "_setTempRet0": _setTempRet0, "_setitimer": _setitimer, "_setprotoent": _setprotoent, "_sigaction": _sigaction, "_sigaddset": _sigaddset, "_sigdelset": _sigdelset, "_sigemptyset": _sigemptyset, "_sigfillset": _sigfillset, "_signal": _signal, "_sigprocmask": _sigprocmask, "_strftime": _strftime, "_strptime": _strptime, "_sysconf": _sysconf, "_time": _time, "_tzset": _tzset, "_unsetenv": _unsetenv, "_usleep": _usleep, "_utime": _utime, "_wait": _wait, "_waitpid": _waitpid, "abort": abort, "getTempRet0": getTempRet0, "invoke_i": invoke_i, "invoke_ii": invoke_ii, "invoke_iii": invoke_iii, "invoke_iiii": invoke_iiii, "invoke_iiiii": invoke_iiiii, "invoke_iiiiiii": invoke_iiiiiii, "invoke_v": invoke_v, "invoke_vi": invoke_vi, "invoke_vii": invoke_vii, "invoke_viidii": invoke_viidii, "invoke_viii": invoke_viii, "invoke_viiii": invoke_viiii, "invoke_viiiii": invoke_viiiii, "invoke_viiiiii": invoke_viiiiii, "memory": wasmMemory, "setTempRet0": setTempRet0, "table": wasmTable, "tempDoublePtr": tempDoublePtr };
+var asmLibraryArg = { "___assert_fail": ___assert_fail, "___buildEnvironment": ___buildEnvironment, "___clock_gettime": ___clock_gettime, "___map_file": ___map_file, "___sys__newselect": ___sys__newselect, "___sys_access": ___sys_access, "___sys_chdir": ___sys_chdir, "___sys_chmod": ___sys_chmod, "___sys_chown32": ___sys_chown32, "___sys_dup": ___sys_dup, "___sys_dup2": ___sys_dup2, "___sys_fchmod": ___sys_fchmod, "___sys_fchown32": ___sys_fchown32, "___sys_fcntl64": ___sys_fcntl64, "___sys_fstat64": ___sys_fstat64, "___sys_ftruncate64": ___sys_ftruncate64, "___sys_getcwd": ___sys_getcwd, "___sys_getdents64": ___sys_getdents64, "___sys_getegid32": ___sys_getegid32, "___sys_geteuid32": ___sys_geteuid32, "___sys_getgid32": ___sys_getgid32, "___sys_getgroups32": ___sys_getgroups32, "___sys_getpid": ___sys_getpid, "___sys_getrusage": ___sys_getrusage, "___sys_getuid32": ___sys_getuid32, "___sys_ioctl": ___sys_ioctl, "___sys_lchown32": ___sys_lchown32, "___sys_link": ___sys_link, "___sys_lstat64": ___sys_lstat64, "___sys_madvise1": ___sys_madvise1, "___sys_mkdir": ___sys_mkdir, "___sys_mmap2": ___sys_mmap2, "___sys_mremap": ___sys_mremap, "___sys_munmap": ___sys_munmap, "___sys_nice": ___sys_nice, "___sys_open": ___sys_open, "___sys_pipe": ___sys_pipe, "___sys_poll": ___sys_poll, "___sys_read": ___sys_read, "___sys_readlink": ___sys_readlink, "___sys_rename": ___sys_rename, "___sys_rmdir": ___sys_rmdir, "___sys_socketcall": ___sys_socketcall, "___sys_stat64": ___sys_stat64, "___sys_statfs64": ___sys_statfs64, "___sys_symlink": ___sys_symlink, "___sys_umask": ___sys_umask, "___sys_uname": ___sys_uname, "___sys_unlink": ___sys_unlink, "___sys_wait4": ___sys_wait4, "___syscall10": ___syscall10, "___syscall102": ___syscall102, "___syscall114": ___syscall114, "___syscall12": ___syscall12, "___syscall122": ___syscall122, "___syscall142": ___syscall142, "___syscall15": ___syscall15, "___syscall163": ___syscall163, "___syscall168": ___syscall168, "___syscall183": ___syscall183, "___syscall192": ___syscall192, "___syscall194": ___syscall194, "___syscall195": ___syscall195, "___syscall196": ___syscall196, "___syscall197": ___syscall197, "___syscall198": ___syscall198, "___syscall199": ___syscall199, "___syscall20": ___syscall20, "___syscall200": ___syscall200, "___syscall201": ___syscall201, "___syscall205": ___syscall205, "___syscall207": ___syscall207, "___syscall212": ___syscall212, "___syscall219": ___syscall219, "___syscall220": ___syscall220, "___syscall221": ___syscall221, "___syscall268": ___syscall268, "___syscall3": ___syscall3, "___syscall33": ___syscall33, "___syscall34": ___syscall34, "___syscall38": ___syscall38, "___syscall39": ___syscall39, "___syscall40": ___syscall40, "___syscall41": ___syscall41, "___syscall42": ___syscall42, "___syscall5": ___syscall5, "___syscall54": ___syscall54, "___syscall60": ___syscall60, "___syscall63": ___syscall63, "___syscall77": ___syscall77, "___syscall83": ___syscall83, "___syscall85": ___syscall85, "___syscall9": ___syscall9, "___syscall91": ___syscall91, "___syscall94": ___syscall94, "___wasi_fd_close": ___wasi_fd_close, "___wasi_fd_fdstat_get": ___wasi_fd_fdstat_get, "___wasi_fd_read": ___wasi_fd_read, "___wasi_fd_seek": ___wasi_fd_seek, "___wasi_fd_sync": ___wasi_fd_sync, "___wasi_fd_write": ___wasi_fd_write, "__addDays": __addDays, "__arraySum": __arraySum, "__exit": __exit, "__getExecutableName": __getExecutableName, "__inet_ntop4_raw": __inet_ntop4_raw, "__inet_ntop6_raw": __inet_ntop6_raw, "__inet_pton4_raw": __inet_pton4_raw, "__inet_pton6_raw": __inet_pton6_raw, "__isLeapYear": __isLeapYear, "__memory_base": 1024, "__read_sockaddr": __read_sockaddr, "__table_base": 0, "__write_sockaddr": __write_sockaddr, "_abort": _abort, "_asctime_r": _asctime_r, "_chroot": _chroot, "_clock_gettime": _clock_gettime, "_difftime": _difftime, "_dlclose": _dlclose, "_dlerror": _dlerror, "_dlopen": _dlopen, "_dlsym": _dlsym, "_emscripten_asm_const_ii": _emscripten_asm_const_ii, "_emscripten_asm_const_iii": _emscripten_asm_const_iii, "_emscripten_asm_const_iiii": _emscripten_asm_const_iiii, "_emscripten_asm_const_int": _emscripten_asm_const_int, "_emscripten_get_heap_size": _emscripten_get_heap_size, "_emscripten_get_now": _emscripten_get_now, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_resize_heap": _emscripten_resize_heap, "_execl": _execl, "_execle": _execle, "_execvp": _execvp, "_exit": _exit, "_fd_close": _fd_close, "_fd_fdstat_get": _fd_fdstat_get, "_fd_read": _fd_read, "_fd_seek": _fd_seek, "_fd_sync": _fd_sync, "_fd_write": _fd_write, "_flock": _flock, "_fork": _fork, "_getdtablesize": _getdtablesize, "_getenv": _getenv, "_getgrnam": _getgrnam, "_gethostbyaddr": _gethostbyaddr, "_gethostbyname": _gethostbyname, "_gethostbyname_r": _gethostbyname_r, "_getloadavg": _getloadavg, "_getprotobyname": _getprotobyname, "_getprotobynumber": _getprotobynumber, "_getpwnam": _getpwnam, "_getpwuid": _getpwuid, "_gettimeofday": _gettimeofday, "_gmtime_r": _gmtime_r, "_kill": _kill, "_llvm_bswap_i64": _llvm_bswap_i64, "_llvm_log10_f32": _llvm_log10_f32, "_llvm_log10_f64": _llvm_log10_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "_localtime_r": _localtime_r, "_longjmp": _longjmp, "_mktime": _mktime, "_nanosleep": _nanosleep, "_popen": _popen, "_pthread_create": _pthread_create, "_pthread_join": _pthread_join, "_pthread_mutexattr_destroy": _pthread_mutexattr_destroy, "_pthread_mutexattr_init": _pthread_mutexattr_init, "_pthread_mutexattr_settype": _pthread_mutexattr_settype, "_pthread_setcancelstate": _pthread_setcancelstate, "_putenv": _putenv, "_setTempRet0": _setTempRet0, "_setitimer": _setitimer, "_setprotoent": _setprotoent, "_sigaction": _sigaction, "_sigaddset": _sigaddset, "_sigdelset": _sigdelset, "_sigemptyset": _sigemptyset, "_sigfillset": _sigfillset, "_signal": _signal, "_sigprocmask": _sigprocmask, "_strftime": _strftime, "_strptime": _strptime, "_sysconf": _sysconf, "_time": _time, "_tzset": _tzset, "_unsetenv": _unsetenv, "_usleep": _usleep, "_utime": _utime, "_wait": _wait, "_waitpid": _waitpid, "abort": abort, "getTempRet0": getTempRet0, "invoke_i": invoke_i, "invoke_ii": invoke_ii, "invoke_iii": invoke_iii, "invoke_iiii": invoke_iiii, "invoke_iiiii": invoke_iiiii, "invoke_iiiiiii": invoke_iiiiiii, "invoke_v": invoke_v, "invoke_vi": invoke_vi, "invoke_vii": invoke_vii, "invoke_viidii": invoke_viidii, "invoke_viii": invoke_viii, "invoke_viiii": invoke_viiii, "invoke_viiiii": invoke_viiiii, "invoke_viiiiii": invoke_viiiiii, "memory": wasmMemory, "setTempRet0": setTempRet0, "table": wasmTable, "tempDoublePtr": tempDoublePtr };
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (asmGlobalArg, asmLibraryArg, buffer);
@@ -8114,8 +8196,18 @@ var __get_tzname = Module["__get_tzname"] = function() {
 };
 
 /** @type {function(...*):?} */
+var _del_callback = Module["_del_callback"] = function() {
+  return (_del_callback = Module["_del_callback"] = Module["asm"]["_del_callback"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
 var _emscripten_get_sbrk_ptr = Module["_emscripten_get_sbrk_ptr"] = function() {
   return (_emscripten_get_sbrk_ptr = Module["_emscripten_get_sbrk_ptr"] = Module["asm"]["_emscripten_get_sbrk_ptr"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var _emscripten_main_thread_process_queued_calls = Module["_emscripten_main_thread_process_queued_calls"] = function() {
+  return (_emscripten_main_thread_process_queued_calls = Module["_emscripten_main_thread_process_queued_calls"] = Module["asm"]["_emscripten_main_thread_process_queued_calls"]).apply(null, arguments);
 };
 
 /** @type {function(...*):?} */
@@ -8199,8 +8291,8 @@ var _pib_destroy = Module["_pib_destroy"] = function() {
 };
 
 /** @type {function(...*):?} */
-var _pib_eval = Module["_pib_eval"] = function() {
-  return (_pib_eval = Module["_pib_eval"] = Module["asm"]["_pib_eval"]).apply(null, arguments);
+var _pib_exec = Module["_pib_exec"] = function() {
+  return (_pib_exec = Module["_pib_exec"] = Module["asm"]["_pib_exec"]).apply(null, arguments);
 };
 
 /** @type {function(...*):?} */
@@ -8211,6 +8303,11 @@ var _pib_init = Module["_pib_init"] = function() {
 /** @type {function(...*):?} */
 var _pib_refresh = Module["_pib_refresh"] = function() {
   return (_pib_refresh = Module["_pib_refresh"] = Module["asm"]["_pib_refresh"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var _pib_run = Module["_pib_run"] = function() {
+  return (_pib_run = Module["_pib_run"] = Module["asm"]["_pib_run"]).apply(null, arguments);
 };
 
 /** @type {function(...*):?} */
@@ -8259,6 +8356,16 @@ var dynCall_d = Module["dynCall_d"] = function() {
 };
 
 /** @type {function(...*):?} */
+var dynCall_di = Module["dynCall_di"] = function() {
+  return (dynCall_di = Module["dynCall_di"] = Module["asm"]["dynCall_di"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_dii = Module["dynCall_dii"] = function() {
+  return (dynCall_dii = Module["dynCall_dii"] = Module["asm"]["dynCall_dii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
 var dynCall_i = Module["dynCall_i"] = function() {
   return (dynCall_i = Module["dynCall_i"] = Module["asm"]["dynCall_i"]).apply(null, arguments);
 };
@@ -8276,6 +8383,11 @@ var dynCall_iidiiii = Module["dynCall_iidiiii"] = function() {
 /** @type {function(...*):?} */
 var dynCall_iii = Module["dynCall_iii"] = function() {
   return (dynCall_iii = Module["dynCall_iii"] = Module["asm"]["dynCall_iii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiid = Module["dynCall_iiid"] = function() {
+  return (dynCall_iiid = Module["dynCall_iiid"] = Module["asm"]["dynCall_iiid"]).apply(null, arguments);
 };
 
 /** @type {function(...*):?} */
@@ -8299,13 +8411,98 @@ var dynCall_iiiiiii = Module["dynCall_iiiiiii"] = function() {
 };
 
 /** @type {function(...*):?} */
+var dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = function() {
+  return (dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = Module["asm"]["dynCall_iiiiiiiii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
 var dynCall_iiiiiiiiii = Module["dynCall_iiiiiiiiii"] = function() {
   return (dynCall_iiiiiiiiii = Module["dynCall_iiiiiiiiii"] = Module["asm"]["dynCall_iiiiiiiiii"]).apply(null, arguments);
 };
 
 /** @type {function(...*):?} */
+var dynCall_iiiiiiiiiii = Module["dynCall_iiiiiiiiiii"] = function() {
+  return (dynCall_iiiiiiiiiii = Module["dynCall_iiiiiiiiiii"] = Module["asm"]["dynCall_iiiiiiiiiii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiiiij = Module["dynCall_iiiiiij"] = function() {
+  return (dynCall_iiiiiij = Module["dynCall_iiiiiij"] = Module["asm"]["dynCall_iiiiiij"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiiijii = Module["dynCall_iiiiijii"] = function() {
+  return (dynCall_iiiiijii = Module["dynCall_iiiiijii"] = Module["asm"]["dynCall_iiiiijii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiij = Module["dynCall_iiiij"] = function() {
+  return (dynCall_iiiij = Module["dynCall_iiiij"] = Module["asm"]["dynCall_iiiij"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiiji = Module["dynCall_iiiiji"] = function() {
+  return (dynCall_iiiiji = Module["dynCall_iiiiji"] = Module["asm"]["dynCall_iiiiji"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiiijii = Module["dynCall_iiiijii"] = function() {
+  return (dynCall_iiiijii = Module["dynCall_iiiijii"] = Module["asm"]["dynCall_iiiijii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiij = Module["dynCall_iiij"] = function() {
+  return (dynCall_iiij = Module["dynCall_iiij"] = Module["asm"]["dynCall_iiij"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iij = Module["dynCall_iij"] = function() {
+  return (dynCall_iij = Module["dynCall_iij"] = Module["asm"]["dynCall_iij"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iiji = Module["dynCall_iiji"] = function() {
+  return (dynCall_iiji = Module["dynCall_iiji"] = Module["asm"]["dynCall_iiji"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_iijii = Module["dynCall_iijii"] = function() {
+  return (dynCall_iijii = Module["dynCall_iijii"] = Module["asm"]["dynCall_iijii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_ij = Module["dynCall_ij"] = function() {
+  return (dynCall_ij = Module["dynCall_ij"] = Module["asm"]["dynCall_ij"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_j = Module["dynCall_j"] = function() {
+  return (dynCall_j = Module["dynCall_j"] = Module["asm"]["dynCall_j"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_ji = Module["dynCall_ji"] = function() {
+  return (dynCall_ji = Module["dynCall_ji"] = Module["asm"]["dynCall_ji"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_jii = Module["dynCall_jii"] = function() {
+  return (dynCall_jii = Module["dynCall_jii"] = Module["asm"]["dynCall_jii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_jiij = Module["dynCall_jiij"] = function() {
+  return (dynCall_jiij = Module["dynCall_jiij"] = Module["asm"]["dynCall_jiij"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
 var dynCall_jiji = Module["dynCall_jiji"] = function() {
   return (dynCall_jiji = Module["dynCall_jiji"] = Module["asm"]["dynCall_jiji"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_jj = Module["dynCall_jj"] = function() {
+  return (dynCall_jj = Module["dynCall_jj"] = Module["asm"]["dynCall_jj"]).apply(null, arguments);
 };
 
 /** @type {function(...*):?} */
@@ -8316,6 +8513,11 @@ var dynCall_v = Module["dynCall_v"] = function() {
 /** @type {function(...*):?} */
 var dynCall_vi = Module["dynCall_vi"] = function() {
   return (dynCall_vi = Module["dynCall_vi"] = Module["asm"]["dynCall_vi"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_vid = Module["dynCall_vid"] = function() {
+  return (dynCall_vid = Module["dynCall_vid"] = Module["asm"]["dynCall_vid"]).apply(null, arguments);
 };
 
 /** @type {function(...*):?} */
@@ -8351,6 +8553,31 @@ var dynCall_viiiiii = Module["dynCall_viiiiii"] = function() {
 /** @type {function(...*):?} */
 var dynCall_viiiiiiii = Module["dynCall_viiiiiiii"] = function() {
   return (dynCall_viiiiiiii = Module["dynCall_viiiiiiii"] = Module["asm"]["dynCall_viiiiiiii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_viiiij = Module["dynCall_viiiij"] = function() {
+  return (dynCall_viiiij = Module["dynCall_viiiij"] = Module["asm"]["dynCall_viiiij"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_viij = Module["dynCall_viij"] = function() {
+  return (dynCall_viij = Module["dynCall_viij"] = Module["asm"]["dynCall_viij"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_viiji = Module["dynCall_viiji"] = function() {
+  return (dynCall_viiji = Module["dynCall_viiji"] = Module["asm"]["dynCall_viiji"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_viijii = Module["dynCall_viijii"] = function() {
+  return (dynCall_viijii = Module["dynCall_viijii"] = Module["asm"]["dynCall_viijii"]).apply(null, arguments);
+};
+
+/** @type {function(...*):?} */
+var dynCall_vij = Module["dynCall_vij"] = function() {
+  return (dynCall_vij = Module["dynCall_vij"] = Module["asm"]["dynCall_vij"]).apply(null, arguments);
 };
 ;
 

@@ -2,6 +2,10 @@
 	background-color: #000082;
 }
 
+.sub-window .title-bar {
+	display: none !important;
+}
+
 .title-bar {
 	user-select: none;
 	background-color: #666;

@@ -34,7 +34,7 @@ export class PhpEditor extends Task
 		this.window.args.input = '<?php ';
 		// this.window.args.input = `\`\`\`php <?php ob_end_flush(); echo "Hello," . PHP_EOL . " world!" ?> \`\`\``;
 
-		const Php = require('php-wasm/Php').Php;
+		const Php = require('php-wasm/PhpWeb').PhpWeb;
 
 		const php = new Php();
 
@@ -213,36 +213,22 @@ export class PhpEditor extends Task
 						editor.session.replace(new Range(lines - 2, 0, lines - 2, Infinity), phpCommand);
 					}
 
+					phpCommand = phpCommand.replace(/^<\?php/, '');
+
+					console.log(phpCommand);
+
 					if(!!phpCommand)
 					{
-						phpCommand = phpCommand.replace(/^\<\?php/, '');
-						phpCommand = phpCommand.replace(/\?\>\s+?/, '');
+						console.log(phpCommand);
 
-						if(!phpCommand.match(/(^(echo|print)|;$)/))
-						{
-							phpCommand = `print "<?php " . var_export(${phpCommand}, TRUE) . ";?>";`;
-						}
+						this.window.onIdle(()=>php.run(phpCommand).then(retVal => {
 
+							console.log(retVal);
 
-						this.window.onIdle(()=>php.run(`<?php ${phpCommand};`).then(exitCode => {
-
-							console.log(exitCode);
-
-							if(exitCode)
-							{
-								php.refresh();
-
-								editor.session.insert(
-									{row: lines - 1, column: 0}
-									, "# PHP Error, interpreter refreshed.\n<?php "
-								);
-
-								editor.session.insert(
-									{row: lines - 2, column: 0}
-									, "# "
-								);
-							}
-
+							editor.session.insert(
+								{row: lines - 1, column: 0}
+								, retVal
+							);
 						}));
 					}
 				}

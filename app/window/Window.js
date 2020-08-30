@@ -30,7 +30,20 @@ let Base = class extends View
 
 		this.args.wid = this.constructor.idInc++;
 
-		this.args.titleBar = new TitleBar(this.args, this);
+		this.args.titleBar     = new TitleBar(this.args, this);
+		this.args.hideTitleBar = false;
+
+		this.outWindow = false;
+		this.wasMaximized = false;
+
+		this.args.bindTo('title', v => {
+
+			if(this.outWindow)
+			{
+				this.outWindow.document.title = v;
+			}
+
+		});
 	}
 
 	postRender()
@@ -63,8 +76,73 @@ let Base = class extends View
 		));
 	}
 
+	popup()
+	{
+		const main = this.tags.window.element;
+		const rect = main.getBoundingClientRect();
+		const orig = main.parentNode;
+
+		const trimSize = {
+			x: window.outerWidth - window.innerWidth
+			, y: window.outerHeight - window.innerHeight
+		};
+
+		const features = `screenX=${Math.floor(rect.x) + trimSize.x + window.screenX}`
+			+ `,screenY=${Math.floor(rect.y) + trimSize.y + window.screenY}`
+			+ `,width=${rect.width}`
+			+ `,height=${rect.height}`;
+
+		console.log(features);
+
+		this.outWindow = window.open(
+			''
+			, this._id
+			, features
+		);
+
+		this.outWindow.document.title = this.args.title;
+
+		this.outWindow.addEventListener('beforeunload', () => {
+			this.outWindow = false;
+			this.args.hideTitleBar = false;
+			this.classes.maximized = this.wasMaximized;
+			this.restore();
+			this.render(orig);
+		});
+
+		const base = this.outWindow.document.createElement('base');
+
+		base.setAttribute('href', origin);
+
+		this.outWindow.document.head.append(base);
+
+		const newDoc = this.outWindow.document;
+
+		for(const sheet of document.styleSheets)
+		{
+			const newSheet = sheet.ownerNode.cloneNode(true);
+
+			if(sheet.href)
+			{
+				newSheet.setAttribute('href', sheet.href);
+			}
+
+			newDoc.head.append(newSheet);
+		}
+
+		this.wasMaximized = this.classes.maximized;
+
+		this.args.hideTitleBar = true;
+		this.render(this.outWindow.document.body);
+		this.classes.maximized = true;
+
+		this.outWindow.document.body.classList.add('sub-window');
+	}
+
 	menuFocus()
 	{
+		console.log(this.tags.window.element.isConnected);
+
 		this.classes['menu-open'] = true;
 	}
 
@@ -147,6 +225,11 @@ let Base = class extends View
 			return;
 		}
 
+		if(this.outWindow)
+		{
+			this.outWindow.close();
+		}
+
 		this.windows.remove(this);
 
 		this.dispatchEvent(new CustomEvent(
@@ -163,6 +246,11 @@ let Base = class extends View
 		if(canceled)
 		{
 			return;
+		}
+
+		if(this.outWindow)
+		{
+			this.outWindow.focus();
 		}
 
 		const prevZ = this.pos.z;
@@ -194,7 +282,17 @@ let Base = class extends View
 			return;
 		}
 
-		this.maximize();
+		if(this.classes['popping'])
+		{
+			return;
+		}
+
+		this.classes['popping'] = true;
+
+		this.onTimeout(333, () => {
+			this.classes['popping'] = false;
+			this.popup();
+		});
 	}
 
 	grabTitleBar(event)

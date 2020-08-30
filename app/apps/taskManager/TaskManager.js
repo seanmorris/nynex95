@@ -23,7 +23,14 @@ export class TaskManager extends Task
 		};
 
 		this.window.focusTask = (event, task) => {
-			task.window.focus();
+
+
+			setTimeout(1000, ()=> {
+
+				console.log(task.window);
+				task.window.focus();
+
+			});
 		};
 
 		this.window.args.tasks = [];

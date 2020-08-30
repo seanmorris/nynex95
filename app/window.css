@@ -61,3 +61,31 @@
 .window.menu-open {
 	overflow: visible;
 }
+
+.window.popping {
+	animation-name: window-popout;
+	animation-duration: 0.333s;
+}
+
+@keyframes window-popout {
+	from {
+		transform: scale(1,1);
+		animation-timing-function: ease-out;
+	}
+
+	40% {
+		transform: scale(.75,.75);
+		animation-timing-function: ease-in;
+	}
+
+	85% {
+		transform: scale(.75,.75);
+		animation-timing-function: ease-in;
+	}
+
+
+	to {
+		transform: scale(1,1);
+	}
+
+}
