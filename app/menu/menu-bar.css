@@ -1,0 +1,12 @@
+.menu-bar {
+	flex-direction: row;
+	flex-wrap: wrap;
+	display: flex;
+}
+
+.menu-bar > * {
+	margin: 0.25em;
+	margin-left: 0.5em;
+	position: relative;
+}
+

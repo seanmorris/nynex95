@@ -39,7 +39,7 @@ export class GitHub extends Task
 				this.trayIcon = this.trayIcon || new Icon({
 					icon: 'github'
 					, path: 'apps'
-					, bits: 1
+					, bits: 2
 					, size: 16
 					, action: () => {
 						GitHub.setToken('{}');

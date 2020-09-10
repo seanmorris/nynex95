@@ -14,6 +14,8 @@ import { Json as JsonControl } from '../../control/Json';
 import { Image as ImageControl } from '../../control/Image';
 import { Plaintext as PlaintextControl } from '../../control/Plaintext';
 
+import { Console as Terminal } from 'subspace-console/Console';
+
 export class RepoBrowser extends Task
 {
 	title    = 'Repo Browser';
@@ -26,6 +28,8 @@ export class RepoBrowser extends Task
 
 		this.current = null;
 
+		this.window.args.branch = 'master';
+
 		this.window.selectParent = (event) => {
 
 			if(!this.current.parent || !(this.current.parent instanceof Folder))
@@ -36,6 +40,27 @@ export class RepoBrowser extends Task
 			this.current.parent.select();
 			this.current.parent.expand(null, null, true);
 		};
+
+		this.window.classes['hide-right'] = true;
+
+		this.window.toggleSection = (section) => {
+
+			console.log(section,this.window.classes);
+
+			const clas = 'hide-' + section;
+
+			this.window.classes[clas] = !!!this.window.classes[clas];
+
+			const centerCol = this.window.findTag('[data-center-col]');
+
+			console.log(centerCol);
+
+			if(centerCol)
+			{
+				centerCol.style.minWidth = '';
+				centerCol.style.height   = '';
+			}
+		}
 
 		const gitHubToken = GitHub.getToken();
 		const reposUrl    = 'https://nynex.unholysh.it/github-proxy/user/repos'
@@ -50,13 +75,17 @@ export class RepoBrowser extends Task
 
 		this.window.args.repoIcons = [];
 
+		this.print(`Scanning repos.`);
+
 		fetch(reposUrl, {headers}).then(r=>r.json()).then((repos)=>{
+
+			this.print(`Scanning complete.`);
 
 			this.window.args.repoIcons = [];
 
 			repos.map(repo => {
 
-				console.log(repo);
+				this.print(`Found repo ${repo.name}`);
 
 				this.window.args.repoIcons.push(new Icon({
 					action: () => {
@@ -74,6 +103,12 @@ export class RepoBrowser extends Task
 
 	attached()
 	{
+		this.console = new Terminal({scroller:this.window.tags.termscroll.element});
+
+		this.window.args.terminal = this.console;
+
+		this.console.args.prompt = '';
+
 		this.window.args.menuBar  = new MenuBar(this.args, this.window);
 
 		this.window.args.filetype = '';
@@ -90,6 +125,8 @@ export class RepoBrowser extends Task
 				return;
 			}
 
+			this.print(`Scanning repo @ ${v}.`);
+
 			const folder = new Folder({
 				expanded:  true
 				, browser: this
@@ -102,7 +139,6 @@ export class RepoBrowser extends Task
 		});
 
 		this.window.args.repoUrl = 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/';
-
 
 		this.window.args.bindTo('filename', v => {
 
@@ -126,14 +162,13 @@ export class RepoBrowser extends Task
 
 			switch(filetype)
 			{
-				case 'md':
-				case 'html':
-					this.window.args.control = new HtmlControl(
-						{srcdoc:this.window.args.content}
-						, this
-					);
-
-					break;
+				// case 'md':
+				// case 'html':
+				// 	this.window.args.control = new HtmlControl(
+				// 		{srcdoc:this.window.args.content}
+				// 		, this
+				// 	);
+				// 	break;
 
 				case 'ico':
 				case 'gif':
@@ -161,7 +196,7 @@ export class RepoBrowser extends Task
 
 				default:
 					this.window.args.control = new PlaintextControl(
-						{content: this.window.args.content}
+						{filetype, content: this.window.args.content}
 						, this
 					);
 					break;
@@ -169,5 +204,13 @@ export class RepoBrowser extends Task
 
 			this.window.args.chars = (this.window.args.content||'').length;
 		});
+	}
+
+	print(line)
+	{
+		if(this.console)
+		{
+			this.console.args.output.push(line);
+		}
 	}
 }

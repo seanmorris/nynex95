@@ -1,0 +1,57 @@
+ul.menu {
+	max-width: 22em;
+	min-width: 12em;
+}
+
+ul.menu, .menu-bar * > ul {
+	display: none;
+	z-index: 1000;
+	position: absolute;
+	left: -2px;
+	top: 100%;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+
+li:focus > ul.menu,
+li:focus-within > ul.menu,
+.menu-bar *:focus > ul,
+.menu-bar *:focus-within > ul{
+	display: block;
+}
+
+ul.menu li, .menu-bar ul li {
+	position: relative;
+	min-width: 128px;
+	padding-left: 0.5em;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+}
+
+ul.menu li ul, .menu-bar ul li ul {
+	top: -2px;
+	left: calc(100% + 1px);
+}
+
+ul.menu [tabindex], .menu-bar ul [tabindex] {
+	color: black;
+}
+
+ul.menu [tabindex]:hover {
+	background-color: #000082;
+	color: white;
+}
+
+ul.context.menu {
+	position: fixed;
+	display: initial;
+	pointer-events: none;
+	opacity: 0;
+}
+
+ul.context.menu:focus,
+ul.context.menu:focus-within {
+	pointer-events: initial;
+	opacity: 1;
+}

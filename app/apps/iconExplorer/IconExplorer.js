@@ -13,8 +13,6 @@ export class IconExplorer extends Task
 	constructor(taskList)
 	{
 		super(taskList);
-
-
 		return Bindable.make(this);
 	}
 

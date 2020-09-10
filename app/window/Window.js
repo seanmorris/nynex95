@@ -33,6 +33,8 @@ let Base = class extends View
 		this.args.titleBar     = new TitleBar(this.args, this);
 		this.args.hideTitleBar = false;
 
+		this.args.poppedOut = false;
+
 		this.outWindow = false;
 		this.wasMaximized = false;
 
@@ -76,7 +78,7 @@ let Base = class extends View
 		));
 	}
 
-	popup()
+	popout()
 	{
 		const main = this.tags.window.element;
 		const rect = main.getBoundingClientRect();
@@ -89,25 +91,32 @@ let Base = class extends View
 
 		const features = `screenX=${Math.floor(rect.x) + trimSize.x + window.screenX}`
 			+ `,screenY=${Math.floor(rect.y) + trimSize.y + window.screenY}`
-			+ `,width=${rect.width}`
-			+ `,height=${rect.height}`;
+			+ `,width=${Math.floor(rect.width)}`
+			+ `,height=${Math.floor(rect.height)}`;
 
-		console.log(features);
+		if(!(this.outWindow = window.open('', this._id, features)))
+		{
+			return;
+		}
 
-		this.outWindow = window.open(
-			''
-			, this._id
-			, features
-		);
+		this.args.poppedOut = true;
 
 		this.outWindow.document.title = this.args.title;
 
+		const mainUnload = () => {
+			this.outWindow.close();
+		};
+
+		window.addEventListener('beforeunload', mainUnload);
+
 		this.outWindow.addEventListener('beforeunload', () => {
+			window.removeEventListener('beforeunload', mainUnload);
 			this.outWindow = false;
 			this.args.hideTitleBar = false;
 			this.classes.maximized = this.wasMaximized;
 			this.restore();
 			this.render(orig);
+			this.args.poppedOut = false;
 		});
 
 		const base = this.outWindow.document.createElement('base');
@@ -289,9 +298,9 @@ let Base = class extends View
 
 		this.classes['popping'] = true;
 
-		this.onTimeout(333, () => {
+		this.onTimeout(450, () => {
 			this.classes['popping'] = false;
-			this.popup();
+			this.popout();
 		});
 	}
 
@@ -343,6 +352,106 @@ let Base = class extends View
 
 		document.addEventListener('mouseup',  drop, options);
 		document.addEventListener('touchend', drop, options);
+	}
+
+	horizontalResizeGrabbed(event)
+	{
+		const start = event.clientY;
+		let before  = event.target.previousSibling;
+		let after   = event.target.nextSibling;
+
+		while(before.nodeType !== Node.ELEMENT_NODE && before.previousSibling)
+		{
+			before = before.previousSibling;
+		}
+
+		while(after.nodeType !== Node.ELEMENT_NODE && after.nextSibling)
+		{
+			after = after.nextSibling;
+		}
+
+		const beforeHeight = before.offsetHeight;
+		const afterHeight  = after.offsetHeight;
+
+		before.style.height = `${beforeHeight}px`;
+		after.style.height  = `${afterHeight}px`;
+
+		const onMove = (event) => {
+			const delta = start - event.clientY;
+
+			if(beforeHeight - delta < 0)
+			{
+				return;
+			}
+
+			if(afterHeight + delta < 0)
+			{
+				return;
+			}
+
+			before.style.height = `${-5+beforeHeight - delta}px`;
+			after.style.height  = `${-5+afterHeight  + delta}px`;
+		};
+
+		document.addEventListener('mousemove', onMove);
+
+		const onDrop = () => {
+			document.removeEventListener('mousemove', onMove);
+			document.removeEventListener('mouseup', onDrop);
+		};
+
+		document.addEventListener('mouseup', onDrop);
+	}
+
+	verticalResizeGrabbed(event)
+	{
+		const start = event.clientX;
+		let before  = event.target.previousSibling;
+		let after   = event.target.nextSibling;
+
+		while(before.nodeType !== Node.ELEMENT_NODE && before.previousSibling)
+		{
+			before = before.previousSibling;
+		}
+
+		while(after.nodeType !== Node.ELEMENT_NODE && after.nextSibling)
+		{
+			after = after.nextSibling;
+		}
+
+		const beforeWidth = before.offsetWidth;
+		const afterWidth  = after.offsetWidth;
+
+		before.style.minWidth = `${beforeWidth}px`;
+		after.style.minWidth  = `${afterWidth}px`;
+
+		const onMove = (event) => {
+			const delta = start - event.clientX;
+
+			if(beforeWidth - delta < 0)
+			{
+				before.style.minWidth = 0;
+				return;
+			}
+
+			if(afterWidth + delta < 0)
+			{
+				after.style.minWidth = 0;
+				return;
+			}
+
+			before.style.minWidth = `${beforeWidth - delta}px`;
+			after.style.minWidth  = `${afterWidth  + delta}px`;
+		};
+
+		document.addEventListener('mousemove', onMove);
+
+		const onDrop = () => {
+			document.removeEventListener('mousemove', onMove);
+			document.removeEventListener('mouseup', onDrop);
+		};
+
+		document.addEventListener('mouseup', onDrop);
 	}
 }
 

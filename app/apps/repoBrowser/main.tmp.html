@@ -1,34 +1,164 @@
-<div class = "inset row tight scroll-header outer" tabindex = "-1">
-	<button class = "tight">
+<div class = "row tight">
+
+	<button class = "tight" title = "new file">
+		<img src = "/ui/new.png" />
+	</button>
+
+	<button class = "tight"  title = "open file">
+		<img src = "/ui/open.png" />
+	</button>
+
+	<button class = "tight" title = "save file">
+		<img src = "/ui/save.png" />
+	</button>
+
+	<button class = "tight"  title = "download file">
+		<img class = "icon16" src = "/w98/download-16-4bit.png" />
+	</button>
+
+	<button class = "tight" title = "upload file">
+		<img class = "icon16" src = "/w98/system_restore-16-8bit.png" />
+	</button>
+
+	<button class = "tight" title = "Github">
+		<img class = "icon16" src = "/apps/github-16-2bit.png" />
+	</button>
+
+	<button class = "tight" title = "toggle left bar" cv-on = "click:toggleSection('left')">
+		<img data-section-antileft class = "icon16" src = "/ui/left-sidebar-expand.png" />
+		<img data-section-left class = "icon16" src = "/ui/left-sidebar-collapse.png" />
+	</button>
+
+	<button class = "tight" title = "toggle right bar" cv-on = "click:toggleSection('right')">
+		<img data-section-antiright class = "icon16" src = "/ui/right-sidebar-expand.png" />
+		<img data-section-right class = "icon16" src = "/ui/right-sidebar-collapse.png" />
+	</button>
+
+	<button class = "tight" title = "toggle terminal" cv-on = "click:toggleSection('term')">
+		<img class = "icon16" src = "/w98/console_prompt-16-4bit.png" />
+	</button>
+
+	<button class = "tight"  title = "help">
+		<img class = "icon16" src = "/w98/help_book_small-16-4bit.png" />
+	</button>
+
+</div>
+
+<div class = "inset row tight scroll-header outer white" tabindex = "-1">
+
+	<button class = "flat tight white" class = "tight">
 		<img src = "/w95/21-16-4bit.png" />
 	</button>
-	<label class = "pane wide left-align">
-		Repo: [[repoName]]
-		<div class = "pane repos-dropdown">
-			<label>Your Repos:</label>
-			<div class = "scroll inset white" data-role = "icon-list" cv-each = "repoIcons:icon:i">
-				[[icon]]
-			</div>
+
+	<input
+		class = "inset wide flat white"
+		value = "Repo: [[repoName]] [ [[branch]] ]"
+		readonly = "true"
+	/>
+
+	<div class = "pane repos-dropdown">
+		<div class = "scroll inset white" data-role = "icon-list" cv-each = "repoIcons:icon:i">
+			[[icon]]
 		</div>
-	</label>
+	</div>
+
 </div>
 
 <div class = "frame cols liquid">
-	<div cv-each = "files:file:f" class = "inset treeview">
-		<div class = "resize">[[file]]</div>
-	</div>
-	<div class = "inset rows content liquid scroll">
-		<div class = "row tight scroll-header">
-			<button cv-on = "click:selectParent(event);" class = "tight">
-				<img src = "/ui/dir-up.png" />
+
+	<div data-section-left class = "content rows">
+		<div class = "row tight">
+
+			<button class = "tight">
+				<img class = "icon16" src = "/w98/homepage-16-4bit.png" title = "repo root" />
 			</button>
-			<label class = "pane wide left-align">File: [[filename]]</label>
+
+			<button class = "tight">
+				<img class = "icon16" src = "/w98/message_tack-16-4bit.png" title = "view readme" />
+			</button>
+
+			<button class = "tight">
+				<img class = "icon16" src = "/w98/diskettes_copy-16-4bit.png"  title = "branches" />
+			</button>
+
+			<button class = "tight">
+				<img class = "icon16" src = "/w98/history-16-4bit.png"  title = "history" />
+			</button>
+
+			<button class = "tight">
+				<img class = "icon16" src = "/w98/search_directory-16-8bit.png"  title = "search" />
+			</button>
+
+			<button class = "tight">
+				<img class = "icon16" src = "/w98/directory_program_group_small-16-4bit.png"  title = "actions" />
+			</button>
 		</div>
-		[[control]]
+
+		<div class = "inset liquid white">
+			<div cv-each = "files:file:f" class = "scroll treeview wide">
+				<div class = "">[[file]]</div>
+			</div>
+		</div>
 	</div>
+
+	<div data-section-left data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
+
+	<div data-center-col class = "content rows">
+
+		<div class = "row tight scroll-header">
+			<div class = "inset row wide white tight">
+
+				<button cv-on = "click:selectParent(event);" class = "flat tight white">
+					<img src = "/ui/dir-up.png" />
+				</button>
+
+				<input
+					type  = "text"
+					class = "inset wide flat white"
+					value = "File: [[filename]]"
+					readonly = "true"
+				/>
+			</div>
+
+			<div class = "row tight tabs">
+				<div class = "tab" tabindex="0">
+					<img class = "icon16" src = "/w98/file_lines-16-4bit.png" />
+				</div>
+				<div class = "tab" tabindex="0">
+					<img class = "icon16" src = "/w98/xml_gear-16-8bit.png" />
+				</div>
+			</div>
+
+		</div>
+
+		<div data-control-sector class = "white inset scroll">
+			<div class = "liquid abs-holder">
+				<div class = "abs-fill">
+					[[control]]
+				</div>
+			</div>
+		</div>
+
+		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
+
+		<div data-terminal-sector class = "liquid inset term" style = "height: 5em;">
+			<div class = "terminal black liquid abs-holder" cv-ref = "termscroll::">
+				<div class = "abs-fill" data-readonly>
+					[[terminal]]
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
+
+	<div data-section-right>
+		<div>[[right]] bar</div>
+	</div>
+
 </div>
 
 <div class = "status row">
 	<div class = "label inset">[[filename]]</div>
-	<div class = "label inset">type: [[filetype]] size: [[chars]]</div>
+	<div class = "label inset" cv-if = "chars">type: [[filetype]] size: [[chars]]</div>
 </div>

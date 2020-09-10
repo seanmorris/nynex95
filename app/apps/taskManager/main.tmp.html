@@ -1,30 +1,31 @@
-<div class = "frame liquid">
-	<div class = "frame inset gridview">
-		<table>
-			<thead>
-				<tr>
-					<th>id</th>
-					<th class = "wide">title</th>
-					<th></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody cv-each = "tasks:task:t">
-				<tr>
-					<td>[[task.wid]]</td>
-					<td>[[task.title]]</td>
+<div class = "frame inset gridview" cv-attr = "data-thing">
+	<button cv-expand = "cycler" cv-on = ":click()">cycle [[cycler.at]]</button>
+	<span cv-attr = "cyat:cycler.at">[[cycler.at]]</span>
+	<button cv-expand = "cycler" cv-on = "click:recycle()">cycle</button>
+	<table>
+		<thead>
+			<tr>
+				<th>id</th>
+				<th class = "wide">title</th>
+				<th cv-if = "focusAttrs.disabled">!</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody cv-each = "tasks:task:t">
+			<tr>
+				<td>[[task.wid]]</td>
+				<td>[[task.title]]</td>
 
-					<td>
-						<button cv-on = "click:focusTask(event, task);">
-							focus
-						</button>
-					</td>
+				<td>
+					<button cv-expand = "focusAttrs" cv-on = "click:focusTask(event, task);">
+						focus
+					</button>
+				</td>
 
-					<td>
-						<button cv-on = "click:endTask(event, task);">close</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+				<td>
+					<button cv-on = "click:endTask(event, task);">close</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

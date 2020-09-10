@@ -71,14 +71,14 @@ export class PhpEditor extends Task
 		};
 
 		this.window.ruleSet.add('textarea', ({element}) => {
-			const resizeTarget   = element.parentElement;
-			const resizeObserver = new ResizeObserver(entries => {
-				editor.resize();
-			});
+			// const resizeTarget   = element.parentElement;
+			// const resizeObserver = new ResizeObserver(entries => {
+			// 	editor.resize();
+			// });
 
-			resizeObserver.observe(resizeTarget);
+			// resizeObserver.observe(resizeTarget);
 
-			this.window.onRemove(()=>resizeObserver.unobserve(resizeTarget));
+			// this.window.onRemove(()=>resizeObserver.unobserve(resizeTarget));
 
 			let editor = ace.edit(element);
 
@@ -214,6 +214,7 @@ export class PhpEditor extends Task
 					}
 
 					phpCommand = phpCommand.replace(/^<\?php/, '');
+					phpCommand = phpCommand.replace(/;$/, '');
 
 					console.log(phpCommand);
 
@@ -221,15 +222,15 @@ export class PhpEditor extends Task
 					{
 						console.log(phpCommand);
 
-						this.window.onIdle(()=>php.run(phpCommand).then(retVal => {
+						php.exec(`var_export(${phpCommand},1)`).then(retVal => {
 
 							console.log(retVal);
 
 							editor.session.insert(
 								{row: lines - 1, column: 0}
-								, retVal
+								, ';' + String(retVal) + "?>\n\n<?php "
 							);
-						}));
+						});
 					}
 				}
 
@@ -275,14 +276,14 @@ export class PhpEditor extends Task
 				this.window.classes.loading = false;
 				this.window.args.status = 'PHP Ready!';
 
-				const retVal   = event.detail.join("\n");
+				const detail   = event.detail.join("\n").trim();
 				const prevLine = editor.session.getLine(lines);
 
-				console.log(prevLine, retVal);
+				console.log(prevLine, detail);
 
 				if(!prevLine || prevLine.match(/^\s*?\<\?php/))
 				{
-					if(!retVal)
+					if(!detail)
 					{
 						return;
 					}
@@ -303,12 +304,19 @@ export class PhpEditor extends Task
 
 				editor.session.insert(
 					editor.getCursorPosition()
-					, retVal + "\n"
-					// , "```text " + retVal + " ```\n"
+					, '// ' + detail + "\n"
 				);
 			});
 
 			php.addEventListener('error', event => {
+
+				const detail = event.detail.join("\n ").trim();
+
+				if(!detail)
+				{
+					return;
+				}
+
 				const lines  = editor.session.getLength() - 1;
 
 				editor.gotoLine(lines + 1);
@@ -319,7 +327,7 @@ export class PhpEditor extends Task
 
 				editor.session.insert(
 					editor.getCursorPosition()
-					, '#' + event.detail.join("\n ")
+					, '// ' + detail + "\n"
 				);
 
 				console.log(event);

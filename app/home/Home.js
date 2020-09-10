@@ -5,32 +5,13 @@ import { Desktop  } from 'desktop/Desktop';
 import { Window   } from 'window/Window';
 import { TaskBar  } from 'task/TaskBar';
 import { Task     } from 'task/Task';
-
-import { IconExplorer } from 'apps/iconExplorer/IconExplorer';
-import { TaskManager  } from 'apps/taskManager/TaskManager';
-import { RepoBrowser  } from 'apps/repoBrowser/RepoBrowser';
-import { PhpEditor    } from 'apps/phpEditor/PhpEditor';
-import { Nynemark     } from 'apps/nynemark/Nynemark';
-import { Nynepad      } from 'apps/nynepad/Nynepad';
-import { Clippy       } from 'apps/clippy/Clippy';
-import { GitHub       } from 'apps/gitHub/GitHub';
-import { NpmUnpkgr    } from 'apps/npmUnpkgr/NpmUnpkgr';
+import { Path     } from '../Path';
 
 export class Home extends View
 {
 	static singleton = false;
-	static path      = {
-		'/apps/icon-explorer':  IconExplorer
-		, '/apps/task-manager': TaskManager
-		, '/apps/nynepad':      Nynepad
-		, '/apps/nynemark':     Nynemark
-		, '/apps/repo-browser': RepoBrowser
-		, '/apps/window':       Task
-		, '/apps/php':          PhpEditor
-		, '/apps/github':       GitHub
-		, '/apps/npm-unpkgr':   NpmUnpkgr
-		, '/apps/clippy':       Clippy
-	};
+
+	static path = Path;
 
 	static instance()
 	{
@@ -66,11 +47,13 @@ export class Home extends View
 			i.pos.x = this.open.x;
 			i.pos.y = this.open.y;
 
-			this.open.x += 50;
-			this.open.y += 80;
+			this.open.x += 57;
+			this.open.y += 93;
 
-			this.open.x %= (window.innerWidth / 2);
-			this.open.y %= (window.innerHeight / 2);
+			this.open.x %= Math.floor(window.innerWidth / 2);
+			this.open.y %= Math.floor(window.innerHeight / 2);
+
+			console.log(this.open.x, this.open.y);
 		});
 
 

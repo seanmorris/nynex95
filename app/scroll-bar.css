@@ -1,4 +1,4 @@
-body::-webkit-scrollbar {
+/*body::-webkit-scrollbar {
 	width: 16px;
 	height: 12px;
 }
@@ -24,3 +24,4 @@ body::-webkit-scrollbar-thumb {
 ::-webkit-scrollbar-thumb:hover {
 	background-color: rgba(0,0,0,0.5);
 }
+*/

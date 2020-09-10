@@ -8,10 +8,13 @@
   "scripts": {
     "start": "brunch watch --server",
     "build": "brunch build --production",
-    "postinstall": "cp -rfv node_modules/php-wasm/php-web.* app/assets/"
+    "php": "cp -rfv node_modules/php-wasm/php-web.* docs/",
+    "dos": "cp -rfv node_modules/js-dos/dist/wdosbox.wasm.js docs/"
   },
   "dependencies": {
     "curvature": "^0.0.60",
+    "cv-markdown": "^1.0.4",
+    "js-dos": "^6.22.59",
     "php-wasm": "^0.0.1",
     "simplemde": "^1.11.2"
   },

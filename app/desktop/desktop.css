@@ -1,0 +1,56 @@
+.viewport {
+}
+
+.desktop {
+	/*--bg: url(/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg);*/
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: black;
+	background-image: var(--bg);
+	background-size: 40%;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	min-width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+.desktop [data-role=icon-list] {
+	justify-content: space-between;
+	flex-direction: column;
+	flex-wrap: wrap;
+	max-height: 100%;
+}
+
+.desktop [data-role=icon-list] [tabindex] {
+	min-width: 96px;
+	min-height: 64px;
+}
+
+.desktop [data-role=icon-list] [tabindex] label {
+	text-shadow:
+		   1px  0px 3px #000
+		, -1px  0px 3px #000
+		,  0px  1px 3px #000
+		,  0px -1px 3px #000;
+	color: white;
+	/*background-color: rgba(255,255,255,0.125);*/
+	border-radius: 3px;
+	font-size: 12pt;
+	padding: 0.25em;
+}
+
+.desktop [data-role=icon-list] div:focus label {
+	text-shadow: none;
+}
+
+
+.desktop [data-role=icon-list]:last-child {
+	flex-direction: column-reverse;
+	align-self: flex-end;
+	flex-wrap: wrap-reverse;
+}

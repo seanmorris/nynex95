@@ -16,4 +16,9 @@ module.exports = {
 	, paths: {
 		public: './docs'
 	}
+	, npm: {
+		styles: {
+			'subspace-console': ['style/layout.css']
+		}
+	}
 };

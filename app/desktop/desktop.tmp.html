@@ -1,4 +1,9 @@
-<div tabindex="-1" class = "desktop" cv-on = ":focus(event))">
+<div
+	style    = "--bg: url([[bg]])"
+	tabindex = "-1"
+	class    = "desktop"
+	cv-on    = ":focus(event));:contextmenu(event);"
+>
 	<div data-role = "icon-list" cv-each = "icons:icon:i">
 		[[icon]]
 	</div>
@@ -6,3 +11,4 @@
 		[[icon]]
 	</div>
 </div>
+[[contextMenu]]

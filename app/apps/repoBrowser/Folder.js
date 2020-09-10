@@ -163,15 +163,17 @@ export class Folder extends View
 
 		const renderable = (type === 'md' || type === 'html');
 
-		if(type === 'md')
-		{
-			headers.Accept = 'application/vnd.github.v3.html+json';
-		}
+		headers.Accept = 'application/vnd.github.v3.raw';
 
-		if(type === 'html')
-		{
-			headers.Accept = 'application/vnd.github.v3.raw+json';
-		}
+		// if(type === 'md')
+		// {
+		// 	headers.Accept = 'application/vnd.github.v3.html+json';
+		// }
+
+		// if(type === 'html')
+		// {
+		// 	headers.Accept = 'application/vnd.github.v3.raw+json';
+		// }
 
 		// if(renderable && gitHubToken && gitHubToken.access_token)
 		// {

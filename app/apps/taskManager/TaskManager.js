@@ -14,6 +14,57 @@ export class TaskManager extends Task
 	constructor(taskList)
 	{
 		super(taskList);
+
+		const args = this.window.args;
+
+		args.cycler = {};
+
+		args.focusAttrs = {};
+
+		args['data-thing'] = '!!!';
+
+		args.bindTo('poppedOut', v => {
+
+			const focus = args.focusAttrs;
+
+			// if(v)
+			// {
+			// 	focus.disabled = 'disabled';
+			// 	args['data-thing'] = '';
+
+			// }
+			// else if(focus)
+			// {
+			// 	args['data-thing'] = '!!';
+			// 	delete focus.disabled;
+			// }
+
+			// args.focusAttrs = focus;
+			console.log(focus);
+		});
+
+		this.window.toJSON = (i) => {
+			return JSON.stringify(i);
+		};
+
+		this.window.recycle = () => {
+
+		}
+
+		this.window.click = () => {
+			this.x = this.x || 0;
+
+			const l = [1,2,null,4,5,undefined,7,8];
+
+			if(++this.x >= l.length)
+			{
+				this.x = 0;
+			}
+
+			args.cycler.at = l[this.x];
+
+			console.log(this.x, l[this.x], args.cycler);
+		}
 	}
 
 	attached()
@@ -24,13 +75,7 @@ export class TaskManager extends Task
 
 		this.window.focusTask = (event, task) => {
 
-
-			setTimeout(1000, ()=> {
-
-				console.log(task.window);
-				task.window.focus();
-
-			});
+			task.window.focus();
 		};
 
 		this.window.args.tasks = [];
