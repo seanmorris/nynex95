@@ -1,0 +1,48 @@
+.phpEditor .cols.tight > *,
+.phpEditor .cols.tight,
+.phpEditor label.pane {
+	white-space: nowrap;
+	min-height: 23px;
+	z-index: 1;
+}
+
+.phpEditor label.pane {
+	align-items: flex-start;
+}
+
+.phpEditor textarea {
+	border:none;
+}
+
+.phpEditor.mode-script .tab.script,
+.phpEditor.mode-iffe .tab.iffe,
+.phpEditor.mode-term .tab.term {
+	text-decoration: underline;
+	outline-offset: -6px;
+	color: #000;
+	margin-left: -1px;
+	margin-right: 1px;
+	margin-top: -1px;
+	margin-bottom: 1px;
+}
+
+.phpEditor .ace_editor .ace_scroller {
+	background-color: transparent;
+}
+
+.phpEditor .resize-vert {
+	overflow-y: scroll;
+}
+
+.phpEditor .ace_editor {
+	margin: 0px;
+	padding: 1em 0px;
+	flex-grow: 1;
+	height: auto !important;
+}
+
+.phpEditor.loading .scroll {
+	background-image: url(/loading.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+}

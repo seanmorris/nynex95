@@ -58727,7 +58727,7 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
     _this.window.args.outputConsole = _this.outputConsole;
     _this.window.args.errorConsole = _this.errorConsole;
     _this.window.args.input = '<?php ';
-    _this.window.args.input = "<?php\n\n// Only \"single\" expressions can return strings directly\n// So wrap the commands in an IFFE.\n\n(function() {\n    global $persist;\n\n    $stdout = fopen('php://stdout', 'w');\n    $stderr = fopen('php://stderr', 'w');\n\n    fwrite($stdout, \"some output...\\n\");\n\n    fwrite($stdout, sprintf(\"Ran %d times!\\n\", $persist++));\n\n    fwrite($stderr, 'testing stderror');\n\n    return 'return value';\n\n})();";
+    _this.window.args.input = "<?php\n\n// Only \"single\" expressions can return strings directly\n// So wrap the commands in an IFFE.\n\n(function() {\n    global $persist;\n\n    $stdout = fopen('php://stdout', 'w');\n    $stderr = fopen('php://stderr', 'w');\n\n    fwrite($stdout, \"some output...\\n\");\n\n    fwrite($stdout, sprintf(\"Ran %d times!\\n\", $persist++));\n\n    fwrite($stderr, 'testing stderror');\n\n    return 'this is a return value.';\n\n})();";
 
     var Php = require('php-wasm/PhpWeb').PhpWeb;
 
@@ -58739,8 +58739,6 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
       if (!_this.window.args.input.trim()) {
         return;
       }
-
-      console.log(_this.window.args.input);
     });
     _this.window.args.output = '';
 
@@ -58754,7 +58752,8 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
       _this.window.classes.loading = true;
       _this.window.args.status = 'PHP Running...';
       _this.window.args.output = '';
-      php.run(_this.window.args.input).then(function (exitCode) {
+      var code = String(_this.window.args.input).replace(/^<\?php/, '').replace(/;$/, '');
+      php.exec(code).then(function (exitCode) {
         _this.returnConsole.args.output.push(exitCode);
 
         _this.window.args.exitCode = exitCode; // php.refresh();
@@ -58763,7 +58762,16 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
 
     _this.window.ruleSet.add('textarea[data-php]', function (_ref) {
       var element = _ref.element;
+      var resizer = element.parentNode;
       var editor = ace.edit(element);
+
+      if (ResizeObserver) {
+        var resizeObserver = new ResizeObserver(function (entries) {
+          editor && editor.resize();
+        });
+        resizeObserver.observe(resizer);
+      }
+
       editor.setTheme('ace/theme/monokai');
       editor.session.setMode('ace/mode/php'); // editor.session.setMode('ace/mode/markdown', () => {
       // 	const rules = editor.session.$mode.$highlightRules.getRules();

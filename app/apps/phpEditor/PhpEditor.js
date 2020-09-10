@@ -66,7 +66,7 @@ export class PhpEditor extends Task
 
     fwrite($stderr, 'testing stderror');
 
-    return 'return value';
+    return 'this is a return value.';
 
 })();`;
 
@@ -82,8 +82,6 @@ export class PhpEditor extends Task
 			{
 				return;
 			}
-
-			console.log(this.window.args.input);
 		});
 
 		this.window.args.output = '';
@@ -99,10 +97,13 @@ export class PhpEditor extends Task
 
 			this.window.args.output = '';
 
-			php.run(this.window.args.input).then(exitCode => {
+			const code = String(this.window.args.input)
+				.replace(/^<\?php/,'')
+				.replace(/;$/,'');
+
+			php.exec(code).then(exitCode => {
 
 				this.returnConsole.args.output.push(exitCode);
-
 
 				this.window.args.exitCode = exitCode;
 				// php.refresh();
@@ -111,7 +112,19 @@ export class PhpEditor extends Task
 		};
 
 		this.window.ruleSet.add('textarea[data-php]', ({element}) => {
+
+			const resizer = element.parentNode;
+
 			let editor = ace.edit(element);
+
+			if(ResizeObserver)
+			{
+				const resizeObserver = new ResizeObserver(entries => {
+					editor && editor.resize();
+				});
+
+				resizeObserver.observe(resizer);
+			}
 
 			editor.setTheme('ace/theme/monokai');
 
