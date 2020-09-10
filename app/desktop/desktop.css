@@ -8,7 +8,7 @@
 	background-repeat: no-repeat;
 	background-color: black;
 	background-image: var(--bg);
-	background-size: 40%;
+	/*background-size: 40%;*/
 	position: absolute;
 	top: 0px;
 	bottom: 0px;

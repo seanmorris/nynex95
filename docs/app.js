@@ -57339,6 +57339,8 @@ var _Drupal = require("apps/drupal/Drupal");
 
 var _Numb = require("apps/numb/Numb");
 
+var _WidgetViewer = require("apps/widgetViewer/WidgetViewer");
+
 var _Dosbox = require("apps/dosbox/Dosbox");
 
 var _ClonesNBarrels = require("apps/clonesNBarrels/ClonesNBarrels");
@@ -57356,6 +57358,7 @@ var Path = {
   'clippy': _Clippy.Clippy,
   'console': _Console.Console,
   'drupal': _Drupal.Drupal,
+  'widgets': _WidgetViewer.WidgetViewer,
   'clones': _ClonesNBarrels.ClonesNBarrels,
   'numb': _Numb.Numb,
   'dos': _Dosbox.Dosbox
@@ -58981,7 +58984,7 @@ exports.PhpEditor = PhpEditor;
 });
 
 ;require.register("apps/phpEditor/main.tmp.html", function(exports, require, module) {
-module.exports = "\t<div class = \"row cols\">\n\t\t<div class = \"row tight tabs\">\n\t\t\t<div cv-on = \"click:modeTo('script')\" class = \"tab script\" tabindex=\"0\">script</div>\n\n\t\t\t<div cv-on = \"click:modeTo('term')\" class = \"tab term\" tabindex=\"0\">terminal</div>\n\n\t\t\t<div cv-on = \"click:modeTo('iffe')\" class = \"tab iffe\" tabindex=\"0\">iffe</div>\n\t\t</div>\n\n\t\t<div class = \"spaced row wide right\">\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"arrow-circle.png\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split.png\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split-vertical.png\" />\n\t\t\t</button>\n\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split-tile.png\" />\n\t\t\t</button>\n\n\t\t</div>\n\n\t</div>\n\n</div>\n\n<div class = \"row tight liquid\">\n\n\t<div class = \"rows tight liquid\">\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">PHP Code</label>\n\t\t\t\t<button cv-on = \":click(event)\" class = \"pane tight\" data-tint = \"red\">\n\t\t\t\t\t<i>RUN</i>\n\t\t\t\t</button>\n\t\t\t</div>\n\n\t\t\t<div class = \"wide scroll zfront\">\n\t\t\t\t<textarea data-php rows = \"14\" spellcheck=\"false\" cv-bind = \"input\"></textarea>\n\t\t\t</div>\n\t\t</div>\n\n\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div class = \"rows tight liquid\" data-readonly>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">Return</label>\n\t\t\t\t<button class = \"pane tight\">HTML</button>\n\t\t\t\t<button class = \"pane tight\">Text</button>\n\t\t\t</div>\n\t\t\t[[returnConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdOut</label>\n\t\t\t\t<button class = \"pane tight\">HTML</button>\n\t\t\t\t<button class = \"pane tight\">Text</button>\n\t\t\t\t<label class = \"pane\">exit</label>\n\t\t\t\t<label class = \"tight\">[[exitCode]]</label>\n\t\t\t</div>\n\t\t\t[[outputConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdErr</label>\n\t\t\t</div>\n\t\t\t[[errorConsole]]\n\t\t</div>\n\n\t</div>\n</div>\n\n\n<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n<div class = \"frame cols liquid\">\n\t[[inputConsole]]\n</div>\n\n\n<!-- <div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div> -->\n<!--\n<div class = \"row inset\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div> -->\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
+module.exports = "\t<div class = \"row cols\">\n\t\t<div class = \"row tight tabs\">\n\t\t\t<div cv-on = \"click:modeTo('script')\" class = \"tab script\" tabindex=\"0\">script</div>\n\n\t\t\t<div cv-on = \"click:modeTo('term')\" class = \"tab term\" tabindex=\"0\">terminal</div>\n\n\t\t\t<div cv-on = \"click:modeTo('iffe')\" class = \"tab iffe\" tabindex=\"0\">iffe</div>\n\t\t</div>\n\n\t\t<div class = \"spaced row wide right\">\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"arrow-circle.png\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split.png\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split-vertical.png\" />\n\t\t\t</button>\n\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split-tile.png\" />\n\t\t\t</button>\n\n\t\t</div>\n\n\t</div>\n\n</div>\n\n<div class = \"row tight liquid\">\n\n\t<div class = \"rows tight liquid\">\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">PHP Code</label>\n\t\t\t\t<button cv-on = \":click(event)\" class = \"pane tight\" data-tint = \"red\">\n\t\t\t\t\t<i>RUN</i>\n\t\t\t\t</button>\n\t\t\t</div>\n\n\t\t\t<div class = \"wide scroll zfront\">\n\t\t\t\t<textarea data-php rows = \"14\" spellcheck=\"false\" cv-bind = \"input\"></textarea>\n\t\t\t</div>\n\t\t</div>\n\n\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div class = \"rows tight liquid\" data-readonly>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">Return</label>\n\t\t\t\t<button class = \"pane tight\">HTML</button>\n\t\t\t\t<button class = \"pane tight\">Text</button>\n\t\t\t</div>\n\t\t\t[[returnConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdOut</label>\n\t\t\t\t<button class = \"pane tight\">HTML</button>\n\t\t\t\t<button class = \"pane tight\">Text</button>\n\t\t\t\t<label class = \"pane\">exit</label>\n\t\t\t\t<label class = \"tight\">[[exitCode]]</label>\n\t\t\t</div>\n\t\t\t[[outputConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdErr</label>\n\t\t\t</div>\n\t\t\t[[errorConsole]]\n\t\t</div>\n\n\t</div>\n</div>\n\n\n<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n<!-- <div class = \"frame cols liquid\">\n\t[[inputConsole]]\n</div>\n\n -->\n<!-- <div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div> -->\n<!--\n<div class = \"row inset\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div> -->\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/Folder.js", function(exports, require, module) {
@@ -59523,7 +59526,7 @@ module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"row tight\">\n\n\t<button class = \"square\" title = \"new file\">\n\t\t<img src = \"/ui/new.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"open file\">\n\t\t<img src = \"/ui/open.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"save file\">\n\t\t<img src = \"/ui/save.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"download file\">\n\t\t<img class = \"icon16\" src = \"/w98/download-16-4bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"upload file\">\n\t\t<img class = \"icon16\" src = \"/w98/system_restore-16-8bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"Github\">\n\t\t<img class = \"icon16\" src = \"/apps/github-16-2bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle left bar\" cv-on = \"click:toggleSection('left')\">\n\t\t<img data-section-antileft class = \"icon16\" src = \"/ui/left-sidebar-expand.png\" />\n\t\t<img data-section-left class = \"icon16\" src = \"/ui/left-sidebar-collapse.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle right bar\" cv-on = \"click:toggleSection('right')\">\n\t\t<img data-section-antiright class = \"icon16\" src = \"/ui/right-sidebar-expand.png\" />\n\t\t<img data-section-right class = \"icon16\" src = \"/ui/right-sidebar-collapse.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle terminal\" cv-on = \"click:toggleSection('term')\">\n\t\t<img class = \"icon16\" src = \"/w98/console_prompt-16-4bit.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"help\">\n\t\t<img class = \"icon16\" src = \"/w98/help_book_small-16-4bit.png\" />\n\t</button>\n\n</div>\n\n<div class = \"inset row tight scroll-header outer white\" tabindex = \"-1\">\n\n\t<button class = \"flat tight white\" class = \"tight\">\n\t\t<img src = \"/w95/21-16-4bit.png\" />\n\t</button>\n\n\t<input\n\t\tclass = \"inset wide flat white\"\n\t\tvalue = \"Repo: [[repoName]] [ [[branch]] ]\"\n\t\treadonly = \"true\"\n\t/>\n\n\t<div class = \"pane repos-dropdown\">\n\t\t<div class = \"scroll inset white\" data-role = \"icon-list\" cv-each = \"repoIcons:icon:i\">\n\t\t\t[[icon]]\n\t\t</div>\n\t</div>\n\n</div>\n\n<div class = \"frame cols liquid\">\n\n\t<div data-section-left class = \"content rows\">\n\t\t<div class = \"row tight\">\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/homepage-16-4bit.png\" title = \"repo root\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/message_tack-16-4bit.png\" title = \"view readme\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/diskettes_copy-16-4bit.png\"  title = \"branches\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/history-16-4bit.png\"  title = \"history\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/search_directory-16-8bit.png\"  title = \"search\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/directory_program_group_small-16-4bit.png\"  title = \"actions\" />\n\t\t\t</button>\n\t\t</div>\n\n\t\t<div class = \"inset liquid white\">\n\t\t\t<div cv-each = \"files:file:f\" class = \"scroll treeview wide\">\n\t\t\t\t<div class = \"\">[[file]]</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div data-section-left data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div data-center-col class = \"content rows\">\n\n\t\t<div class = \"row tight scroll-header\">\n\t\t\t<div class = \"inset row wide white tight\">\n\n\t\t\t\t<button cv-on = \"click:selectParent(event);\" class = \"flat tight white\">\n\t\t\t\t\t<img src = \"/ui/dir-up.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t<input\n\t\t\t\t\ttype  = \"text\"\n\t\t\t\t\tclass = \"inset wide flat white\"\n\t\t\t\t\tvalue = \"File: [[filename]]\"\n\t\t\t\t\treadonly = \"true\"\n\t\t\t\t/>\n\t\t\t</div>\n\n\t\t\t<div class = \"row tight tabs\">\n\t\t\t\t<div class = \"tab\" tabindex=\"0\">\n\t\t\t\t\t<img class = \"icon16\" src = \"/w98/file_lines-16-4bit.png\" />\n\t\t\t\t</div>\n\t\t\t\t<div class = \"tab\" tabindex=\"0\">\n\t\t\t\t\t<img class = \"icon16\" src = \"/w98/xml_gear-16-8bit.png\" />\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\n\t\t<div data-control-sector class = \"white inset scroll\">\n\t\t\t<div class = \"liquid abs-holder\">\n\t\t\t\t<div class = \"abs-fill\">\n\t\t\t\t\t[[control]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div data-terminal-sector class = \"liquid inset term\" style = \"height: 5em;\">\n\t\t\t<div class = \"terminal black liquid abs-holder\" cv-ref = \"termscroll::\">\n\t\t\t\t<div class = \"abs-fill\" data-readonly>\n\t\t\t\t\t[[terminal]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div data-section-right>\n\t\t<div>[[right]] bar</div>\n\t</div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\" cv-if = \"chars\">type: [[filetype]] size: [[chars]]</div>\n</div>\n"
+module.exports = "<div class = \"row tight\">\n\n\t<button class = \"square\" title = \"new file\">\n\t\t<img src = \"/ui/new.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"open file\">\n\t\t<img src = \"/ui/open.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"save file\">\n\t\t<img src = \"/ui/save.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"download file\">\n\t\t<img class = \"icon16\" src = \"/w98/download-16-4bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"upload file\">\n\t\t<img class = \"icon16\" src = \"/w98/system_restore-16-8bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"Github\">\n\t\t<img class = \"icon16\" src = \"/apps/github-16-2bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle left bar\" cv-on = \"click:toggleSection('left')\">\n\t\t<img data-section-antileft class = \"icon16\" src = \"/ui/left-sidebar-expand.png\" />\n\t\t<img data-section-left class = \"icon16\" src = \"/ui/left-sidebar-collapse.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle right bar\" cv-on = \"click:toggleSection('right')\">\n\t\t<img data-section-antiright class = \"icon16\" src = \"/ui/right-sidebar-expand.png\" />\n\t\t<img data-section-right class = \"icon16\" src = \"/ui/right-sidebar-collapse.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle terminal\" cv-on = \"click:toggleSection('term')\">\n\t\t<img class = \"icon16\" src = \"/w98/console_prompt-16-4bit.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"help\">\n\t\t<img class = \"icon16\" src = \"/w98/help_book_small-16-4bit.png\" />\n\t</button>\n\n</div>\n\n<div class = \"inset row tight scroll-header outer white\" tabindex = \"-1\">\n\n\t<button class = \"flat tight white\" class = \"tight\">\n\t\t<img src = \"/w95/21-16-4bit.png\" />\n\t</button>\n\n\t<input\n\t\tclass = \"inset wide flat white\"\n\t\tvalue = \"Repo: [[repoName]] [ [[branch]] ]\"\n\t\treadonly = \"true\"\n\t/>\n\n\t<div class = \"pane repos-dropdown\">\n\t\t<div class = \"scroll inset white\" data-role = \"icon-list\" cv-each = \"repoIcons:icon:i\">\n\t\t\t[[icon]]\n\t\t</div>\n\t</div>\n\n</div>\n\n<div class = \"frame cols liquid\">\n\n\t<div data-section-left class = \"content rows\">\n\t\t<div class = \"row tight\">\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/homepage-16-4bit.png\" title = \"repo root\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/message_tack-16-4bit.png\" title = \"view readme\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/diskettes_copy-16-4bit.png\"  title = \"branches\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/history-16-4bit.png\"  title = \"history\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/search_directory-16-8bit.png\"  title = \"search\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/directory_program_group_small-16-4bit.png\"  title = \"actions\" />\n\t\t\t</button>\n\t\t</div>\n\n\t\t<div class = \"inset liquid white\">\n\t\t\t<div cv-each = \"files:file:f\" class = \"scroll treeview wide\">\n\t\t\t\t<div class = \"\">[[file]]</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div data-section-left data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div data-center-col class = \"content rows\">\n\n\t\t<div class = \"row tight scroll-header\">\n\t\t\t<div class = \"inset row wide white tight\">\n\n\t\t\t\t<button cv-on = \"click:selectParent(event);\" class = \"flat tight white\">\n\t\t\t\t\t<img src = \"/ui/dir-up.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t<input\n\t\t\t\t\ttype  = \"text\"\n\t\t\t\t\tclass = \"inset wide flat white\"\n\t\t\t\t\tvalue = \"File: [[filename]]\"\n\t\t\t\t\treadonly = \"true\"\n\t\t\t\t/>\n\t\t\t</div>\n\n\t\t\t<div class = \"row tight tabs\">\n\t\t\t\t<div class = \"tab\" tabindex=\"0\">\n\t\t\t\t\t<img class = \"icon16\" src = \"/w98/file_lines-16-4bit.png\" />\n\t\t\t\t</div>\n\t\t\t\t<div class = \"tab\" tabindex=\"0\">\n\t\t\t\t\t<img class = \"icon16\" src = \"/w98/xml_gear-16-8bit.png\" />\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\n\t\t<div data-control-sector class = \"white inset scroll\">\n\t\t\t<div class = \"liquid abs-holder\">\n\t\t\t\t<div class = \"abs-fill\">\n\t\t\t\t\t[[control]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div data-terminal-sector class = \"liquid inset term\" style = \"min-height: 5em;\">\n\t\t\t<div class = \"terminal black liquid abs-holder\" cv-ref = \"termscroll::\">\n\t\t\t\t<div class = \"abs-fill\" data-readonly>\n\t\t\t\t\t[[terminal]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div data-section-right>\n\t\t<div>[[right]] bar</div>\n\t</div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\" cv-if = \"chars\">type: [[filetype]] size: [[chars]]</div>\n</div>\n"
 });
 
 ;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {
@@ -59652,6 +59655,92 @@ exports.TaskManager = TaskManager;
 
 ;require.register("apps/taskManager/main.tmp.html", function(exports, require, module) {
 module.exports = "<div class = \"frame inset gridview\" cv-attr = \"data-thing\">\n\t<button cv-expand = \"cycler\" cv-on = \":click()\">cycle [[cycler.at]]</button>\n\t<span cv-attr = \"cyat:cycler.at\">[[cycler.at]]</span>\n\t<button cv-expand = \"cycler\" cv-on = \"click:recycle()\">cycle</button>\n\t<table>\n\t\t<thead>\n\t\t\t<tr>\n\t\t\t\t<th>id</th>\n\t\t\t\t<th class = \"wide\">title</th>\n\t\t\t\t<th cv-if = \"focusAttrs.disabled\">!</th>\n\t\t\t\t<th></th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody cv-each = \"tasks:task:t\">\n\t\t\t<tr>\n\t\t\t\t<td>[[task.wid]]</td>\n\t\t\t\t<td>[[task.title]]</td>\n\n\t\t\t\t<td>\n\t\t\t\t\t<button cv-expand = \"focusAttrs\" cv-on = \"click:focusTask(event, task);\">\n\t\t\t\t\t\tfocus\n\t\t\t\t\t</button>\n\t\t\t\t</td>\n\n\t\t\t\t<td>\n\t\t\t\t\t<button cv-on = \"click:endTask(event, task);\">close</button>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n</div>\n"
+});
+
+;require.register("apps/widgetViewer/WidgetViewer.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.WidgetViewer = void 0;
+
+var _Task2 = require("task/Task");
+
+var _Diskette = require("../../widgets/diskette/Diskette");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var WidgetViewer = /*#__PURE__*/function (_Task) {
+  _inherits(WidgetViewer, _Task);
+
+  var _super = _createSuper(WidgetViewer);
+
+  // silent   = true
+  function WidgetViewer(taskList) {
+    var _this;
+
+    _classCallCheck(this, WidgetViewer);
+
+    _this = _super.call(this, taskList);
+
+    _defineProperty(_assertThisInitialized(_this), "title", 'WidgetViewer');
+
+    _defineProperty(_assertThisInitialized(_this), "icon", '/w95/3-16-4bit.png');
+
+    _defineProperty(_assertThisInitialized(_this), "template", require('./widgetViewer.tmp'));
+
+    _this.window.args.widget = new _Diskette.Diskette();
+    _this.window.args.width = "540px";
+    _this.window.args.height = "560px";
+    _this.window.args.width = "286px";
+    _this.window.args.height = "320px";
+
+    _this.window.maximize = function () {};
+
+    _this.window.classes.focused = false;
+    return _this;
+  }
+
+  _createClass(WidgetViewer, [{
+    key: "attached",
+    value: function attached() {
+      this.window.classes.transparent = true;
+      this.window.classes.pane = false;
+      this.window.classes['widget-viewer-win'] = true;
+    }
+  }]);
+
+  return WidgetViewer;
+}(_Task2.Task);
+
+exports.WidgetViewer = WidgetViewer;
+});
+
+;require.register("apps/widgetViewer/widgetViewer.tmp.html", function(exports, require, module) {
+module.exports = "<div cv-on = \"mousedown:grabTitleBar(event);\" class = \"widget-viewer\">\n\t[[widget]]\n</div>\n"
 });
 
 ;require.register("control/Html.js", function(exports, require, module) {
@@ -60110,6 +60199,8 @@ var _Icon = require("../icon/Icon");
 
 var _Menu = require("../menu/Menu");
 
+var _Diskette = require("../widgets/diskette/Diskette");
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -60143,10 +60234,10 @@ var Desktop = /*#__PURE__*/function (_View) {
     _classCallCheck(this, Desktop);
 
     _this = _super.call(this, args, parent);
-    _this.template = require('./desktop.tmp');
-    _this.args.bg = '/sm-disk-open.png'; // this.args.bg = '/sm-disk.png';
-    // this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
+    _this.template = require('./desktop.tmp'); // this.args.bg = '/sm-disk-open.png';
+    // this.args.bg = '/sm-disk.png';
 
+    _this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
     _this.args.contextMenu = new _Menu.Menu({
       items: {
         'Create New File': function CreateNewFile() {
@@ -60209,6 +60300,10 @@ var Desktop = /*#__PURE__*/function (_View) {
       name: 'Curvature 0.0.61',
       icon: 'curvature',
       bits: 8
+    }), new _Icon.Icon({
+      action: 'widgets',
+      name: 'Widgets',
+      icon: 1
     })];
     _this.args.endIcons = [new _Icon.Icon({
       action: 'nynex-help',
@@ -61299,6 +61394,60 @@ exports.TaskBar = TaskBar;
 module.exports = "<div class = \"task-bar pane\">\n\t<div class = \"start button\">\n\t\t<button>\n\t\t\t<img class = \"icon24\" src = \"/sm/player-24-24bit.png\" />\n\t\t\t<!-- <img class = \"icon16\" src = \"/w98/windows-16-4bit.png\" /> -->\n\t\t\t<div>Start</div>\n\t\t</button>\n\t\t<div class = \"pane\">\n\t\t\t<div class = \"brand-stripe\">\n\t\t\t\t<img src = \"/nynex95-logo.svg\">\n\t\t\t</div>\n\t\t\t<ul>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/20-32-4bit.png\" />\n\t\t\t\t\t<label tabindex = \"0\">Programs</label>\n\t\t\t\t\t<img class = \"expand\" src = \"/arrow-expand.png\" />\n\n\t\t\t\t\t<ul class = \"pane\">\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tAccessories\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tGames\n\t\t\t\t\t\t\t<ul class = \"pane\">\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Foo</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Bar</li>\n\t\t\t\t\t\t\t\t<li tabindex = \"0\">Baz</li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t\t\tStartup\n\t\t\t\t\t\t</li>\n\n\t\t\t\t\t</ul>\n\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/21-32-4bit.png\" />\n\t\t\t\t\tDocuments\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/22-32-4bit.png\" />\n\t\t\t\t\tSettings\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/23-32-4bit.png\" />\n\t\t\t\t\tFind\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/24-32-4bit.png\" />\n\t\t\t\t\tHelp\n\t\t\t\t</li>\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/25-32-4bit.png\" />\n\t\t\t\t\tRun...\n\t\t\t\t</li>\n\t\t\t\t<hr />\n\n\t\t\t\t<li tabindex = \"0\">\n\t\t\t\t\t<img src = \"/w95/28-32-4bit.png\" />\n\t\t\t\t\tShutdown...\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\n\t<div class = \"quickstart\">\n\t</div>\n\n\t<div class = \"task-list wide\" data-count = \"[[taskCount]]\" cv-each = \"tasks:task:t\">\n\t\t<button cv-on = \"click:activate(event,task);dblclick:doubleTap(event,task);\">\n\t\t\t<img class = \"icon16\" cv-attr = \"src:task.icon\" />\n\t\t\t[[task.title]]\n\t\t</button>\n\t</div>\n\n\t<div class = \"tray inset\">\n\t\t<div data-role=\"icon-list\" class = \"tray tight\" cv-each = \"tray:trayItem:t\">\n\t\t\t[[trayItem]]\n\t\t</div>\n\t\t[[hh]]:[[mm]]:[[ss]]\n\t</div>\n</div>\n"
 });
 
+;require.register("widgets/diskette/Diskette.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Diskette = void 0;
+
+var _View2 = require("curvature/base/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Diskette = /*#__PURE__*/function (_View) {
+  _inherits(Diskette, _View);
+
+  var _super = _createSuper(Diskette);
+
+  function Diskette(args, parent) {
+    var _this;
+
+    _classCallCheck(this, Diskette);
+
+    _this = _super.call(this, args, parent);
+    console.log(_assertThisInitialized(_this));
+    _this.template = require('./diskette.tmp.html');
+    return _this;
+  }
+
+  return Diskette;
+}(_View2.View);
+
+exports.Diskette = Diskette;
+});
+
+;require.register("widgets/diskette/diskette.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \"diskette\" tabindex=\"0\">\n\t<div class = \"disk\"></div>\n\t<div class = \"label\"></div>\n\t<div class = \"face\"></div>\n\t<div class = \"eye-glow\"></div>\n\t<div class = \"glass-flash\"></div>\n\t<div class = \"slider\"></div>\n\n\t<div class = \"sparks\">\n\t\t<div class = \"spark\"></div>\n\t\t<div class = \"spark\"></div>\n\t\t<div class = \"spark\"></div>\n\t\t<div class = \"spark\"></div>\n\t</div>\n</div>\n"
+});
+
 ;require.register("window/MenuBar.js", function(exports, require, module) {
 "use strict";
 
@@ -61469,6 +61618,8 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
     _this = _super.call(this, args);
     _this.args.classes = ['pane', 'resize'];
     _this.args.preview = '/w95/1-16-4bit.png';
+    _this.args.width = '690px';
+    _this.args.height = '520px';
     _this.pos = _Bindable.Bindable.make({
       x: 160,
       y: 100,
@@ -61823,8 +61974,8 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
 
       var beforeHeight = before.offsetHeight;
       var afterHeight = after.offsetHeight;
-      before.style.height = "".concat(beforeHeight, "px");
-      after.style.height = "".concat(afterHeight, "px");
+      before.style.minHeight = "".concat(beforeHeight, "px");
+      after.style.minHeight = "".concat(afterHeight, "px");
 
       var onMove = function onMove(event) {
         var delta = start - event.clientY;
@@ -61837,8 +61988,8 @@ var Base = (_temp = _class = /*#__PURE__*/function (_View) {
           return;
         }
 
-        before.style.height = "".concat(-5 + beforeHeight - delta, "px");
-        after.style.height = "".concat(-5 + afterHeight + delta, "px");
+        before.style.minHeight = "".concat(-5 + beforeHeight - delta, "px");
+        after.style.minHeight = "".concat(-5 + afterHeight + delta, "px");
       };
 
       document.addEventListener('mousemove', onMove);
@@ -61931,7 +62082,7 @@ module.exports = "<div class = \"title-bar\" cv-on = \"mousedown:grabTitleBar(ev
 });
 
 ;require.register("window/window.tmp.html", function(exports, require, module) {
-module.exports = "<div\n\ttabindex = \"-1\"\n\tclass    = \"window [[classes|join]]\"\n\tcv-on    = \"mousedown:focus(event):c;touchstart:focus(event):c\"\n\tcv-ref   = \"window::\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t[[$$template]]\n\t</div>\n</div>\n"
+module.exports = "<div\n\ttabindex = \"-1\"\n\tstyle    = \"width:[[width]]; height:[[height]]\"\n\tclass    = \"window [[classes|join]]\"\n\tcv-on    = \"mousedown:focus(event):c;touchstart:focus(event):c\"\n\tcv-ref   = \"window::\">\n\t[[titleBar]]\n\t[[menuBar]]\n\t<div class = \"frame liquid\">\n\t\t[[$$template]]\n\t</div>\n</div>\n"
 });
 
 ;require.alias("buffer/index.js", "buffer");

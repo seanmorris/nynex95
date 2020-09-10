@@ -20,6 +20,9 @@ let Base = class extends View
 		this.args.classes = ['pane', 'resize'];
 		this.args.preview = '/w95/1-16-4bit.png';
 
+		this.args.width   = '690px';
+		this.args.height  = '520px';
+
 		this.pos = Bindable.make({x: 160, y: 100, z: 0});
 
 		this.args.icon  = args.icon       || '/w95/3-16-4bit.png';
@@ -373,8 +376,8 @@ let Base = class extends View
 		const beforeHeight = before.offsetHeight;
 		const afterHeight  = after.offsetHeight;
 
-		before.style.height = `${beforeHeight}px`;
-		after.style.height  = `${afterHeight}px`;
+		before.style.minHeight = `${beforeHeight}px`;
+		after.style.minHeight  = `${afterHeight}px`;
 
 		const onMove = (event) => {
 			const delta = start - event.clientY;
@@ -389,8 +392,8 @@ let Base = class extends View
 				return;
 			}
 
-			before.style.height = `${-5+beforeHeight - delta}px`;
-			after.style.height  = `${-5+afterHeight  + delta}px`;
+			before.style.minHeight = `${-5+beforeHeight - delta}px`;
+			after.style.minHeight  = `${-5+afterHeight  + delta}px`;
 		};
 
 		document.addEventListener('mousemove', onMove);

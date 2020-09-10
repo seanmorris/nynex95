@@ -11,6 +11,7 @@ import { NpmUnpkgr    } from 'apps/npmUnpkgr/NpmUnpkgr';
 import { Console      } from 'apps/console/Console';
 import { Drupal       } from 'apps/drupal/Drupal';
 import { Numb         } from 'apps/numb/Numb';
+import { WidgetViewer } from 'apps/widgetViewer/WidgetViewer';
 import { Dosbox       } from 'apps/dosbox/Dosbox';
 
 import { ClonesNBarrels } from 'apps/clonesNBarrels/ClonesNBarrels';
@@ -27,6 +28,7 @@ export const Path = {
 	, 'clippy':       Clippy
 	, 'console':      Console
 	, 'drupal':       Drupal
+	, 'widgets':      WidgetViewer
 	, 'clones':       ClonesNBarrels
 	, 'numb':         Numb
 	, 'dos':          Dosbox

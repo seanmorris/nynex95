@@ -142,6 +142,9 @@ html, body, input, button, select {
 	border-image: url(/border-inset.png) 2 2 2 2;
 	border-color: #c3c3c3;
 	margin: 2px !important;
+}
+
+.inset:not(.scroll){
 	overflow: hidden;
 }
 
@@ -608,7 +611,7 @@ label.icon-frame label {
 }
 
 [data-control-sector]{
-	height: calc(100% - 6em);
+	height: 100%;
 }
 
 [data-center-col] {

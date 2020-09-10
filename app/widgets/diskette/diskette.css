@@ -1,0 +1,138 @@
+div.diskette {
+	position: relative;
+	width: 512px;
+	height: 512px;
+	margin: 16px;
+	overflow: hidden;
+	transform-origin: top left;
+	transform: scale(0.5);
+}
+
+div.diskette > * {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+
+div.diskette > .disk {
+	pointer-events: initial;
+}
+
+div.diskette .disk {
+	background-image: url(/sm/disk/disk.png);
+	filter: saturate(80%);
+}
+
+div.diskette .label {
+	background-image: url(/sm/disk/grey-label.png);
+	background-image: url(/sm/disk/white-label.png);
+}
+
+div.diskette .face {
+	background-image: url(/sm/disk/face.png);
+}
+
+div.diskette .eye-glow {
+	background-image: url(/sm/disk/eye-glow.png);
+	opacity: 0;
+}
+
+div.diskette .glass-flash {
+	opacity: 0;
+	background-image: url(/sm/disk/glass-flash.png);
+	transition: 3s opacity ease-out;
+}
+
+div.diskette .slider {
+	transform: translateX(0px);
+	background-image: url(/sm/disk/slider-closed.png);
+	transition: 0.25s transform cubic-bezier(1.000, -0.5, 0.000, 1.5);
+}
+
+div.diskette:hover .slider {
+	transform: translateX(12.5%);
+	transition: 0.3s transform cubic-bezier(0.250, 1, 0.000, 1.25);
+}
+
+div.diskette:focus .glass-flash {
+	opacity: 1;
+}
+
+div.diskette .spark {
+	background-color: white;
+	width: 8px;
+	height: 8px;
+	position: absolute;
+	--travel: 64px;
+	--halftravel: calc(var(--travel) * 0.85);
+	--twotravel: calc(var(--travel) / 0.85);
+	--left: 128px;
+	--top: 320px;
+	left: --var(left);
+	top: --var(top);
+	opacity: 0;
+	transform: translate(-50%,-50%);
+}
+
+div.diskette:not(:hover) .spark {
+	animation-name: spark;
+	animation-delay: 0.125s;
+	animation-duration: 0.333s;
+}
+
+div.diskette:not(:hover) .spark:nth-child(1) {
+	--finishLeft: 128px;
+	--finishTop: calc(var(--top) - var(--halftravel));
+}
+
+div.diskette:not(:hover) .spark:nth-child(2) {
+	--finishLeft: calc(var(--left) - var(--travel));
+	--finishTop: calc(var(--top) - var(--halftravel));
+}
+
+div.diskette:not(:hover) .spark:nth-child(3) {
+	--finishLeft: calc(var(--left) - var(--twotravel));
+	--finishTop: 320px;
+}
+
+div.diskette:not(:hover) .spark:nth-child(4) {
+	--finishLeft: calc(var(--left) - var(--halftravel));
+	--finishTop: calc(var(--top) + var(--halftravel));
+}
+
+/*
+
+div.diskette:not(:hover) .spark:nth-child(5) {
+	--finishLeft: 160px;
+	--finishTop: 0px;
+}*/
+
+@keyframes spark {
+	from {
+		width: 48px;
+		height: 48px;
+		left: 128px;
+		top: 320px;
+		opacity: 0;
+	}
+	20% {
+		opacity: 1;
+	}
+	30% {
+		width: 8px;
+		height: 8px;
+	}
+	to {
+		opacity: 0;
+		width:  0px;
+		height: 0px;
+		left:   var(--finishLeft);
+		top:    var(--finishTop);
+	}
+}

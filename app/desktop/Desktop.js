@@ -4,6 +4,8 @@ import { Home } from '../home/Home';
 import { Icon } from '../icon/Icon';
 import { Menu } from '../menu/Menu';
 
+import { Diskette } from '../widgets/diskette/Diskette';
+
 export class Desktop extends View
 {
 	constructor(args, parent)
@@ -12,9 +14,9 @@ export class Desktop extends View
 
 		this.template = require('./desktop.tmp');
 
-		this.args.bg = '/sm-disk-open.png';
+		// this.args.bg = '/sm-disk-open.png';
 		// this.args.bg = '/sm-disk.png';
-		// this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
+		this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
 
 		this.args.contextMenu = new Menu({items: {
 
@@ -87,6 +89,11 @@ export class Desktop extends View
 				, name: 'Curvature 0.0.61'
 				, icon: 'curvature'
 				, bits: 8
+			})
+			, new Icon({
+				action: 'widgets'
+				, name: 'Widgets'
+				, icon: 1
 			})
 		];
 

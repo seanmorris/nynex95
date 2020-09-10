@@ -1,0 +1,24 @@
+.widget-viewer-win:not(.minimized) .widget-viewer-win {
+	background-color: transparent;
+}
+
+.window.widget-viewer-win {
+	resize: none !important;
+}
+
+.widget-viewer-win.focused .title-bar {
+	display: flex;
+	flex: 1;
+}
+
+.widget-viewer-win .title-bar {
+	display: none;
+}
+
+.widget-viewer-win .maximize {
+	display: none;
+}
+
+.widget-viewer-win .title-bar {
+	margin: 0px;
+}
