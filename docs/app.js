@@ -58665,6 +58665,8 @@ require("brace/mode/markdown");
 
 require("brace/theme/monokai");
 
+var _Console = require("subspace-console/Console");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -58712,8 +58714,20 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
 
     _this.window.classes.loading = true;
     _this.window.classes.phpEditor = true;
+    _this.modes = ['script', 'iffe', 'term'];
+    _this.mode = 'script';
+    _this.returnConsole = new _Console.Console();
+    _this.inputConsole = new _Console.Console();
+    _this.outputConsole = new _Console.Console();
+    _this.errorConsole = new _Console.Console();
+    _this.inputConsole.args.prompt = '<?php';
     _this.window.args.status = 'initializing...';
-    _this.window.args.input = '<?php '; // this.window.args.input = `\`\`\`php <?php ob_end_flush(); echo "Hello," . PHP_EOL . " world!" ?> \`\`\``;
+    _this.window.args.returnConsole = _this.returnConsole;
+    _this.window.args.inputConsole = _this.inputConsole;
+    _this.window.args.outputConsole = _this.outputConsole;
+    _this.window.args.errorConsole = _this.errorConsole;
+    _this.window.args.input = '<?php ';
+    _this.window.args.input = "<?php\n\n// Only \"single\" expressions can return strings directly\n// So wrap the commands in an IFFE.\n\n(function() {\n    global $persist;\n\n    $stdout = fopen('php://stdout', 'w');\n    $stderr = fopen('php://stderr', 'w');\n\n    fwrite($stdout, \"some output...\\n\");\n\n    fwrite($stdout, sprintf(\"Ran %d times!\\n\", $persist++));\n\n    fwrite($stderr, 'testing stderror');\n\n    return 'return value';\n\n})();";
 
     var Php = require('php-wasm/PhpWeb').PhpWeb;
 
@@ -58726,104 +58740,103 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
         return;
       }
 
-      console.log(_this.window.args.input); // php.run(this.window.args.input + "\n");
+      console.log(_this.window.args.input);
     });
     _this.window.args.output = '';
 
     _this.window.click = function (event) {
+      _this.returnConsole.args.output.splice(0);
+
+      _this.outputConsole.args.output.splice(0);
+
+      _this.errorConsole.args.output.splice(0);
+
       _this.window.classes.loading = true;
       _this.window.args.status = 'PHP Running...';
       _this.window.args.output = '';
-      php.run(_this.window.args.input)["catch"](function (exitCode) {
-        console.log(exitCode);
-        php.refresh();
+      php.run(_this.window.args.input).then(function (exitCode) {
+        _this.returnConsole.args.output.push(exitCode);
+
+        _this.window.args.exitCode = exitCode; // php.refresh();
       });
     };
 
-    _this.window.ruleSet.add('textarea', function (_ref) {
+    _this.window.ruleSet.add('textarea[data-php]', function (_ref) {
       var element = _ref.element;
-      // const resizeTarget   = element.parentElement;
-      // const resizeObserver = new ResizeObserver(entries => {
-      // 	editor.resize();
-      // });
-      // resizeObserver.observe(resizeTarget);
-      // this.window.onRemove(()=>resizeObserver.unobserve(resizeTarget));
       var editor = ace.edit(element);
       editor.setTheme('ace/theme/monokai');
-      editor.session.setMode('ace/mode/markdown');
-      editor.session.setMode('ace/mode/markdown', function () {
-        var rules = editor.session.$mode.$highlightRules.getRules();
-
-        for (var stateName in rules) {
-          if (Object.prototype.hasOwnProperty.call(rules, stateName)) {
-            rules[stateName].unshift({
-              token: 'markdown-generic-code-tag',
-              regex: /```/,
-              next: 'start'
-            });
-            rules[stateName].unshift({
-              token: 'markdown-open-code-tag',
-              regex: /```(\S+)?/,
-              next: 'start'
-            });
-            rules[stateName].unshift({
-              token: 'php-open-tag',
-              regex: /<\?=/i,
-              next: 'start',
-              onMatch: function onMatch(value, state, stack, line) {
-                console.log(value, state, stack, line);
-                return _this.token;
-              }
-            });
-          }
-        } // force recreation of tokenizer
-
-
-        editor.session.$mode.$tokenizer = null;
-        editor.session.bgTokenizer.setTokenizer(editor.session.$mode.getTokenizer()); // force re-highlight whole document
-
-        editor.session.bgTokenizer.start(0);
-      });
-      editor.setOptions({
-        autoScrollEditorIntoView: true,
-        maxLines: 0,
-        printMargin: false,
-        readOnly: false
-      });
-      editor.commands.on("exec", function (event) {
-        if (event.command.readOnly) {
-          return;
-        }
-
-        var rowCol = editor.selection.getCursor();
-        var lines = editor.session.getLength() - 1;
-
-        if (rowCol.row !== lines) {
-          event.preventDefault();
-          event.stopPropagation();
-          return;
-        }
-
-        if (event.command.name === 'backspace' && rowCol.column === 0) {
-          event.preventDefault();
-          event.stopPropagation();
-          return;
-        }
-
-        var selection = editor.selection.getRange();
-
-        if (selection) {
-          var newSelection = selection.clipRows(lines, lines); // console.log(newSelection.startOffset);
-
-          editor.selection.setRange(newSelection);
-
-          if (newSelection.start.row !== lines || newSelection.end.row !== lines) {
-            event.preventDefault();
-            event.stopPropagation();
-            return;
-          }
-        }
-      });
+      editor.session.setMode('ace/mode/php'); // editor.session.setMode('ace/mode/markdown', () => {
+      // 	const rules = editor.session.$mode.$highlightRules.getRules();
+      // 	for (const stateName in rules)
+      // 	{
+      // 		if (Object.prototype.hasOwnProperty.call(rules, stateName))
+      // 		{
+      // 			rules[stateName].unshift({
+      // 				token:   'markdown-generic-code-tag'
+      // 				, regex: /```/
+      // 				, next:  'start'
+      // 			});
+      // 			rules[stateName].unshift({
+      // 				token:   'markdown-open-code-tag'
+      // 				, regex: /```(\S+)?/
+      // 				, next:  'start'
+      // 			});
+      // 			rules[stateName].unshift({
+      // 				token:   'php-open-tag'
+      // 				, regex: /<\?=/i
+      // 				, next:  'start'
+      // 				, onMatch: (value, state, stack, line) => {
+      // 					console.log(value, state, stack, line)
+      // 					return this.token;
+      // 				},
+      // 			});
+      // 		}
+      // 	}
+      // 	// force recreation of tokenizer
+      // 	editor.session.$mode.$tokenizer = null;
+      // 	editor.session.bgTokenizer.setTokenizer(editor.session.$mode.getTokenizer());
+      // 	// force re-highlight whole document
+      // 	editor.session.bgTokenizer.start(0);
+      // });
+      // editor.setOptions({
+      // 	autoScrollEditorIntoView: true
+      // 	, maxLines:               0
+      // 	, printMargin:            false
+      // 	, readOnly:               false
+      // });
+      // editor.commands.on("exec", event => {
+      // 	if(event.command.readOnly)
+      // 	{
+      // 		return;
+      // 	}
+      // 	const rowCol = editor.selection.getCursor();
+      // 	const lines  = editor.session.getLength() - 1;
+      // 	if(rowCol.row !== lines)
+      // 	{
+      // 		event.preventDefault();
+      // 		event.stopPropagation();
+      // 		return;
+      // 	}
+      // 	if(event.command.name === 'backspace' && rowCol.column === 0)
+      // 	{
+      // 		event.preventDefault();
+      // 		event.stopPropagation();
+      // 		return;
+      // 	}
+      // 	const selection = editor.selection.getRange();
+      // 	if(selection)
+      // 	{
+      // 		const newSelection = selection.clipRows(lines, lines);
+      // 		// console.log(newSelection.startOffset);
+      // 		editor.selection.setRange(newSelection);
+      // 		if(newSelection.start.row !== lines || newSelection.end.row !== lines)
+      // 		{
+      // 			event.preventDefault();
+      // 			event.stopPropagation();
+      // 			return;
+      // 		}
+      // 	}
+      // });
 
       var aceChanged = function aceChanged(event) {
         if (!editor.curOp || !editor.curOp.command.name) {
@@ -58834,54 +58847,51 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
           });
 
           return;
-        }
+        } // const lines = editor.session.getLength();
 
-        var lines = editor.session.getLength();
 
-        if (event.end.row !== event.start.row) {
-          var newLine = editor.session.getLine(lines - 1);
-          var addedLine = editor.session.getLine(lines - 2);
-          var phpCommand = (addedLine + newLine).trim();
-
-          if (addedLine.trim()) {
-            editor.session.replace(new Range(lines - 1, 0, lines - 1, Infinity), "");
-            editor.session.replace(new Range(lines - 2, 0, lines - 2, Infinity), phpCommand);
-          }
-
-          phpCommand = phpCommand.replace(/^<\?php/, '');
-          phpCommand = phpCommand.replace(/;$/, '');
-          console.log(phpCommand);
-
-          if (!!phpCommand) {
-            console.log(phpCommand);
-            php.exec("var_export(".concat(phpCommand, ",1)")).then(function (retVal) {
-              console.log(retVal);
-              editor.session.insert({
-                row: lines - 1,
-                column: 0
-              }, ';' + String(retVal) + "?>\n\n<?php ");
-            });
-          }
-        }
-
-        if (event.action !== 'remove') {
-          return;
-        }
-
-        if (event.end.column !== 0) {
-          return;
-        }
-
-        if (event.end.row === lines && event.start.row === lines) {
-          return;
-        }
-
-        _this.window.onNextFrame(function () {
-          editor.gotoLine(lines + 1);
-          editor.navigateLineEnd();
-        });
-
-        _this.window.args.input = editor.getValue();
+        _this.window.args.input = editor.session.getValue(); // if(event.end.row !== event.start.row)
+        // {
+        // 	const newLine   = editor.session.getLine(lines - 1);
+        // 	const addedLine = editor.session.getLine(lines - 2);
+        // 	let phpCommand = (addedLine + newLine).trim();
+        // 	if(addedLine.trim())
+        // 	{
+        // 		editor.session.replace(new Range(lines - 1, 0, lines - 1, Infinity), "");
+        // 		editor.session.replace(new Range(lines - 2, 0, lines - 2, Infinity), phpCommand);
+        // 	}
+        // 	phpCommand = phpCommand.replace(/^<\?php/, '');
+        // 	phpCommand = phpCommand.replace(/;$/, '');
+        // 	console.log(phpCommand);
+        // 	if(!!phpCommand)
+        // 	{
+        // 		console.log(phpCommand);
+        // 		this.window.args.input =
+        // 		// php.exec(`var_export(${phpCommand},1)`).then(retVal => {
+        // 		// 	console.log(retVal);
+        // 		// 	editor.session.insert(
+        // 		// 		{row: lines - 1, column: 0}
+        // 		// 		, ';' + String(retVal) + "?>\n\n<?php "
+        // 		// 	);
+        // 		// });
+        // 	}
+        // }
+        // if(event.action !== 'remove')
+        // {
+        // 	return;
+        // }
+        // if(event.end.column !== 0)
+        // {
+        // 	return;
+        // }
+        // if(event.end.row === lines && event.start.row === lines)
+        // {
+        // 	return;
+        // }
+        // this.window.onNextFrame(()=>{
+        // 	editor.gotoLine(lines + 1);
+        // 	editor.navigateLineEnd();
+        // });
       };
 
       editor.session.on('change', aceChanged);
@@ -58894,68 +58904,76 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
 
       editor.resize();
       php.addEventListener('output', function (event) {
-        var lines = editor.session.getLength() - 1;
-        editor.gotoLine(lines + 1);
-        editor.navigateLineEnd();
+        // const lines  = editor.session.getLength() - 1;
         _this.window.classes.loading = false;
         _this.window.args.status = 'PHP Ready!';
-        var detail = event.detail.join("\n").trim();
-        var prevLine = editor.session.getLine(lines);
-        console.log(prevLine, detail);
+        var detail = event.detail.join("\n").trim(); // const prevLine = editor.session.getLine(lines);
+        // console.log(prevLine, detail);
 
-        if (!prevLine || prevLine.match(/^\s*?\<\?php/)) {
-          if (!detail) {
-            return;
-          }
-        }
+        _this.outputConsole.args.output.push(detail); // if(!prevLine || prevLine.match(/^\s*?\<\?php/))
+        // {
+        // 	if(!detail)
+        // 	{
+        // 		return;
+        // 	}
+        // }
+        // if(this.printOpen)
+        // {
+        // 	clearTimeout(this.printOpen);
+        // }
+        // this.printOpen = this.window.onTimeout(100, () => {
+        // 	editor.session.insert(
+        // 		editor.getCursorPosition()
+        // 		, '<?php '
+        // 	)
+        // });
+        // editor.session.insert(
+        // 	editor.getCursorPosition()
+        // 	, '// ' + detail + "\n"
+        // );
 
-        if (_this.printOpen) {
-          clearTimeout(_this.printOpen);
-        }
-
-        _this.printOpen = _this.window.onTimeout(100, function () {
-          editor.session.insert(editor.getCursorPosition(), '<?php ');
-        });
-        editor.session.insert(editor.getCursorPosition(), '// ' + detail + "\n");
       });
       php.addEventListener('error', function (event) {
         var detail = event.detail.join("\n ").trim();
 
         if (!detail) {
           return;
-        }
+        } // const lines  = editor.session.getLength() - 1;
+        // editor.gotoLine(lines + 1);
+        // editor.navigateLineEnd();
 
-        var lines = editor.session.getLength() - 1;
-        editor.gotoLine(lines + 1);
-        editor.navigateLineEnd();
+
         _this.window.args.status = 'PHP Ready - ERRORS!';
         _this.window.classes.loading = false;
-        editor.session.insert(editor.getCursorPosition(), '// ' + detail + "\n");
-        console.log(event);
+
+        _this.errorConsole.args.output.push(detail);
       });
     });
+
+    _this.window.modeTo = function (mode) {
+      if (!_this.modes.includes(mode)) {
+        return;
+      }
+
+      for (var m in _this.modes) {
+        var testMode = _this.modes[m];
+        _this.window.classes['mode-' + testMode] = testMode == mode;
+      }
+
+      _this.mode = mode;
+    };
 
     return _this;
   }
 
   return PhpEditor;
-}(_Task2.Task); // 		this.window.args.input = `<?php
-// class HelloWorld
-// {
-//     public function __toString()
-//     {
-//         return "Hello, world!";
-//     }
-// }
-// print new HelloWorld;
-// //phpinfo();
-
+}(_Task2.Task);
 
 exports.PhpEditor = PhpEditor;
 });
 
-require.register("apps/phpEditor/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"row tight tabs\">\n\t<div class = \"tab\" tabindex=\"0\">script</div>\n\t<div class = \"tab\" tabindex=\"0\">iffe</div>\n\t<div class = \"tab\" tabindex=\"0\">terminal</div>\n</div>\n<div class = \"row tight inset liquid\">\n\t<div class = \"wide scroll zfront\">\n\t\t<textarea rows = \"14\" spellcheck=\"false\" cv-bind = \"input\"></textarea>\n\t</div>\n</div>\n\n<!-- <div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div> -->\n<!--\n<div class = \"row inset\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div> -->\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
+;require.register("apps/phpEditor/main.tmp.html", function(exports, require, module) {
+module.exports = "\t<div class = \"row cols\">\n\t\t<div class = \"row tight tabs\">\n\t\t\t<div cv-on = \"click:modeTo('script')\" class = \"tab script\" tabindex=\"0\">script</div>\n\n\t\t\t<div cv-on = \"click:modeTo('term')\" class = \"tab term\" tabindex=\"0\">terminal</div>\n\n\t\t\t<div cv-on = \"click:modeTo('iffe')\" class = \"tab iffe\" tabindex=\"0\">iffe</div>\n\t\t</div>\n\n\t\t<div class = \"spaced row wide right\">\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"arrow-circle.png\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split.png\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split-vertical.png\" />\n\t\t\t</button>\n\n\n\t\t\t<button class = \"square\" title = \"new file\">\n\t\t\t\t<img src = \"/ui/application-split-tile.png\" />\n\t\t\t</button>\n\n\t\t</div>\n\n\t</div>\n\n</div>\n\n<div class = \"row tight liquid\">\n\n\t<div class = \"rows tight liquid\">\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">PHP Code</label>\n\t\t\t\t<button cv-on = \":click(event)\" class = \"pane tight\" data-tint = \"red\">\n\t\t\t\t\t<i>RUN</i>\n\t\t\t\t</button>\n\t\t\t</div>\n\n\t\t\t<div class = \"wide scroll zfront\">\n\t\t\t\t<textarea data-php rows = \"14\" spellcheck=\"false\" cv-bind = \"input\"></textarea>\n\t\t\t</div>\n\t\t</div>\n\n\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div class = \"rows tight liquid\" data-readonly>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">Return</label>\n\t\t\t\t<button class = \"pane tight\">HTML</button>\n\t\t\t\t<button class = \"pane tight\">Text</button>\n\t\t\t</div>\n\t\t\t[[returnConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdOut</label>\n\t\t\t\t<button class = \"pane tight\">HTML</button>\n\t\t\t\t<button class = \"pane tight\">Text</button>\n\t\t\t\t<label class = \"pane\">exit</label>\n\t\t\t\t<label class = \"tight\">[[exitCode]]</label>\n\t\t\t</div>\n\t\t\t[[outputConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdErr</label>\n\t\t\t</div>\n\t\t\t[[errorConsole]]\n\t\t</div>\n\n\t</div>\n</div>\n\n\n<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n<div class = \"frame cols liquid\">\n\t[[inputConsole]]\n</div>\n\n\n<!-- <div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div> -->\n<!--\n<div class = \"row inset\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div> -->\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/Folder.js", function(exports, require, module) {
@@ -59497,7 +59515,7 @@ module.exports = "<div class = \"folder\">\n\t<span cv-on = \"click:expand(event
 });
 
 ;require.register("apps/repoBrowser/main.tmp.html", function(exports, require, module) {
-module.exports = "<div class = \"row tight\">\n\n\t<button class = \"tight\" title = \"new file\">\n\t\t<img src = \"/ui/new.png\" />\n\t</button>\n\n\t<button class = \"tight\"  title = \"open file\">\n\t\t<img src = \"/ui/open.png\" />\n\t</button>\n\n\t<button class = \"tight\" title = \"save file\">\n\t\t<img src = \"/ui/save.png\" />\n\t</button>\n\n\t<button class = \"tight\"  title = \"download file\">\n\t\t<img class = \"icon16\" src = \"/w98/download-16-4bit.png\" />\n\t</button>\n\n\t<button class = \"tight\" title = \"upload file\">\n\t\t<img class = \"icon16\" src = \"/w98/system_restore-16-8bit.png\" />\n\t</button>\n\n\t<button class = \"tight\" title = \"Github\">\n\t\t<img class = \"icon16\" src = \"/apps/github-16-2bit.png\" />\n\t</button>\n\n\t<button class = \"tight\" title = \"toggle left bar\" cv-on = \"click:toggleSection('left')\">\n\t\t<img data-section-antileft class = \"icon16\" src = \"/ui/left-sidebar-expand.png\" />\n\t\t<img data-section-left class = \"icon16\" src = \"/ui/left-sidebar-collapse.png\" />\n\t</button>\n\n\t<button class = \"tight\" title = \"toggle right bar\" cv-on = \"click:toggleSection('right')\">\n\t\t<img data-section-antiright class = \"icon16\" src = \"/ui/right-sidebar-expand.png\" />\n\t\t<img data-section-right class = \"icon16\" src = \"/ui/right-sidebar-collapse.png\" />\n\t</button>\n\n\t<button class = \"tight\" title = \"toggle terminal\" cv-on = \"click:toggleSection('term')\">\n\t\t<img class = \"icon16\" src = \"/w98/console_prompt-16-4bit.png\" />\n\t</button>\n\n\t<button class = \"tight\"  title = \"help\">\n\t\t<img class = \"icon16\" src = \"/w98/help_book_small-16-4bit.png\" />\n\t</button>\n\n</div>\n\n<div class = \"inset row tight scroll-header outer white\" tabindex = \"-1\">\n\n\t<button class = \"flat tight white\" class = \"tight\">\n\t\t<img src = \"/w95/21-16-4bit.png\" />\n\t</button>\n\n\t<input\n\t\tclass = \"inset wide flat white\"\n\t\tvalue = \"Repo: [[repoName]] [ [[branch]] ]\"\n\t\treadonly = \"true\"\n\t/>\n\n\t<div class = \"pane repos-dropdown\">\n\t\t<div class = \"scroll inset white\" data-role = \"icon-list\" cv-each = \"repoIcons:icon:i\">\n\t\t\t[[icon]]\n\t\t</div>\n\t</div>\n\n</div>\n\n<div class = \"frame cols liquid\">\n\n\t<div data-section-left class = \"content rows\">\n\t\t<div class = \"row tight\">\n\n\t\t\t<button class = \"tight\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/homepage-16-4bit.png\" title = \"repo root\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"tight\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/message_tack-16-4bit.png\" title = \"view readme\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"tight\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/diskettes_copy-16-4bit.png\"  title = \"branches\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"tight\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/history-16-4bit.png\"  title = \"history\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"tight\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/search_directory-16-8bit.png\"  title = \"search\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"tight\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/directory_program_group_small-16-4bit.png\"  title = \"actions\" />\n\t\t\t</button>\n\t\t</div>\n\n\t\t<div class = \"inset liquid white\">\n\t\t\t<div cv-each = \"files:file:f\" class = \"scroll treeview wide\">\n\t\t\t\t<div class = \"\">[[file]]</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div data-section-left data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div data-center-col class = \"content rows\">\n\n\t\t<div class = \"row tight scroll-header\">\n\t\t\t<div class = \"inset row wide white tight\">\n\n\t\t\t\t<button cv-on = \"click:selectParent(event);\" class = \"flat tight white\">\n\t\t\t\t\t<img src = \"/ui/dir-up.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t<input\n\t\t\t\t\ttype  = \"text\"\n\t\t\t\t\tclass = \"inset wide flat white\"\n\t\t\t\t\tvalue = \"File: [[filename]]\"\n\t\t\t\t\treadonly = \"true\"\n\t\t\t\t/>\n\t\t\t</div>\n\n\t\t\t<div class = \"row tight tabs\">\n\t\t\t\t<div class = \"tab\" tabindex=\"0\">\n\t\t\t\t\t<img class = \"icon16\" src = \"/w98/file_lines-16-4bit.png\" />\n\t\t\t\t</div>\n\t\t\t\t<div class = \"tab\" tabindex=\"0\">\n\t\t\t\t\t<img class = \"icon16\" src = \"/w98/xml_gear-16-8bit.png\" />\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\n\t\t<div data-control-sector class = \"white inset scroll\">\n\t\t\t<div class = \"liquid abs-holder\">\n\t\t\t\t<div class = \"abs-fill\">\n\t\t\t\t\t[[control]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div data-terminal-sector class = \"liquid inset term\" style = \"height: 5em;\">\n\t\t\t<div class = \"terminal black liquid abs-holder\" cv-ref = \"termscroll::\">\n\t\t\t\t<div class = \"abs-fill\" data-readonly>\n\t\t\t\t\t[[terminal]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div data-section-right>\n\t\t<div>[[right]] bar</div>\n\t</div>\n\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\" cv-if = \"chars\">type: [[filetype]] size: [[chars]]</div>\n</div>\n"
+module.exports = "<div class = \"row tight\">\n\n\t<button class = \"square\" title = \"new file\">\n\t\t<img src = \"/ui/new.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"open file\">\n\t\t<img src = \"/ui/open.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"save file\">\n\t\t<img src = \"/ui/save.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"download file\">\n\t\t<img class = \"icon16\" src = \"/w98/download-16-4bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"upload file\">\n\t\t<img class = \"icon16\" src = \"/w98/system_restore-16-8bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"Github\">\n\t\t<img class = \"icon16\" src = \"/apps/github-16-2bit.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle left bar\" cv-on = \"click:toggleSection('left')\">\n\t\t<img data-section-antileft class = \"icon16\" src = \"/ui/left-sidebar-expand.png\" />\n\t\t<img data-section-left class = \"icon16\" src = \"/ui/left-sidebar-collapse.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle right bar\" cv-on = \"click:toggleSection('right')\">\n\t\t<img data-section-antiright class = \"icon16\" src = \"/ui/right-sidebar-expand.png\" />\n\t\t<img data-section-right class = \"icon16\" src = \"/ui/right-sidebar-collapse.png\" />\n\t</button>\n\n\t<button class = \"square\" title = \"toggle terminal\" cv-on = \"click:toggleSection('term')\">\n\t\t<img class = \"icon16\" src = \"/w98/console_prompt-16-4bit.png\" />\n\t</button>\n\n\t<button class = \"square\"  title = \"help\">\n\t\t<img class = \"icon16\" src = \"/w98/help_book_small-16-4bit.png\" />\n\t</button>\n\n</div>\n\n<div class = \"inset row tight scroll-header outer white\" tabindex = \"-1\">\n\n\t<button class = \"flat tight white\" class = \"tight\">\n\t\t<img src = \"/w95/21-16-4bit.png\" />\n\t</button>\n\n\t<input\n\t\tclass = \"inset wide flat white\"\n\t\tvalue = \"Repo: [[repoName]] [ [[branch]] ]\"\n\t\treadonly = \"true\"\n\t/>\n\n\t<div class = \"pane repos-dropdown\">\n\t\t<div class = \"scroll inset white\" data-role = \"icon-list\" cv-each = \"repoIcons:icon:i\">\n\t\t\t[[icon]]\n\t\t</div>\n\t</div>\n\n</div>\n\n<div class = \"frame cols liquid\">\n\n\t<div data-section-left class = \"content rows\">\n\t\t<div class = \"row tight\">\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/homepage-16-4bit.png\" title = \"repo root\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/message_tack-16-4bit.png\" title = \"view readme\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/diskettes_copy-16-4bit.png\"  title = \"branches\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/history-16-4bit.png\"  title = \"history\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/search_directory-16-8bit.png\"  title = \"search\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/directory_program_group_small-16-4bit.png\"  title = \"actions\" />\n\t\t\t</button>\n\t\t</div>\n\n\t\t<div class = \"inset liquid white\">\n\t\t\t<div cv-each = \"files:file:f\" class = \"scroll treeview wide\">\n\t\t\t\t<div class = \"\">[[file]]</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div data-section-left data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div data-center-col class = \"content rows\">\n\n\t\t<div class = \"row tight scroll-header\">\n\t\t\t<div class = \"inset row wide white tight\">\n\n\t\t\t\t<button cv-on = \"click:selectParent(event);\" class = \"flat tight white\">\n\t\t\t\t\t<img src = \"/ui/dir-up.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t<input\n\t\t\t\t\ttype  = \"text\"\n\t\t\t\t\tclass = \"inset wide flat white\"\n\t\t\t\t\tvalue = \"File: [[filename]]\"\n\t\t\t\t\treadonly = \"true\"\n\t\t\t\t/>\n\t\t\t</div>\n\n\t\t\t<div class = \"row tight tabs\">\n\t\t\t\t<div class = \"tab\" tabindex=\"0\">\n\t\t\t\t\t<img class = \"icon16\" src = \"/w98/file_lines-16-4bit.png\" />\n\t\t\t\t</div>\n\t\t\t\t<div class = \"tab\" tabindex=\"0\">\n\t\t\t\t\t<img class = \"icon16\" src = \"/w98/xml_gear-16-8bit.png\" />\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\n\t\t<div data-control-sector class = \"white inset scroll\">\n\t\t\t<div class = \"liquid abs-holder\">\n\t\t\t\t<div class = \"abs-fill\">\n\t\t\t\t\t[[control]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div data-terminal-sector class = \"liquid inset term\" style = \"height: 5em;\">\n\t\t\t<div class = \"terminal black liquid abs-holder\" cv-ref = \"termscroll::\">\n\t\t\t\t<div class = \"abs-fill\" data-readonly>\n\t\t\t\t\t[[terminal]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div data-section-right>\n\t\t<div>[[right]] bar</div>\n\t</div>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[filename]]</div>\n\t<div class = \"label inset\" cv-if = \"chars\">type: [[filetype]] size: [[chars]]</div>\n</div>\n"
 });
 
 ;require.register("apps/taskManager/TaskManager.js", function(exports, require, module) {

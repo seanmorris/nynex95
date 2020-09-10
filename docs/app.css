@@ -128,15 +128,18 @@ iframe{
 	background-color: black;
 }
 
-.terminal,
-.terminal input,
-.terminal textarea {
-	overflow: auto;
+.terminal{
+	font-family: Unispace;
 	background-color: black;
 	color: white;
-	font-family: Unispace;
-	font-weight: bold;
+	overflow: auto;
 	font-size: 8pt;
+}
+
+.terminal input,
+.terminal textarea {
+	background-color: transparent;
+	font-weight: bold;
 }
 
 [data-readonly]:not([data-readonly=false]) .terminal input,
@@ -197,6 +200,55 @@ div.sheild {
 	left: 0px;
 	width: 100%;
 	height: 100%;
+}
+
+.phpEditor .cols.tight > *,
+.phpEditor .cols.tight,
+.phpEditor label.pane {
+	white-space: nowrap;
+	min-height: 23px;
+	z-index: 1;
+}
+
+.phpEditor label.pane {
+	align-items: flex-start;
+}
+
+.phpEditor textarea {
+	border:none;
+}
+
+.phpEditor.mode-script .tab.script,
+.phpEditor.mode-iffe .tab.iffe,
+.phpEditor.mode-term .tab.term {
+	text-decoration: underline;
+	outline-offset: -6px;
+	color: #000;
+	margin-left: -1px;
+	margin-right: 1px;
+	margin-top: -1px;
+	margin-bottom: 1px;
+}
+
+.phpEditor .ace_editor .ace_scroller {
+	background-color: transparent;
+}
+
+.phpEditor .resize-vert {
+	overflow-y: scroll;
+}
+
+.phpEditor .ace_editor {
+	margin: 0px;
+	padding: 1em 0px;
+	flex-grow: 1;
+	height: auto !important;
+}
+
+.phpEditor.loading .scroll {
+	background-image: url(/loading.gif);
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .viewport {
@@ -506,34 +558,6 @@ html, body, input, button, select {
 	box-sizing: border-box;
 }
 
-.tabs > .tab {
-	padding: 4px;
-	border: 2px solid;
-	border-bottom-width: 0px;
-	border-image: url(/border-tab.png) 2 2 1 2 fill;
-}
-
-.tabs {
-	padding-top: 3px;
-	padding-left: 2px;
-	margin-bottom: -2px;
-	padding-right: 2px;
-	color: #383838;
-	z-index: 1;
-	position: relative;
-}
-
-.tabs > .tab:focus,
-.tabs > .tab:hover {
-	outline-offset: -6px;
-	color: #000;
-	margin-left: -1px;
-	margin-right: 1px;
-	margin-top: -1px;
-	margin-bottom: 1px;
-}
-
-
 .frame {
 	overflow: auto;
 	flex-direction: column;
@@ -596,6 +620,10 @@ html, body, input, button, select {
 	align-content: center;
 }
 
+.right {
+	justify-content: flex-end !important;
+}
+
 .cols {
 	display: flex;
 	flex-direction: row;
@@ -656,7 +684,7 @@ button {
 	text-align: center;
 }
 
- .window button:not(.tight) {
+ .window button:not(.tight,.square) {
 	min-width: 120px;
 }
 
@@ -664,28 +692,33 @@ button {
 	min-width: initial !important;
 }
 
-.window button.tight {
+.window button.square {
 	display: flex;
 	min-width: 24px;
 	height: 28px;
 	padding: 2px 4px 2px 4px;
 }
 
-.tight > button.tight {
+button.tight {
+	height: 22px;
+}
+
+.tight > button.square {
 	margin-bottom: -1px;
 	border-bottom-width: 1px;
 	height: 30px;
 	min-width: 30px;
 }
 
-.tight > button.tight.flat {
+.tight > button.square.flat {
 	height: auto;
 	padding: 1px;
 	min-width: 36px;
 }
 
-.tight{
-	overflow:hidden;
+.rows > *,
+.cols > *{
+	/*overflow:hidden;*/
 }
 
 button:active {
@@ -884,13 +917,6 @@ label.icon-frame label {
 
 }
 
-
-.phpEditor.loading .scroll {
-	background-image: url(/loading.gif);
-	background-repeat: no-repeat;
-	background-position: center;
-}
-
 .CodeMirror-selectedtext {
 	background-color: #000082 !important;
 	color: white;
@@ -906,30 +932,14 @@ label.icon-frame label {
 	justify-content: center;
 }
 
-.phpEditor .ace_editor .ace_scroller {
-	background-color: transparent;
-}
-
-.phpEditor .resize-vert {
-	overflow-y: scroll;
-}
-
-.phpEditor .ace_editor,
-.phpEditor textarea {
-	margin: 0px;
-	padding: 1em 0px;
-	flex-grow: 1;
-	height: auto !important;
+.spaced {
+	margin: 4px;
 }
 
 .over-hide {
 	overflow: hidden;
 }
 
-/*.phpEditor .ace_editor {
-	min-height: 18em;
-}
-*/
 .scroll-header {
 	min-height: 24px;
 }
@@ -953,7 +963,8 @@ label.icon-frame label {
 	padding-right: 0.5em;
 }
 
-.tight > img {
+.tight > img,
+.square > img {
 	align-self: center;
 	image-rendering: pixelated;
 }
@@ -1121,8 +1132,52 @@ label.icon-frame label {
 	background-color: #c0c0c0;
 }
 
-.tabs {
+[data-tint] {
+}
 
+[data-tint]::before {
+	display: block;
+	background-color: red;
+	opacity: 0.5;
+	mix-blend-mode: color-burn;
+	position: absolute;
+	z-index: 3;
+	left: -2px;
+	top: -2px;
+	width:  calc(100% + 4px);
+	height: calc(100% + 4px);
+	content: ' ';
+	padding: 0px;
+}
+
+.tabs > .tab {
+	align-self: flex-end;
+	padding: 4px;
+	border: 2px solid;
+	border-bottom-width: 0px;
+	border-image: url(/border-tab.png) 2 2 1 2 fill;
+}
+
+.tabs {
+	padding-top: 3px;
+	padding-left: 2px;
+	margin-bottom: -2px;
+	padding-right: 2px;
+	z-index: 1;
+	position: relative;
+}
+
+.tabs > .tab:focus,
+.tabs > .tab:hover {
+	outline-offset: -6px;
+	color: #000;
+	margin-left: -1px;
+	margin-right: 1px;
+	margin-top: -1px;
+	margin-bottom: 1px;
+}
+
+.tabs > .tab:focus{
 }
 
 .task-bar {
