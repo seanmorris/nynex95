@@ -14,9 +14,9 @@ export class Desktop extends View
 
 		this.template = require('./desktop.tmp');
 
-		// this.args.bg = '/sm-disk-open.png';
+		// this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
 		// this.args.bg = '/sm-disk.png';
-		this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
+		this.args.bg = '/sm-disk-open.png';
 
 		this.args.contextMenu = new Menu({items: {
 
