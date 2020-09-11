@@ -1,6 +1,8 @@
 terraform {
   required_providers {
-    cloudflare = {}
+    cloudflare = {
+      source = "terraform-providers/cloudflare"
+    }
   }
-  required_version = ">= 0.12"
+  required_version = ">= 0.13"
 }
