@@ -33,15 +33,13 @@ export class PhpEditor extends Task
 		this.window.classes.loading   = true;
 		this.window.classes.phpEditor = true;
 
-		// this.window.classes['mode-script'] = true;
-		this.window.classes['mode-term'] = true;
+		this.window.classes['mode-script'] = true;
 
-		this.window.args.width  = `620px`;
-		this.window.args.height = `740px`;
+		this.window.args.width  = `640px`;
+		this.window.args.height = `720px`;
 
 		this.modes = ['script', 'iffe', 'term'];
-		// this.mode  = 'script';
-		this.mode  = 'terminal';
+		this.mode  = 'script';
 
 		this.returnConsole = new Terminal;
 		this.inputConsole  = new Terminal({path:{php: PhpTask}});
@@ -51,9 +49,14 @@ export class PhpEditor extends Task
 		this.inputConsole.runCommand('php');
 		this.inputConsole.runCommand('/clear');
 
-		this.window.onTimeout(
-			0, () => this.inputConsole.runCommand(`'Extensions available: ' . implode(', ', get_loaded_extensions() )`)
-		);
+		this.window.args.layout = 'vertical';
+
+		// this.inputConsole.runCommand(
+		// 	`'Extensions available: ' . implode(', ', get_loaded_extensions())`
+		// );
+
+		this.inputConsole.runCommand('var_dump( (object)[ "php" => "working!" ] )');
+
 
 		this.window.args.status = 'initializing...';
 
@@ -64,21 +67,25 @@ export class PhpEditor extends Task
 
 		this.window.args.input = '<?php ';
 		this.window.args.input = `<?php
-
-// Only "single" expressions can return strings directly
+// Only "single" expressions can
+// return strings directly...
 // So wrap the commands in an IFFE.
 
 (function() {
-    global $persist;
+	$stdout = fopen('php://stdout', 'w');
+	$stderr = fopen('php://stderr', 'w');
 
-    $stdout = fopen('php://stdout', 'w');
-    $stderr = fopen('php://stderr', 'w');
+	global $count;
 
-    fwrite($stdout, sprintf("Ran %d times!\\n", $persist++));
+	fwrite($stdout, sprintf(
+		"Ran %d time%s!\\n"
+		, ++$count
+		, $count==1?'':'s'
+	));
 
-    fwrite($stderr, 'testing stderror');
+	fwrite($stderr, 'testing STDERR.');
 
-    return 'this is a return value.';
+	return 'Ran @' . (new DateTime)->format('Y-m-d h:i:s.v') . ' UTC';
 
 })();`;
 
@@ -96,7 +103,22 @@ export class PhpEditor extends Task
 			}
 		});
 
+		this.window.args.persist = true;
+
 		this.window.args.output = '';
+
+		this.window.toggle = (varname) => {
+			this.window.args[varname] = !this.window.args[varname];
+
+			if(varname === 'persist')
+			{
+				this.window.refresh();
+			}
+		}
+
+		this.window.layout = (layout) => {
+			this.window.args.layout = layout;
+		}
 
 		this.window.click = (event) => {
 
@@ -108,6 +130,11 @@ export class PhpEditor extends Task
 			this.window.args.status = 'PHP Running...';
 
 			this.window.args.output = '';
+
+			if(!this.window.args.persist)
+			{
+				this.window.refresh();
+			}
 
 			const code = String(this.window.args.input)
 				.replace(/^<\?php/,'')
@@ -255,7 +282,6 @@ export class PhpEditor extends Task
 			this.returnConsole.args.output.splice(0);
 			this.outputConsole.args.output.splice(0);
 			this.errorConsole.args.output.splice(0);
-
 		};
 
 		this.window.modeTo = (mode) => {

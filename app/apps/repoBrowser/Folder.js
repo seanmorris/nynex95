@@ -88,8 +88,6 @@ export class Folder extends View
 				return icon;
 			});
 
-			// iconList.args.icons = icons;
-
 			this.args.browser.window.args.filename = this.args.name;
 			this.args.browser.window.args.control = iconList;
 		});
@@ -187,8 +185,8 @@ export class Folder extends View
 		this.args.browser.window.args.url = url;
 
 		fetch(url, {headers}).then(r => r.text()).then(body => {
-
 			this.args.browser.window.args.content  = body;
+			this.args.browser.window.args.sha      = file.sha;
 			this.args.browser.window.args.filename = file.name;
 
 		});

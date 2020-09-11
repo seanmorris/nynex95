@@ -19,6 +19,8 @@ export class Plaintext extends View
 	{
 		super(args, parent);
 
+		console.log(args);
+
 		this.template  = require('./plaintext.tmp');
 	}
 
@@ -45,7 +47,11 @@ export class Plaintext extends View
 			editor.session.setMode(mode);
 		}
 
-		console.log(mode);
+		const aceChanged = (event) => {
+			this.args.content = editor.session.getValue();
+		};
+
+		editor.session.on('change', aceChanged);
 
 		editor.setOptions({
 			autoScrollEditorIntoView: true
@@ -55,6 +61,7 @@ export class Plaintext extends View
 		});
 
 		this.onRemove(()=>{
+			editor.session.off('change', aceChanged);
 			editor.container.remove();
 			editor.destroy();
 		});

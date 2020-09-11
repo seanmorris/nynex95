@@ -366,6 +366,14 @@ label.icon-frame label {
 	flex: 1;
 }
 
+.contents {
+	display: contents;
+}
+
+.desat {
+	filter: saturate(0);
+}
+
 .json-view:not(.top-level) {
 	display: contents;
 }

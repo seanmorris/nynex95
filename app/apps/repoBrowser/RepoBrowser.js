@@ -46,6 +46,36 @@ export class RepoBrowser extends Task
 
 		this.window.classes['hide-right'] = true;
 
+
+		this.window.save = (event) => {
+
+			const branch  = 'nynex';
+			const message = 'Nynex edit.';
+			const content = btoa(encodeURIComponent(this.window.args.control.args.content));
+			const sha     = this.window.args.control.args.sha;
+			const url     = new URL(this.window.args.control.args.url).pathname;
+
+			const gitHubToken = GitHub.getToken();
+			const postChange  = {branch, message, content, url, sha};
+
+			const headers = {
+				accept: 'application/vnd.github.v3.json'
+			};
+
+			if(gitHubToken && gitHubToken.access_token)
+			{
+				headers.authorization = `token ${gitHubToken.access_token}`;
+			}
+
+			return fetch('https://nynex.unholysh.it' + url, {
+
+				method: 'PUT', body: JSON.stringify(postChange)
+
+			}).then(response => response.json())
+
+			console.log(postChange);
+		}
+
 		this.window.toggleSection = (section) => {
 
 			console.log(section,this.window.classes);
@@ -199,7 +229,12 @@ export class RepoBrowser extends Task
 
 				default:
 					this.window.args.control = new PlaintextControl(
-						{filetype, content: this.window.args.content}
+						{
+							filetype
+							, sha: this.window.args.sha
+							, url: this.window.args.url
+							, content: this.window.args.content
+						}
 						, this
 					);
 					break;

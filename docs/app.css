@@ -129,17 +129,19 @@ iframe{
 }
 
 .terminal{
-	font-family: Unispace;
+	/*font-family: Unispace;*/
+	font-family: 'fixedsys', 'Monaco';
 	background-color: black;
 	color: white;
 	overflow: auto;
-	font-size: 9pt;
+	font-size: 12pt;
+	font-weight: normal;
 }
 
 .terminal input,
 .terminal textarea {
 	background-color: transparent;
-	font-weight: bold;
+	font-weight: normal;
 }
 
 [data-readonly]:not([data-readonly=false]) .terminal input,
@@ -206,16 +208,20 @@ div.sheild {
 .phpEditor .cols.tight,
 .phpEditor label.pane {
 	white-space: nowrap;
-
 	z-index: 1;
+}
+
+.phpEditor .cols.tight {
+	overflow: hidden;
 }
 
 .phpEditor label.pane {
 	align-items: flex-start;
 }
 
-.phpEditor textarea {
-	border:none;
+.phpEditor .terminal,
+.phpEditor .terminal > *{
+	user-select: initial !important;
 }
 
 .phpEditor.mode-script .tab.script,
@@ -255,6 +261,40 @@ div.sheild {
 }
 
 .mode-script [data-mode-term] {
+	display: none;
+}
+
+.phpEditor .main[data-layout=vertical] {
+	flex-direction: row;
+}
+
+.phpEditor .main[data-layout=horizontal] {
+	flex-direction: column;
+}
+
+.phpEditor .main[data-layout=vertical] .terms {
+	flex-direction: column;
+}
+
+.phpEditor .main[data-layout=horizontal] .terms {
+	flex-direction: row;
+}
+
+.phpEditor .main[data-layout=quad] {
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: 50% 50%;
+}
+
+.phpEditor .main[data-layout=quad] .terms {
+	display: contents;
+}
+
+.phpEditor .main[data-layout=quad] [data-vertical-resize] {
+	display: none;
+}
+
+.phpEditor .main[data-layout=quad] [data-horizontal-resize] {
 	display: none;
 }
 
@@ -338,6 +378,34 @@ div.sheild {
 	flex-direction: column-reverse;
 	align-self: flex-end;
 	flex-wrap: wrap-reverse;
+}
+
+@font-face {
+    font-family: 'dogica pixel mono';
+    font-weight: bold;
+    src: url('fonts/dogicabold-webfont.woff2') format('woff2'),
+         url('fonts/dogicabold-webfont.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'dogica pixel';
+    font-weight: bold;
+    src: url('fonts/dogicapixelbold-webfont.woff2') format('woff2'),
+         url('fonts/dogicapixelbold-webfont.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'dogica pixel mono';
+    font-weight: normal;
+    src: url('fonts/dogica-webfont.woff2') format('woff2'),
+         url('fonts/dogica-webfont.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'dogica pixel';
+    font-weight: normal;
+    src: url('fonts/dogicapixel-webfont.woff2') format('woff2'),
+         url('fonts/dogicapixel-webfont.woff') format('woff');
 }
 
 [data-role=icon-list] {
@@ -905,6 +973,14 @@ label.icon-frame label {
 
 .html-control iframe {
 	flex: 1;
+}
+
+.contents {
+	display: contents;
+}
+
+.desat {
+	filter: saturate(0);
 }
 
 .json-view:not(.top-level) {
@@ -1497,7 +1573,7 @@ div.diskette .spark {
 	width: 8px;
 	height: 8px;
 	position: absolute;
-	--travel: 96px;
+	--travel: 64px;
 	--halftravel: calc(var(--travel) * 0.85);
 	--twotravel: calc(var(--travel) / 0.85);
 	--left: 128px;

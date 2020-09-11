@@ -69,7 +69,7 @@ div.diskette .spark {
 	width: 8px;
 	height: 8px;
 	position: absolute;
-	--travel: 96px;
+	--travel: 64px;
 	--halftravel: calc(var(--travel) * 0.85);
 	--twotravel: calc(var(--travel) / 0.85);
 	--left: 128px;

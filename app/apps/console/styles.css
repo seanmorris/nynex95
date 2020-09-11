@@ -1,15 +1,17 @@
 .terminal{
-	font-family: Unispace;
+	/*font-family: Unispace;*/
+	font-family: 'fixedsys', 'Monaco';
 	background-color: black;
 	color: white;
 	overflow: auto;
-	font-size: 9pt;
+	font-size: 12pt;
+	font-weight: normal;
 }
 
 .terminal input,
 .terminal textarea {
 	background-color: transparent;
-	font-weight: bold;
+	font-weight: normal;
 }
 
 [data-readonly]:not([data-readonly=false]) .terminal input,

@@ -111,7 +111,6 @@ export class Desktop extends View
 				, icon: 'npm'
 				, path: 'apps'
 				, bits: 24
-				, size: 32
 			})
 			, new Icon({
 				action: 'github'
@@ -134,7 +133,6 @@ export class Desktop extends View
 				, icon: 'php'
 				, path: 'apps'
 				, bits: 24
-				, size: 48
 			})
 			, new Icon({
 				action: 'drupal'
@@ -142,22 +140,20 @@ export class Desktop extends View
 				, icon: 'drupal'
 				, path: 'apps'
 				, bits: 24
-				, size: 32
 			})
-			, new Icon({
-				action: 'dos'
-				, name: 'Doom'
-				, icon: 'doomguy'
-				, path: 'apps'
-				, bits: 16
-			})
+			// , new Icon({
+			// 	action: 'dos'
+			// 	, name: 'Doom'
+			// 	, icon: 'doomguy'
+			// 	, path: 'apps'
+			// 	, bits: 16
+			// })
 			, new Icon({
 				action: 'clones'
 				, name: 'Clones n Barrels'
 				, icon: 'barrel'
 				, path: 'sm'
 				, bits: 24
-				, size: 32
 			})
 			, new Icon({
 				action: 'numb'
@@ -165,15 +161,6 @@ export class Desktop extends View
 				, icon: 'numb'
 				, path: 'apps'
 				, bits: 8
-				, size: 32
-			})
-			, new Icon({
-				action: 'tooltime'
-				, name: 'tooltime remix.mp3.exe'
-				, icon: 'tooltime-remix'
-				, path: 'apps'
-				, bits: 8
-				, size: 32
 			})
 		];
 

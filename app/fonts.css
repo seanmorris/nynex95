@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'dogica pixel mono';
+    font-weight: bold;
+    src: url('fonts/dogicabold-webfont.woff2') format('woff2'),
+         url('fonts/dogicabold-webfont.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'dogica pixel';
+    font-weight: bold;
+    src: url('fonts/dogicapixelbold-webfont.woff2') format('woff2'),
+         url('fonts/dogicapixelbold-webfont.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'dogica pixel mono';
+    font-weight: normal;
+    src: url('fonts/dogica-webfont.woff2') format('woff2'),
+         url('fonts/dogica-webfont.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'dogica pixel';
+    font-weight: normal;
+    src: url('fonts/dogicapixel-webfont.woff2') format('woff2'),
+         url('fonts/dogicapixel-webfont.woff') format('woff');
+}

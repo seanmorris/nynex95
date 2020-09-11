@@ -2,16 +2,20 @@
 .phpEditor .cols.tight,
 .phpEditor label.pane {
 	white-space: nowrap;
-
 	z-index: 1;
+}
+
+.phpEditor .cols.tight {
+	overflow: hidden;
 }
 
 .phpEditor label.pane {
 	align-items: flex-start;
 }
 
-.phpEditor textarea {
-	border:none;
+.phpEditor .terminal,
+.phpEditor .terminal > *{
+	user-select: initial !important;
 }
 
 .phpEditor.mode-script .tab.script,
@@ -51,5 +55,39 @@
 }
 
 .mode-script [data-mode-term] {
+	display: none;
+}
+
+.phpEditor .main[data-layout=vertical] {
+	flex-direction: row;
+}
+
+.phpEditor .main[data-layout=horizontal] {
+	flex-direction: column;
+}
+
+.phpEditor .main[data-layout=vertical] .terms {
+	flex-direction: column;
+}
+
+.phpEditor .main[data-layout=horizontal] .terms {
+	flex-direction: row;
+}
+
+.phpEditor .main[data-layout=quad] {
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: 50% 50%;
+}
+
+.phpEditor .main[data-layout=quad] .terms {
+	display: contents;
+}
+
+.phpEditor .main[data-layout=quad] [data-vertical-resize] {
+	display: none;
+}
+
+.phpEditor .main[data-layout=quad] [data-horizontal-resize] {
 	display: none;
 }

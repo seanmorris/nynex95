@@ -48,11 +48,11 @@ export class PhpTask extends Task
 
 			if(Number(output) != output)
 			{
-				this.printErr(`"${output}"`);
+				this.printErr(`"${output}"\n\n`);
 			}
 			else
 			{
-				this.printErr(output);
+				this.printErr(output + "\n\n");
 			}
 		});
 
@@ -67,11 +67,11 @@ export class PhpTask extends Task
 
 				if(Number(output) != output)
 				{
-					this.print(`"${output}"`);
+					this.print(`"${output}"\n\n`);
 				}
 				else
 				{
-					this.print(output);
+					this.print(output + "\n\n");
 				}
 
 			})

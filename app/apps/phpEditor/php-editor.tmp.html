@@ -1,5 +1,5 @@
 <div>
-	<div class = "row cols">
+	<div class = "cols">
 		<div class = "row tight tabs">
 			<div cv-on = "click:modeTo('script')" class = "tab script" tabindex="0">script</div>
 
@@ -8,16 +8,16 @@
 
 		<div class = "spaced row wide right">
 
-			<span class = "row" data-mode-script>
-				<button title = "horizontal view" class = "square" title = "new file">
+			<span class = "contents" data-mode-script>
+				<button cv-on = "click:layout('horizontal')" title = "horizontal view" class = "square">
 					<img src = "/ui/application-split.png" />
 				</button>
 
-				<button title = "vertical view" class = "square" title = "new file">
+				<button cv-on = "click:layout('vertical')" title = "vertical view" class = "square">
 					<img src = "/ui/application-split-vertical.png" />
 				</button>
 
-				<button title = "quad view" class = "square" title = "new file">
+				<button cv-on = "click:layout('quad')" title = "quad view" class = "square">
 					<img src = "/ui/application-split-tile.png" />
 				</button>
 
@@ -29,11 +29,16 @@
 			</span>
 
 
-			<button cv-on = "click:refresh(event)" class = "square" title = "new file">
-				<img src = "arrow-circle.png" />
+			<button cv-on = "click:refresh(event)" class = "square" title = "refresh">
+				<span cv-if = "persist" class = "contents">
+					<img src = "arrow-circle.png" />
+				</span>
+				<span cv-if = "!persist" class = "contents">
+					<img src = "arrow-circle.png" class = "desat" />
+				</span>
 			</button>
 
-			<button class = "square" title = "new file">
+			<button cv-on = "click:toggle('persist')" class = "square" title = "toggle persistent memory">
 				<img src = "/w98/memory-16-4bit.png" />
 			</button>
 
@@ -46,9 +51,9 @@
 	</div>
 </div>
 
-<div class = "row tight liquid"  data-mode-script>
+<div data-layout = "[[layout]]" class = "main tight liquid" data-mode-script>
 
-	<div class = "rows tight liquid">
+	<div class = "code tight liquid">
 
 		<div class = "rows inset wide scroll zfront">
 			<div class = "cols tight">
@@ -68,7 +73,7 @@
 
 	<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
 
-	<div class = "rows tight liquid resize-container" data-readonly>
+	<div class = "terms tight liquid resize-container" data-readonly>
 
 		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
