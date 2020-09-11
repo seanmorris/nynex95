@@ -1,7 +1,1 @@
-# Nynex95℠
-
-Windows 95-inspired theme & controls for Curvature.
-
-https://nynex.unholysh.it/
-
-This is the first Nynex self-update.
+%23%20Nynex95%E2%84%A0%0A%0AWindows%2095-inspired%20theme%20%26%20controls%20for%20Curvature.%0A%0Ahttps%3A%2F%2Fnynex.unholysh.it%2F%0A%0AThis%20is%20the%20first%20Nynex%20self-update.%0A%0APublic%20facing%20edit%20test.
