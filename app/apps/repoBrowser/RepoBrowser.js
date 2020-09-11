@@ -56,12 +56,12 @@ export class RepoBrowser extends Task
 			// const branch  = 'nynex-changes';
 			const branch  = 'master';
 			const message = 'Nynex self-edit.';
-			const content = btoa(encodeURIComponent(raw));
+			const content = btoa(unescape(encodeURIComponent(raw)));
 			const sha     = this.window.args.control.args.sha;
 			const url     = new URL(this.window.args.control.args.url).pathname;
 
 			const gitHubToken = GitHub.getToken();
-			const postChange  = {branch, message, content, url, sha};
+			const postChange  = {message, content, sha};
 
 			const headers = {
 				'Content-Type': 'application/json'
@@ -76,12 +76,12 @@ export class RepoBrowser extends Task
 			const method = 'PUT';
 			const body   = JSON.stringify(postChange)
 
+			console.log(body);
+
 			return fetch(
 				'https://nynex.unholysh.it' + url
 				, {method, headers, body}
-			).then(response => response.json())
-
-			console.log(postChange);
+			).then(response => response.json());
 		}
 
 		this.window.toggleSection = (section) => {

@@ -59458,17 +59458,15 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
 
       var branch = 'master';
       var message = 'Nynex self-edit.';
-      var content = btoa(encodeURIComponent(raw));
+      var content = btoa(unescape(encodeURIComponent(raw)));
       var sha = _this.window.args.control.args.sha;
       var url = new URL(_this.window.args.control.args.url).pathname;
 
       var gitHubToken = _GitHub.GitHub.getToken();
 
       var postChange = {
-        branch: branch,
         message: message,
         content: content,
-        url: url,
         sha: sha
       };
       var headers = {
@@ -59482,6 +59480,7 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
 
       var method = 'PUT';
       var body = JSON.stringify(postChange);
+      console.log(body);
       return fetch('https://nynex.unholysh.it' + url, {
         method: method,
         headers: headers,
@@ -59489,7 +59488,6 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
       }).then(function (response) {
         return response.json();
       });
-      console.log(postChange);
     };
 
     _this.window.toggleSection = function (section) {

@@ -12,12 +12,13 @@ async function handleRequest(request) {
 
 	const headers = new Headers(request.headers);
 	const method  = request.method;
+	const body    = request.body;
 
 	headers.append('User-Agent',    'node.js');
 	headers.append('Cache-Control', 'no-cache');
 	headers.append('pragma',        'no-cache');
 
-	return fetch(githubUrl, method, {headers}).then(response => {
+	return fetch(githubUrl, {method, headers, body}).then(response => {
 
 		return response.text().then(responseText => {
 			return {response, responseText};
@@ -64,9 +65,9 @@ async function handleRequest(request) {
 			}
 
 			return new Response(readable, {
-				'status':       200
-				, 'statusText': 'ok'
-				, 'headers':     headers
+				status:       response.status
+				, statusText: response.statusText
+				, headers:    headers
 			});
 		}
 
