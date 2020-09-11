@@ -49,9 +49,14 @@ export class RepoBrowser extends Task
 
 		this.window.save = (event) => {
 
-			const branch  = 'nynex';
-			const message = 'Nynex edit.';
-			const content = btoa(encodeURIComponent(this.window.args.control.args.content));
+			const raw     = this.window.args.control.args.content
+
+			console.log(raw);
+
+			// const branch  = 'nynex-changes';
+			const branch  = 'master';
+			const message = 'Nynex self-edit.';
+			const content = btoa(encodeURIComponent(raw));
 			const sha     = this.window.args.control.args.sha;
 			const url     = new URL(this.window.args.control.args.url).pathname;
 
@@ -59,7 +64,8 @@ export class RepoBrowser extends Task
 			const postChange  = {branch, message, content, url, sha};
 
 			const headers = {
-				accept: 'application/vnd.github.v3.json'
+				'Content-Type': 'application/json'
+				, accept:       'application/vnd.github.v3.json'
 			};
 
 			if(gitHubToken && gitHubToken.access_token)
@@ -67,11 +73,13 @@ export class RepoBrowser extends Task
 				headers.authorization = `token ${gitHubToken.access_token}`;
 			}
 
-			return fetch('https://nynex.unholysh.it' + url, {
+			const method = 'PUT';
+			const body   = JSON.stringify(postChange)
 
-				method: 'PUT', body: JSON.stringify(postChange)
-
-			}).then(response => response.json())
+			return fetch(
+				'https://nynex.unholysh.it' + url
+				, {method, headers, body}
+			).then(response => response.json())
 
 			console.log(postChange);
 		}

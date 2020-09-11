@@ -11,12 +11,13 @@ async function handleRequest(request) {
 	const githubUrl   = 'https://api.github.com' + originalUrl.pathname.replace(/^\/github-proxy/, '');
 
 	const headers = new Headers(request.headers);
+	const method  = request.method;
 
 	headers.append('User-Agent',    'node.js');
 	headers.append('Cache-Control', 'no-cache');
 	headers.append('pragma',        'no-cache');
 
-	return fetch(githubUrl, {headers}).then(response => {
+	return fetch(githubUrl, method, {headers}).then(response => {
 
 		return response.text().then(responseText => {
 			return {response, responseText};
@@ -27,7 +28,7 @@ async function handleRequest(request) {
 		const headers = new Headers(response.headers);
 
 		headers.set('Access-Control-Allow-Origin', '*');
-		headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS, PUT, DELETE');
+		headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS, PUT DELETE');
 		headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
 		const rawBody = responseText.replace(/api\.github\.com/g, originalUrl.host + '/github-proxy');
