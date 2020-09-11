@@ -30,6 +30,9 @@ export class RepoBrowser extends Task
 
 		this.window.args.branch = 'master';
 
+		this.window.args.width  = `760px`;
+		this.window.args.height = `640px`;
+
 		this.window.selectParent = (event) => {
 
 			if(!this.current.parent || !(this.current.parent instanceof Folder))

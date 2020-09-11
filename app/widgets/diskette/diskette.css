@@ -3,12 +3,11 @@ div.diskette {
 	width: 512px;
 	height: 512px;
 	margin: 16px;
-	overflow: hidden;
 	transform-origin: top left;
 	transform: scale(0.5);
 }
 
-div.diskette > * {
+div.diskette * {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -32,6 +31,7 @@ div.diskette .disk {
 div.diskette .label {
 	background-image: url(/sm/disk/grey-label.png);
 	background-image: url(/sm/disk/white-label.png);
+	background-image: url(/sm/disk/off-white-label.png);
 }
 
 div.diskette .face {
@@ -46,21 +46,21 @@ div.diskette .eye-glow {
 div.diskette .glass-flash {
 	opacity: 0;
 	background-image: url(/sm/disk/glass-flash.png);
-	transition: 3s opacity ease-out;
+	transition: 5s opacity ease-in;
 }
 
 div.diskette .slider {
-	transform: translateX(0px);
 	background-image: url(/sm/disk/slider-closed.png);
+	transform: translateX(0px);
 	transition: 0.25s transform cubic-bezier(1.000, -0.5, 0.000, 1.5);
 }
 
-div.diskette:hover .slider {
+div.diskette:active .slider {
 	transform: translateX(12.5%);
-	transition: 0.3s transform cubic-bezier(0.250, 1, 0.000, 1.25);
+	transition: 0.15s transform cubic-bezier(0.250, 0.25, 0.000, 0.2);
 }
 
-div.diskette:focus .glass-flash {
+div.diskette:active .glass-flash {
 	opacity: 1;
 }
 
@@ -69,7 +69,7 @@ div.diskette .spark {
 	width: 8px;
 	height: 8px;
 	position: absolute;
-	--travel: 64px;
+	--travel: 96px;
 	--halftravel: calc(var(--travel) * 0.85);
 	--twotravel: calc(var(--travel) / 0.85);
 	--left: 128px;
@@ -80,35 +80,41 @@ div.diskette .spark {
 	transform: translate(-50%,-50%);
 }
 
-div.diskette:not(:hover) .spark {
+div.diskette:not(:active) .spark {
 	animation-name: spark;
 	animation-delay: 0.125s;
 	animation-duration: 0.333s;
 }
 
-div.diskette:not(:hover) .spark:nth-child(1) {
+div.diskette:not(:active) .spark:nth-child(1) {
 	--finishLeft: 128px;
 	--finishTop: calc(var(--top) - var(--halftravel));
 }
 
-div.diskette:not(:hover) .spark:nth-child(2) {
+div.diskette:not(:active) .spark:nth-child(2) {
 	--finishLeft: calc(var(--left) - var(--travel));
 	--finishTop: calc(var(--top) - var(--halftravel));
 }
 
-div.diskette:not(:hover) .spark:nth-child(3) {
+div.diskette:not(:active) .spark:nth-child(3) {
 	--finishLeft: calc(var(--left) - var(--twotravel));
 	--finishTop: 320px;
 }
 
-div.diskette:not(:hover) .spark:nth-child(4) {
+div.diskette:not(:active) .spark:nth-child(4) {
 	--finishLeft: calc(var(--left) - var(--halftravel));
 	--finishTop: calc(var(--top) + var(--halftravel));
 }
 
+div.diskette .shadow {
+	transform: translate(20px, 40px);
+	filter: brightness(0) blur(4px);
+	opacity: 0.5;
+}
+
 /*
 
-div.diskette:not(:hover) .spark:nth-child(5) {
+div.diskette:not(:active) .spark:nth-child(5) {
 	--finishLeft: 160px;
 	--finishTop: 0px;
 }*/
@@ -121,10 +127,10 @@ div.diskette:not(:hover) .spark:nth-child(5) {
 		top: 320px;
 		opacity: 0;
 	}
-	20% {
-		opacity: 1;
-	}
 	30% {
+	}
+	40% {
+		opacity: 1;
 		width: 8px;
 		height: 8px;
 	}

@@ -1,38 +1,52 @@
+<div>
 	<div class = "row cols">
 		<div class = "row tight tabs">
 			<div cv-on = "click:modeTo('script')" class = "tab script" tabindex="0">script</div>
 
 			<div cv-on = "click:modeTo('term')" class = "tab term" tabindex="0">terminal</div>
-
-			<div cv-on = "click:modeTo('iffe')" class = "tab iffe" tabindex="0">iffe</div>
 		</div>
 
 		<div class = "spaced row wide right">
 
-			<button class = "square" title = "new file">
+			<span class = "row" data-mode-script>
+				<button title = "horizontal view" class = "square" title = "new file">
+					<img src = "/ui/application-split.png" />
+				</button>
+
+				<button title = "vertical view" class = "square" title = "new file">
+					<img src = "/ui/application-split-vertical.png" />
+				</button>
+
+				<button title = "quad view" class = "square" title = "new file">
+					<img src = "/ui/application-split-tile.png" />
+				</button>
+
+				&nbsp;
+
+				<hr />
+
+				&nbsp;
+			</span>
+
+
+			<button cv-on = "click:refresh(event)" class = "square" title = "new file">
 				<img src = "arrow-circle.png" />
 			</button>
 
 			<button class = "square" title = "new file">
-				<img src = "/ui/application-split.png" />
+				<img src = "/w98/memory-16-4bit.png" />
 			</button>
 
-			<button class = "square" title = "new file">
-				<img src = "/ui/application-split-vertical.png" />
-			</button>
-
-
-			<button class = "square" title = "new file">
-				<img src = "/ui/application-split-tile.png" />
+			<button class = "square"  title = "help">
+				<img class = "icon16" src = "/w98/help_book_small-16-4bit.png" />
 			</button>
 
 		</div>
 
 	</div>
-
 </div>
 
-<div class = "row tight liquid">
+<div class = "row tight liquid"  data-mode-script>
 
 	<div class = "rows tight liquid">
 
@@ -54,9 +68,9 @@
 
 	<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
 
-	<div class = "rows tight liquid" data-readonly>
+	<div class = "rows tight liquid resize-container" data-readonly>
 
-		<div class = "rows inset wide scroll zfront">
+		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
 				<label class = "pane wide">Return</label>
 				<button class = "pane tight">HTML</button>
@@ -67,20 +81,18 @@
 
 		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
 
-		<div class = "rows inset wide scroll zfront">
+		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
 				<label class = "pane wide">StdOut</label>
-				<button class = "pane tight">HTML</button>
-				<button class = "pane tight">Text</button>
-				<label class = "pane">exit</label>
-				<label class = "tight">[[exitCode]]</label>
+				<!-- <label class = "pane">exit</label>
+				<label class = "tight">[[exitCode]]</label> -->
 			</div>
 			[[outputConsole]]
 		</div>
 
 		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
 
-		<div class = "rows inset wide scroll zfront">
+		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
 				<label class = "pane wide">StdErr</label>
 			</div>
@@ -93,11 +105,10 @@
 
 <div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
 
-<!-- <div class = "frame cols liquid">
+<div class = "frame cols liquid inset" data-mode-term>
 	[[inputConsole]]
 </div>
 
- -->
 <!-- <div class = "frame padded liquid inset scroll">
 	[[$output]]
 </div> -->

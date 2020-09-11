@@ -5,6 +5,8 @@ import { Home } from '../../home/Home';
 import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
+import { PhpTask } from './PhpTask';
+
 import * as ace from 'brace';
 
 // import 'brace/mode/html';
@@ -22,24 +24,36 @@ export class PhpEditor extends Task
 {
 	title    = 'SM PHP Shell';
 	icon     = '/apps/php-16-24bit.png';
-	template = require('./main.tmp');
+	template = require('./php-editor.tmp');
 
 	constructor(taskList)
 	{
 		super(taskList);
 
-		this.window.classes.loading = true;
+		this.window.classes.loading   = true;
 		this.window.classes.phpEditor = true;
 
+		// this.window.classes['mode-script'] = true;
+		this.window.classes['mode-term'] = true;
+
+		this.window.args.width  = `620px`;
+		this.window.args.height = `740px`;
+
 		this.modes = ['script', 'iffe', 'term'];
-		this.mode  = 'script';
+		// this.mode  = 'script';
+		this.mode  = 'terminal';
 
 		this.returnConsole = new Terminal;
-		this.inputConsole  = new Terminal;
+		this.inputConsole  = new Terminal({path:{php: PhpTask}});
 		this.outputConsole = new Terminal;
 		this.errorConsole  = new Terminal;
 
-		this.inputConsole.args.prompt = '<?php';
+		this.inputConsole.runCommand('php');
+		this.inputConsole.runCommand('/clear');
+
+		this.window.onTimeout(
+			0, () => this.inputConsole.runCommand(`'Extensions available: ' . implode(', ', get_loaded_extensions() )`)
+		);
 
 		this.window.args.status = 'initializing...';
 
@@ -59,8 +73,6 @@ export class PhpEditor extends Task
 
     $stdout = fopen('php://stdout', 'w');
     $stderr = fopen('php://stderr', 'w');
-
-    fwrite($stdout, "some output...\\n");
 
     fwrite($stdout, sprintf("Ran %d times!\\n", $persist++));
 
@@ -88,9 +100,9 @@ export class PhpEditor extends Task
 
 		this.window.click = (event) => {
 
-			this.returnConsole.args.output.splice(0);
-			this.outputConsole.args.output.splice(0);
-			this.errorConsole.args.output.splice(0);
+			// this.returnConsole.args.output.splice(0);
+			// this.outputConsole.args.output.splice(0);
+			// this.errorConsole.args.output.splice(0);
 
 			this.window.classes.loading = true;
 			this.window.args.status = 'PHP Running...';
@@ -179,50 +191,6 @@ export class PhpEditor extends Task
 			// 	, readOnly:               false
 			// });
 
-			// editor.commands.on("exec", event => {
-
-			// 	if(event.command.readOnly)
-			// 	{
-			// 		return;
-			// 	}
-
-			// 	const rowCol = editor.selection.getCursor();
-			// 	const lines  = editor.session.getLength() - 1;
-
-			// 	if(rowCol.row !== lines)
-			// 	{
-			// 		event.preventDefault();
-			// 		event.stopPropagation();
-			// 		return;
-			// 	}
-
-			// 	if(event.command.name === 'backspace' && rowCol.column === 0)
-			// 	{
-			// 		event.preventDefault();
-			// 		event.stopPropagation();
-			// 		return;
-			// 	}
-
-			// 	const selection = editor.selection.getRange();
-
-
-			// 	if(selection)
-			// 	{
-			// 		const newSelection = selection.clipRows(lines, lines);
-
-			// 		// console.log(newSelection.startOffset);
-
-			// 		editor.selection.setRange(newSelection);
-
-			// 		if(newSelection.start.row !== lines || newSelection.end.row !== lines)
-			// 		{
-			// 			event.preventDefault();
-			// 			event.stopPropagation();
-			// 			return;
-			// 		}
-			// 	}
-			// });
-
 			const aceChanged = (event) => {
 
 				if(!editor.curOp || !editor.curOp.command.name)
@@ -241,65 +209,7 @@ export class PhpEditor extends Task
 					return;
 				}
 
-				// const lines = editor.session.getLength();
-
 				this.window.args.input = editor.session.getValue();
-
-				// if(event.end.row !== event.start.row)
-				// {
-				// 	const newLine   = editor.session.getLine(lines - 1);
-				// 	const addedLine = editor.session.getLine(lines - 2);
-
-				// 	let phpCommand = (addedLine + newLine).trim();
-
-				// 	if(addedLine.trim())
-				// 	{
-				// 		editor.session.replace(new Range(lines - 1, 0, lines - 1, Infinity), "");
-				// 		editor.session.replace(new Range(lines - 2, 0, lines - 2, Infinity), phpCommand);
-				// 	}
-
-				// 	phpCommand = phpCommand.replace(/^<\?php/, '');
-				// 	phpCommand = phpCommand.replace(/;$/, '');
-
-				// 	console.log(phpCommand);
-
-				// 	if(!!phpCommand)
-				// 	{
-				// 		console.log(phpCommand);
-
-				// 		this.window.args.input =
-
-				// 		// php.exec(`var_export(${phpCommand},1)`).then(retVal => {
-
-				// 		// 	console.log(retVal);
-
-				// 		// 	editor.session.insert(
-				// 		// 		{row: lines - 1, column: 0}
-				// 		// 		, ';' + String(retVal) + "?>\n\n<?php "
-				// 		// 	);
-				// 		// });
-				// 	}
-				// }
-
-				// if(event.action !== 'remove')
-				// {
-				// 	return;
-				// }
-
-				// if(event.end.column !== 0)
-				// {
-				// 	return;
-				// }
-
-				// if(event.end.row === lines && event.start.row === lines)
-				// {
-				// 	return;
-				// }
-
-				// this.window.onNextFrame(()=>{
-				// 	editor.gotoLine(lines + 1);
-				// 	editor.navigateLineEnd();
-				// });
 			};
 
 			editor.session.on('change', aceChanged);
@@ -313,43 +223,13 @@ export class PhpEditor extends Task
 			editor.resize();
 
 			php.addEventListener('output', event => {
-				// const lines  = editor.session.getLength() - 1;
 
 				this.window.classes.loading = false;
 				this.window.args.status = 'PHP Ready!';
 
 				const detail   = event.detail.join("\n").trim();
-				// const prevLine = editor.session.getLine(lines);
-
-				// console.log(prevLine, detail);
 
 				this.outputConsole.args.output.push(detail);
-
-				// if(!prevLine || prevLine.match(/^\s*?\<\?php/))
-				// {
-				// 	if(!detail)
-				// 	{
-				// 		return;
-				// 	}
-				// }
-
-				// if(this.printOpen)
-				// {
-				// 	clearTimeout(this.printOpen);
-				// }
-
-				// this.printOpen = this.window.onTimeout(100, () => {
-				// 	editor.session.insert(
-				// 		editor.getCursorPosition()
-				// 		, '<?php '
-				// 	)
-
-				// });
-
-				// editor.session.insert(
-				// 	editor.getCursorPosition()
-				// 	, '// ' + detail + "\n"
-				// );
 			});
 
 			php.addEventListener('error', event => {
@@ -361,17 +241,22 @@ export class PhpEditor extends Task
 					return;
 				}
 
-				// const lines  = editor.session.getLength() - 1;
-
-				// editor.gotoLine(lines + 1);
-				// editor.navigateLineEnd();
-
 				this.window.args.status = 'PHP Ready - ERRORS!';
 				this.window.classes.loading = false;
 
 				this.errorConsole.args.output.push(detail);
 			});
 		});
+
+		this.window.refresh = () => {
+
+			php.refresh();
+
+			this.returnConsole.args.output.splice(0);
+			this.outputConsole.args.output.splice(0);
+			this.errorConsole.args.output.splice(0);
+
+		};
 
 		this.window.modeTo = (mode) => {
 			if(!this.modes.includes(mode))
@@ -388,5 +273,13 @@ export class PhpEditor extends Task
 
 			this.mode = mode;
 		};
+	}
+
+	attached()
+	{
+		this.returnConsole.scroller = this.returnConsole.findTag('.terminal');
+		this.inputConsole.scroller  = this.inputConsole.findTag('.terminal');
+		this.outputConsole.scroller = this.outputConsole.findTag('.terminal');
+		this.errorConsole.scroller  = this.errorConsole.findTag('.terminal');
 	}
 }

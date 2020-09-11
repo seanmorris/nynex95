@@ -14,12 +14,11 @@ export class Desktop extends View
 
 		this.template = require('./desktop.tmp');
 
-		// this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
+		// this.args.bg = '/sm-disk-open.png';
 		// this.args.bg = '/sm-disk.png';
-		this.args.bg = '/sm-disk-open.png';
+		this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
 
 		this.args.contextMenu = new Menu({items: {
-
 			'Create New File':      () => this.createFile()
 			, 'Desktop Background': () => {}
 			, 'Settings':           () => {}
@@ -92,8 +91,8 @@ export class Desktop extends View
 			})
 			, new Icon({
 				action: 'widgets'
-				, name: 'Widgets'
-				, icon: 1
+				, name: 'Widget Viewer'
+				, icon: 61
 			})
 		];
 
@@ -235,7 +234,6 @@ export class Desktop extends View
 			this.args.endIcons.push(
 				new Icon({
 					action: () => {
-
 						this.args.bg = blobUrl;
 						// console.log(file);
 					}

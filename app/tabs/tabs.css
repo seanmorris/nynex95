@@ -4,12 +4,13 @@
 	border: 2px solid;
 	border-bottom-width: 0px;
 	border-image: url(/border-tab.png) 2 2 1 2 fill;
+	outline-offset: -6px;
 }
 
 .tabs {
-	padding-top: 3px;
-	padding-left: 2px;
-	margin-bottom: -2px;
+	padding-top:   3px;
+	padding-left:  2px;
+	margin-bottom: 0px;
 	padding-right: 2px;
 	z-index: 1;
 	position: relative;
@@ -17,12 +18,10 @@
 
 .tabs > .tab:focus,
 .tabs > .tab:hover {
-	outline-offset: -6px;
 	color: #000;
 	margin-left: -1px;
 	margin-right: 1px;
-	margin-top: -1px;
-	margin-bottom: 1px;
+	padding-bottom: 5px;
 }
 
 .tabs > .tab:focus{

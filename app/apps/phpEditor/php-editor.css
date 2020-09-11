@@ -2,7 +2,7 @@
 .phpEditor .cols.tight,
 .phpEditor label.pane {
 	white-space: nowrap;
-	min-height: 23px;
+
 	z-index: 1;
 }
 
@@ -22,16 +22,15 @@
 	color: #000;
 	margin-left: -1px;
 	margin-right: 1px;
-	margin-top: -1px;
-	margin-bottom: 1px;
 }
 
 .phpEditor .ace_editor .ace_scroller {
 	background-color: transparent;
 }
 
-.phpEditor .resize-vert {
-	overflow-y: scroll;
+.phpEditor.mode-script .terminal {
+	height: 0px;
+	min-height: initial;
 }
 
 .phpEditor .ace_editor {
@@ -45,4 +44,12 @@
 	background-image: url(/loading.gif);
 	background-repeat: no-repeat;
 	background-position: center;
+}
+
+.mode-term [data-mode-script] {
+	display: none;
+}
+
+.mode-script [data-mode-term] {
+	display: none;
 }

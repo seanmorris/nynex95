@@ -362,6 +362,27 @@ let Base = class extends View
 		const start = event.clientY;
 		let before  = event.target.previousSibling;
 		let after   = event.target.nextSibling;
+		let parent  = event.target.parentNode;
+
+		[...parent.childNodes].map(child=>{
+
+			if(child.nodeType !== Node.ELEMENT_NODE)
+			{
+				return;
+			}
+
+			if(child.matches('[data-horizontal-resize]'))
+			{
+				return;
+			}
+
+			child.style.maxHeight = `${child.clientHeight}px`;
+
+			console.log(child);
+
+		});
+
+		//
 
 		while(before.nodeType !== Node.ELEMENT_NODE && before.previousSibling)
 		{
@@ -373,11 +394,13 @@ let Base = class extends View
 			after = after.nextSibling;
 		}
 
-		const beforeHeight = before.offsetHeight;
-		const afterHeight  = after.offsetHeight;
+		const beforeHeight = before.clientHeight;
+		const afterHeight  = after.clientHeight;
 
-		before.style.minHeight = `${beforeHeight}px`;
-		after.style.minHeight  = `${afterHeight}px`;
+		// before.style.height = `${beforeHeight}px`;
+		// after.style.height  = `${afterHeight}px`;
+
+		console.log(beforeHeight);
 
 		const onMove = (event) => {
 			const delta = start - event.clientY;
@@ -392,8 +415,10 @@ let Base = class extends View
 				return;
 			}
 
-			before.style.minHeight = `${-5+beforeHeight - delta}px`;
-			after.style.minHeight  = `${-5+afterHeight  + delta}px`;
+			console.log(start, delta, beforeHeight);
+
+			before.style.maxHeight = `${-1 + beforeHeight - delta}px`;
+			after.style.maxHeight  = `${-1 + afterHeight  + delta}px`;
 		};
 
 		document.addEventListener('mousemove', onMove);
@@ -422,8 +447,8 @@ let Base = class extends View
 			after = after.nextSibling;
 		}
 
-		const beforeWidth = before.offsetWidth;
-		const afterWidth  = after.offsetWidth;
+		const beforeWidth = before.clientWidth;
+		const afterWidth  = after.clientWidth;
 
 		before.style.minWidth = `${beforeWidth}px`;
 		after.style.minWidth  = `${afterWidth}px`;

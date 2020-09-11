@@ -77,6 +77,13 @@ html, body, input, button, select {
 	overflow: hidden;
 }
 
+.resize-container > *:not([data-vertical-resize]):not([data-horizontal-resize]) {
+	overflow: hidden;
+	display: block;
+	display: flex;
+	flex-basis: 100%;
+}
+
 .resize-vert {
 	resize: vertical;
 	overflow-y: hidden;
