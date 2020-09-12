@@ -161,6 +161,12 @@ export class Desktop extends View
 				, icon: 'numb'
 				, path: 'apps'
 				, bits: 8
+			}), new Icon({
+				action: 'letsvue'
+				, name: 'Letsvue'
+				, icon: 'letsvue'
+				, path: 'apps'
+				, bits: 24
 			})
 		];
 

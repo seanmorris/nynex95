@@ -67,16 +67,18 @@ export class Folder extends View
 					{
 						if(this.files[name])
 						{
-							this.files[name].expand(event, child, true);
+							this.files[name].expand(event, child, this, true);
 							this.files[name].select();
+
 
 							return;
 						}
 					}
 					else if(file.download_url)
 					{
-						this.showControl(file);
+						this.showControl(file, this);
 					}
+
 				};
 
 				const icon = new Icon({icon:file.type === 'dir' ? 4:60, name, action});
@@ -93,7 +95,7 @@ export class Folder extends View
 		});
 	}
 
-	expand(event, child, open = undefined)
+	expand(event, child, dir, open = undefined)
 	{
 		if(this.expanding)
 		{
@@ -138,7 +140,7 @@ export class Folder extends View
 
 				if(this.args.file && this.args.file.type === 'file')
 				{
-					this.showControl(this.args.file);
+					this.showControl(this.args.file, dir);
 				}
 
 				accept();
@@ -146,7 +148,7 @@ export class Folder extends View
 		});
 	}
 
-	showControl(file)
+	showControl(file, dir)
 	{
 		const name = file.name;
 		const type = name.split('.').pop();
@@ -188,7 +190,7 @@ export class Folder extends View
 			this.args.browser.window.args.content  = body;
 			this.args.browser.window.args.sha      = file.sha;
 			this.args.browser.window.args.filename = file.name;
-
+			this.args.browser.parent               = dir;
 		});
 	}
 

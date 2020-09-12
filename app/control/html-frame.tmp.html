@@ -1,0 +1,23 @@
+<iframe
+	cv-ref = "result"
+	cv-on  = "load:frameLoaded(event)"
+	srcdoc = '
+<meta http-equiv="Content-Security-Policy" content="default-src [[location.origin]]/curvature.js ws://[[location.hostname]]:9485
+[[location.origin]]/vendor.js &apos;unsafe-inline&apos; connect-src: https://api.dictionaryapi.dev">
+<style>
+	iframe {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		border: none;
+		background-color: white;
+	}
+</style>
+<iframe
+	sandbox = "allow-scripts"
+	src     = "about:blank"
+	srcdoc  = "[[frameSource|escapeQuotes]]"
+></iframe>
+'></iframe>

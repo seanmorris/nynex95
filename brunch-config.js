@@ -21,4 +21,7 @@ module.exports = {
 			'subspace-console': ['style/layout.css']
 		}
 	}
+	, watcher: {
+		awaitWriteFinish: true
+	}
 };

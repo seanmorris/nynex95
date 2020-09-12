@@ -13,6 +13,7 @@ import { Drupal       } from 'apps/drupal/Drupal';
 import { Numb         } from 'apps/numb/Numb';
 import { WidgetViewer } from 'apps/widgetViewer/WidgetViewer';
 import { Dosbox       } from 'apps/dosbox/Dosbox';
+import { Letsvue      } from 'apps/letsvue/Letsvue';
 
 import { ClonesNBarrels } from 'apps/clonesNBarrels/ClonesNBarrels';
 export const Path = {
@@ -32,4 +33,5 @@ export const Path = {
 	, 'clones':       ClonesNBarrels
 	, 'numb':         Numb
 	, 'dos':          Dosbox
+	, 'letsvue':      Letsvue
 };

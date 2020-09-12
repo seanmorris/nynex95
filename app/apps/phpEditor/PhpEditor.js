@@ -2,6 +2,8 @@ import { Task } from 'task/Task';
 import { Icon } from '../../icon/Icon';
 import { Home } from '../../home/Home';
 
+import { HtmlFrame } from '../../control/HtmlFrame'
+
 import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
@@ -50,6 +52,7 @@ export class PhpEditor extends Task
 		this.inputConsole.runCommand('/clear');
 
 		this.window.args.layout = 'vertical';
+		this.window.args.htmlFrame = new HtmlFrame;
 
 		// this.inputConsole.runCommand(
 		// 	`'Extensions available: ' . implode(', ', get_loaded_extensions())`
@@ -257,6 +260,7 @@ export class PhpEditor extends Task
 				const detail   = event.detail.join("\n").trim();
 
 				this.outputConsole.args.output.push(detail);
+				this.window.args.htmlFrame.args.frameSource += detail;
 			});
 
 			php.addEventListener('error', event => {
@@ -282,6 +286,7 @@ export class PhpEditor extends Task
 			this.returnConsole.args.output.splice(0);
 			this.outputConsole.args.output.splice(0);
 			this.errorConsole.args.output.splice(0);
+			this.window.args.htmlFrame.args.frameSource = '';
 		};
 
 		this.window.modeTo = (mode) => {

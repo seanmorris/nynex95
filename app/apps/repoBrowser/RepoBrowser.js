@@ -35,13 +35,20 @@ export class RepoBrowser extends Task
 
 		this.window.selectParent = (event) => {
 
-			if(!this.current.parent || !(this.current.parent instanceof Folder))
+			console.log(this.parent);
+
+			// if(!this.parent || !(this.parent instanceof Folder))
+			// {
+			// 	return;
+			// }
+
+			this.parent.select();
+
+			if(this.parent instanceof Folder)
 			{
-				return;
+				this.parent.expand(null, null, true);
 			}
 
-			this.current.parent.select();
-			this.current.parent.expand(null, null, true);
 		};
 
 		this.window.classes['hide-right'] = true;

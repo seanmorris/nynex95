@@ -42418,7 +42418,7 @@ var Bindable = /*#__PURE__*/function () {
               target.___before___[_i7](target, key, target[Stack], object, providedArgs);
             }
 
-            var objRef = object instanceof Promise || object instanceof EventTarget || object instanceof MutationObserver || object instanceof IntersectionObserver || object instanceof MutationObserver || object instanceof PerformanceObserver || object instanceof ResizeObserver || object instanceof Map || object instanceof Set ? object : object[Ref];
+            var objRef = object instanceof Promise || object instanceof EventTarget || object instanceof MutationObserver || object instanceof IntersectionObserver || object instanceof MutationObserver || object instanceof PerformanceObserver || typeof ResizeObserver === 'function' && object instanceof ResizeObserver || object instanceof Map || object instanceof Set ? object : object[Ref];
             var ret = new.target ? _construct(target[key], providedArgs) : target[key].apply(objRef || object, providedArgs);
 
             for (var _i8 in target.___after___) {
@@ -57344,6 +57344,8 @@ var _WidgetViewer = require("apps/widgetViewer/WidgetViewer");
 
 var _Dosbox = require("apps/dosbox/Dosbox");
 
+var _Letsvue = require("apps/letsvue/Letsvue");
+
 var _ClonesNBarrels = require("apps/clonesNBarrels/ClonesNBarrels");
 
 var Path = {
@@ -57362,7 +57364,8 @@ var Path = {
   'widgets': _WidgetViewer.WidgetViewer,
   'clones': _ClonesNBarrels.ClonesNBarrels,
   'numb': _Numb.Numb,
-  'dos': _Dosbox.Dosbox
+  'dos': _Dosbox.Dosbox,
+  'letsvue': _Letsvue.Letsvue
 };
 exports.Path = Path;
 });
@@ -58224,6 +58227,97 @@ exports.IconExplorer = IconExplorer;
 module.exports = "<div class = \"row\">\n\t<div class = \"spacer\"></div>\n\t<label class = \"icon-label\">16x16<br />[[smallSrc]]</label>\n\t<label class = \"inset icon-frame\" cv-ref = \"small-icon\">\n\t\t[[small]]\n\t</label>\n\t<label class = \"icon-label\">32x32<br />[[largeSrc]]</label>\n\t<label class = \"inset icon-frame\" cv-ref = \"large-icon\">\n\t\t[[large]]\n\t</label>\n</div>\n\n<div class = \"frame white inset scroll margin\">\n\t<div data-role = \"icon-list\" cv-each = \"icons:iicon:i\">[[iicon]]</div>\n</div>\n\n<!-- <div class = \"row\">\n\t<label>\n\t\t[[progr]]%\n\t</label>\n\t<progress  class = \"inset\" value=\"[[progr]]\" max=\"100\">\n</div> -->\n\n<div class = \"status row\">\n\t<div class = \"label inset\">Showing: Icons</div>\n</div>\n"
 });
 
+;require.register("apps/letsvue/Letsvue.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Letsvue = void 0;
+
+var _Task2 = require("task/Task");
+
+var _Icon = require("../../icon/Icon");
+
+var _Home = require("../../home/Home");
+
+var _MenuBar = require("../../window/MenuBar");
+
+var _Bindable = require("curvature/base/Bindable");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Letsvue = /*#__PURE__*/function (_Task) {
+  _inherits(Letsvue, _Task);
+
+  var _super = _createSuper(Letsvue);
+
+  function Letsvue(taskList) {
+    var _this;
+
+    _classCallCheck(this, Letsvue);
+
+    _this = _super.call(this, taskList);
+
+    _defineProperty(_assertThisInitialized(_this), "title", 'Letsvue');
+
+    _defineProperty(_assertThisInitialized(_this), "icon", '/apps/letsvue-32-24bit.png');
+
+    _defineProperty(_assertThisInitialized(_this), "template", require('./main.tmp'));
+
+    _this.window.classes.clones = true;
+    _this.window.args.src = 'https://letsvue.com/post/';
+    _this.window.args.width = "440px";
+    _this.window.args.height = "800px";
+    _this.window.args.menuBar = new _MenuBar.MenuBar(_this.args, _this.window);
+    return _this;
+  }
+
+  _createClass(Letsvue, [{
+    key: "attached",
+    value: function attached() {
+      var onMessage = function onMessage(event) {
+        console.log(event);
+      };
+
+      var frame = this.findTags('iframe');
+      frame.addEventListener('message', event);
+      this.onRemove(frame.removeEventListener('message', event));
+    }
+  }]);
+
+  return Letsvue;
+}(_Task2.Task);
+
+exports.Letsvue = Letsvue;
+});
+
+;require.register("apps/letsvue/main.tmp.html", function(exports, require, module) {
+module.exports = "<div class = \"frame liquid\">\n\t<iframe class = \"inset liquid\" src=\"[[src]]\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>\n</div>\n\n<div class = \"status row\">\n\t<div class = \"label inset\">Welcome to Letsvue!</div>\n\t<div class = \"label inset\">:)</div>\n</div>\n"
+});
+
 ;require.register("apps/npmUnpkgr/NpmUnpkgr.js", function(exports, require, module) {
 "use strict";
 
@@ -58657,6 +58751,8 @@ var _Icon = require("../../icon/Icon");
 
 var _Home = require("../../home/Home");
 
+var _HtmlFrame = require("../../control/HtmlFrame");
+
 var _MenuBar = require("../../window/MenuBar");
 
 var _Bindable = require("curvature/base/Bindable");
@@ -58742,7 +58838,8 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
 
     _this.inputConsole.runCommand('/clear');
 
-    _this.window.args.layout = 'vertical'; // this.inputConsole.runCommand(
+    _this.window.args.layout = 'vertical';
+    _this.window.args.htmlFrame = new _HtmlFrame.HtmlFrame(); // this.inputConsole.runCommand(
     // 	`'Extensions available: ' . implode(', ', get_loaded_extensions())`
     // );
 
@@ -58884,6 +58981,8 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
         var detail = event.detail.join("\n").trim();
 
         _this.outputConsole.args.output.push(detail);
+
+        _this.window.args.htmlFrame.args.frameSource += detail;
       });
       php.addEventListener('error', function (event) {
         var detail = event.detail.join("\n ").trim();
@@ -58907,6 +59006,8 @@ var PhpEditor = /*#__PURE__*/function (_Task) {
       _this.outputConsole.args.output.splice(0);
 
       _this.errorConsole.args.output.splice(0);
+
+      _this.window.args.htmlFrame.args.frameSource = '';
     };
 
     _this.window.modeTo = function (mode) {
@@ -59070,7 +59171,7 @@ _defineProperty(PhpTask, "useText", '/connect SERVER');
 });
 
 ;require.register("apps/phpEditor/php-editor.tmp.html", function(exports, require, module) {
-module.exports = "<div>\n\t<div class = \"cols\">\n\t\t<div class = \"row tight tabs\">\n\t\t\t<div cv-on = \"click:modeTo('script')\" class = \"tab script\" tabindex=\"0\">script</div>\n\n\t\t\t<div cv-on = \"click:modeTo('term')\" class = \"tab term\" tabindex=\"0\">terminal</div>\n\t\t</div>\n\n\t\t<div class = \"spaced row wide right\">\n\n\t\t\t<span class = \"contents\" data-mode-script>\n\t\t\t\t<button cv-on = \"click:layout('horizontal')\" title = \"horizontal view\" class = \"square\">\n\t\t\t\t\t<img src = \"/ui/application-split.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t<button cv-on = \"click:layout('vertical')\" title = \"vertical view\" class = \"square\">\n\t\t\t\t\t<img src = \"/ui/application-split-vertical.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t<button cv-on = \"click:layout('quad')\" title = \"quad view\" class = \"square\">\n\t\t\t\t\t<img src = \"/ui/application-split-tile.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t&nbsp;\n\n\t\t\t\t<hr />\n\n\t\t\t\t&nbsp;\n\t\t\t</span>\n\n\n\t\t\t<button cv-on = \"click:refresh(event)\" class = \"square\" title = \"refresh\">\n\t\t\t\t<span cv-if = \"persist\" class = \"contents\">\n\t\t\t\t\t<img src = \"arrow-circle.png\" />\n\t\t\t\t</span>\n\t\t\t\t<span cv-if = \"!persist\" class = \"contents\">\n\t\t\t\t\t<img src = \"arrow-circle.png\" class = \"desat\" />\n\t\t\t\t</span>\n\t\t\t</button>\n\n\t\t\t<button cv-on = \"click:toggle('persist')\" class = \"square\" title = \"toggle persistent memory\">\n\t\t\t\t<img src = \"/w98/memory-16-4bit.png\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\"  title = \"help\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/help_book_small-16-4bit.png\" />\n\t\t\t</button>\n\n\t\t</div>\n\n\t</div>\n</div>\n\n<div data-layout = \"[[layout]]\" class = \"main tight liquid\" data-mode-script>\n\n\t<div class = \"code tight liquid\">\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">PHP Code</label>\n\t\t\t\t<button cv-on = \":click(event)\" class = \"pane tight\" data-tint = \"red\">\n\t\t\t\t\t<i>RUN</i>\n\t\t\t\t</button>\n\t\t\t</div>\n\n\t\t\t<div class = \"wide scroll zfront\">\n\t\t\t\t<textarea data-php rows = \"14\" spellcheck=\"false\" cv-bind = \"input\"></textarea>\n\t\t\t</div>\n\t\t</div>\n\n\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div class = \"terms tight liquid resize-container\" data-readonly>\n\n\t\t<div class = \"rows inset wide zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">Return</label>\n\t\t\t\t<button class = \"pane tight\">HTML</button>\n\t\t\t\t<button class = \"pane tight\">Text</button>\n\t\t\t</div>\n\t\t\t[[returnConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdOut</label>\n\t\t\t\t<!-- <label class = \"pane\">exit</label>\n\t\t\t\t<label class = \"tight\">[[exitCode]]</label> -->\n\t\t\t</div>\n\t\t\t[[outputConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdErr</label>\n\t\t\t</div>\n\t\t\t[[errorConsole]]\n\t\t</div>\n\n\t</div>\n</div>\n\n\n<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n<div class = \"frame cols liquid inset\" data-mode-term>\n\t[[inputConsole]]\n</div>\n\n<!-- <div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div> -->\n<!--\n<div class = \"row inset\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div> -->\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
+module.exports = "<div>\n\t<div class = \"cols\">\n\t\t<div class = \"row tight tabs\">\n\t\t\t<div cv-on = \"click:modeTo('script')\" class = \"tab script\" tabindex=\"0\">script</div>\n\n\t\t\t<div cv-on = \"click:modeTo('term')\" class = \"tab term\" tabindex=\"0\">terminal</div>\n\t\t</div>\n\n\t\t<div class = \"spaced row wide right\">\n\n\t\t\t<span class = \"contents\" data-mode-script>\n\t\t\t\t<button cv-on = \"click:layout('horizontal')\" title = \"horizontal view\" class = \"square\">\n\t\t\t\t\t<img src = \"/ui/application-split.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t<button cv-on = \"click:layout('vertical')\" title = \"vertical view\" class = \"square\">\n\t\t\t\t\t<img src = \"/ui/application-split-vertical.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t<button cv-on = \"click:layout('quad')\" title = \"quad view\" class = \"square\">\n\t\t\t\t\t<img src = \"/ui/application-split-tile.png\" />\n\t\t\t\t</button>\n\n\t\t\t\t&nbsp;\n\n\t\t\t\t<hr />\n\n\t\t\t\t&nbsp;\n\t\t\t</span>\n\n\n\t\t\t<button cv-on = \"click:refresh(event)\" class = \"square\" title = \"refresh\">\n\t\t\t\t<span cv-if = \"persist\" class = \"contents\">\n\t\t\t\t\t<img src = \"arrow-circle.png\" />\n\t\t\t\t</span>\n\t\t\t\t<span cv-if = \"!persist\" class = \"contents\">\n\t\t\t\t\t<img src = \"arrow-circle.png\" class = \"desat\" />\n\t\t\t\t</span>\n\t\t\t</button>\n\n\t\t\t<button cv-on = \"click:toggle('persist')\" class = \"square\" title = \"toggle persistent memory\">\n\t\t\t\t<img src = \"/w98/memory-16-4bit.png\" />\n\t\t\t</button>\n\n\t\t\t<button class = \"square\"  title = \"help\">\n\t\t\t\t<img class = \"icon16\" src = \"/w98/help_book_small-16-4bit.png\" />\n\t\t\t</button>\n\n\t\t</div>\n\n\t</div>\n</div>\n\n<div data-layout = \"[[layout]]\" class = \"main tight liquid\" data-mode-script>\n\n\t<div class = \"code tight liquid\">\n\n\t\t<div class = \"rows inset wide scroll zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">PHP Code</label>\n\t\t\t\t<button cv-on = \":click(event)\" class = \"pane tight\" data-tint = \"red\">\n\t\t\t\t\t<i>RUN</i>\n\t\t\t\t</button>\n\t\t\t</div>\n\n\t\t\t<div class = \"wide scroll zfront\">\n\t\t\t\t<textarea data-php rows = \"14\" spellcheck=\"false\" cv-bind = \"input\"></textarea>\n\t\t\t</div>\n\t\t</div>\n\n\n\t</div>\n\n\t<div data-section-right data-vertical-resize cv-on = \"mousedown:verticalResizeGrabbed(event)\"></div>\n\n\t<div class = \"terms tight liquid resize-container\" data-readonly>\n\n\t\t<div class = \"rows inset wide zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">Return</label>\n\t\t\t\t<button class = \"pane tight\">HTML</button>\n\t\t\t\t<button class = \"pane tight\">Text</button>\n\t\t\t</div>\n\t\t\t[[returnConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdOut</label>\n\t\t\t\t<!-- <label class = \"pane\">exit</label>\n\t\t\t\t<label class = \"tight\">[[exitCode]]</label> -->\n\t\t\t</div>\n\t\t\t[[htmlFrame]]\n\t\t\t[[outputConsole]]\n\t\t</div>\n\n\t\t<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n\t\t<div class = \"rows inset wide zfront\">\n\t\t\t<div class = \"cols tight\">\n\t\t\t\t<label class = \"pane wide\">StdErr</label>\n\t\t\t</div>\n\t\t\t[[errorConsole]]\n\t\t</div>\n\n\t</div>\n</div>\n\n\n<div data-horizontal-resize cv-on = \"mousedown:horizontalResizeGrabbed(event);\"></div>\n\n<div class = \"frame cols liquid inset\" data-mode-term>\n\t[[inputConsole]]\n</div>\n\n<!-- <div class = \"frame padded liquid inset scroll\">\n\t[[$output]]\n</div> -->\n<!--\n<div class = \"row inset\">\n\t<div class = \"spacer\"></div>\n\t<button cv-on = \":click(event)\">Run</button>\n</div> -->\n\n<div class = \"status row\">\n\t<div class = \"label inset\">[[status]]</div>\n</div>\n"
 });
 
 ;require.register("apps/repoBrowser/Folder.js", function(exports, require, module) {
@@ -59174,14 +59275,14 @@ var Folder = /*#__PURE__*/function (_View) {
           var action = function action() {
             if (file.type === 'dir') {
               if (_this2.files[name]) {
-                _this2.files[name].expand(event, child, true);
+                _this2.files[name].expand(event, child, _this2, true);
 
                 _this2.files[name].select();
 
                 return;
               }
             } else if (file.download_url) {
-              _this2.showControl(file);
+              _this2.showControl(file, _this2);
             }
           };
 
@@ -59203,10 +59304,10 @@ var Folder = /*#__PURE__*/function (_View) {
     }
   }, {
     key: "expand",
-    value: function expand(event, child) {
+    value: function expand(event, child, dir) {
       var _this3 = this;
 
-      var open = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+      var open = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
 
       if (this.expanding) {
         return this.expanding;
@@ -59238,7 +59339,7 @@ var Folder = /*#__PURE__*/function (_View) {
           _this3.expanding = false;
 
           if (_this3.args.file && _this3.args.file.type === 'file') {
-            _this3.showControl(_this3.args.file);
+            _this3.showControl(_this3.args.file, dir);
           }
 
           accept();
@@ -59247,7 +59348,7 @@ var Folder = /*#__PURE__*/function (_View) {
     }
   }, {
     key: "showControl",
-    value: function showControl(file) {
+    value: function showControl(file, dir) {
       var _this4 = this;
 
       var name = file.name;
@@ -59283,6 +59384,7 @@ var Folder = /*#__PURE__*/function (_View) {
         _this4.args.browser.window.args.content = body;
         _this4.args.browser.window.args.sha = file.sha;
         _this4.args.browser.window.args.filename = file.name;
+        _this4.args.browser.parent = dir;
       });
     }
   }, {
@@ -59441,13 +59543,16 @@ var RepoBrowser = /*#__PURE__*/function (_Task) {
     _this.window.args.height = "640px";
 
     _this.window.selectParent = function (event) {
-      if (!_this.current.parent || !(_this.current.parent instanceof _Folder.Folder)) {
-        return;
+      console.log(_this.parent); // if(!this.parent || !(this.parent instanceof Folder))
+      // {
+      // 	return;
+      // }
+
+      _this.parent.select();
+
+      if (_this.parent instanceof _Folder.Folder) {
+        _this.parent.expand(null, null, true);
       }
-
-      _this.current.parent.select();
-
-      _this.current.parent.expand(null, null, true);
     };
 
     _this.window.classes['hide-right'] = true;
@@ -59920,6 +60025,70 @@ var Html = /*#__PURE__*/function (_View) {
 exports.Html = Html;
 });
 
+;require.register("control/HtmlFrame.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HtmlFrame = void 0;
+
+var _View = require("curvature/base/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var HtmlFrame = /*#__PURE__*/function (_BaseView) {
+  _inherits(HtmlFrame, _BaseView);
+
+  var _super = _createSuper(HtmlFrame);
+
+  function HtmlFrame() {
+    var _this;
+
+    _classCallCheck(this, HtmlFrame);
+
+    _this = _super.call(this);
+    _this.template = require('./html-frame.tmp');
+    _this.args.frameSource = '';
+    return _this;
+  }
+
+  _createClass(HtmlFrame, [{
+    key: "escapeQuotes",
+    value: function escapeQuotes(input) {
+      return String(input).replace(/"/g, '&quot;');
+    }
+  }, {
+    key: "frameLoaded",
+    value: function frameLoaded(event) {}
+  }]);
+
+  return HtmlFrame;
+}(_View.View);
+
+exports.HtmlFrame = HtmlFrame;
+});
+
 ;require.register("control/Icons.js", function(exports, require, module) {
 "use strict";
 
@@ -60297,6 +60466,10 @@ var Plaintext = /*#__PURE__*/function (_View) {
 exports.Plaintext = Plaintext;
 });
 
+;require.register("control/html-frame.tmp.html", function(exports, require, module) {
+module.exports = "<iframe\n\tcv-ref = \"result\"\n\tcv-on  = \"load:frameLoaded(event)\"\n\tsrcdoc = '\n<meta http-equiv=\"Content-Security-Policy\" content=\"default-src [[location.origin]]/curvature.js ws://[[location.hostname]]:9485\n[[location.origin]]/vendor.js &apos;unsafe-inline&apos; connect-src: https://api.dictionaryapi.dev\">\n<style>\n\tiframe {\n\t\tposition: absolute;\n\t\ttop: 0px;\n\t\tleft: 0px;\n\t\twidth: 100%;\n\t\theight: 100%;\n\t\tborder: none;\n\t\tbackground-color: white;\n\t}\n</style>\n<iframe\n\tsandbox = \"allow-scripts\"\n\tsrc     = \"about:blank\"\n\tsrcdoc  = \"[[frameSource|escapeQuotes]]\"\n></iframe>\n'></iframe>\n"
+});
+
 ;require.register("control/html.tmp.html", function(exports, require, module) {
 module.exports = "<div class = \"html-control main-content\">\n\t<iframe\n\t\tclass = \"inset white\"\n\t\tsrcdoc = \"[[srcdoc]]\"></iframe>\n</div>\n"
 });
@@ -60498,6 +60671,12 @@ var Desktop = /*#__PURE__*/function (_View) {
       icon: 'numb',
       path: 'apps',
       bits: 8
+    }), new _Icon.Icon({
+      action: 'letsvue',
+      name: 'Letsvue',
+      icon: 'letsvue',
+      path: 'apps',
+      bits: 24
     })]; // this.windows = new Bag((win, meta, action, index)=>{
     // 	// console.log(this.windows.list);
     // });
