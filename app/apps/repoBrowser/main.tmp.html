@@ -1,3 +1,5 @@
+<hr />
+
 <div class = "row tight">
 
 	<button class = "square" title = "new file">
@@ -42,56 +44,67 @@
 		<img class = "icon16" src = "/w98/help_book_small-16-4bit.png" />
 	</button>
 
-</div>
+	<div class = "row tight wide right">
+		<div class = "row wide">
+		</div>
 
-<div class = "inset row tight scroll-header outer white" tabindex = "-1">
+		<div class = "inset wide row tight scroll-header outer white" tabindex = "-1">
 
-	<button class = "flat tight white" class = "tight">
-		<img src = "/w95/21-16-4bit.png" />
-	</button>
+			<button class = "flat tight white" class = "tight">
+				<img src = "/w98/network_drive-16-4bit.png" />
+			</button>
 
-	<input
-		class = "inset wide flat white"
-		value = "Repo: [[repoName]] [ [[branch]] ]"
-		readonly = "true"
-	/>
+			<input
+				class = "inset wide flat white"
+				value = "Repo: [[repoName]] [ [[branch]] ]"
+				readonly = "true"
+			/>
 
-	<div class = "pane repos-dropdown">
-		<div class = "scroll inset white" data-role = "icon-list" cv-each = "repoIcons:icon:i">
-			[[icon]]
+			<button class = "dropdown"  title = "help">
+				<img src = "/ui/dropdown-arrow.png" />
+			</button>
+
+			<div class = "pane repos-dropdown">
+				<div cv-if = "!repos" class = "tight row">
+					<label class = "pane wide">Log into github to view your repos.</label>
+					<button data-tint = "red" cv-on = "click:githubLogin(event)">
+						Go
+					</button>
+				</div>
+				<div class = "scroll inset white" data-role = "icon-list" cv-each = "repoIcons:icon:i">
+					[[icon]]
+				</div>
+			</div>
 		</div>
 	</div>
-
 </div>
+
+<hr />
 
 <div class = "frame cols liquid">
 
-	<div data-section-left class = "content rows">
-		<div class = "row tight">
+	<div data-section-left class = "rows tight">
+		<div class = "row tight tabs">
 
-			<button class = "square">
+			<div class = "tab" tabindex="0">
 				<img class = "icon16" src = "/w98/homepage-16-4bit.png" title = "repo root" />
-			</button>
+			</div>
 
-			<button class = "square">
+			<div class = "tab" tabindex="0">
 				<img class = "icon16" src = "/w98/message_tack-16-4bit.png" title = "view readme" />
-			</button>
+			</div>
 
-			<button class = "square">
+			<div class = "tab" tabindex="0">
 				<img class = "icon16" src = "/w98/diskettes_copy-16-4bit.png"  title = "branches" />
-			</button>
+			</div>
 
-			<button class = "square">
-				<img class = "icon16" src = "/w98/history-16-4bit.png"  title = "history" />
-			</button>
-
-			<button class = "square">
+			<div class = "tab" tabindex="0">
 				<img class = "icon16" src = "/w98/search_directory-16-8bit.png"  title = "search" />
-			</button>
+			</div>
 
-			<button class = "square">
+			<div class = "tab" tabindex="0">
 				<img class = "icon16" src = "/w98/directory_program_group_small-16-4bit.png"  title = "actions" />
-			</button>
+			</div>
 		</div>
 
 		<div class = "inset liquid white">
@@ -105,31 +118,36 @@
 
 	<div data-center-col class = "content rows">
 
-		<div class = "row tight scroll-header">
-			<div class = "inset row wide white tight">
+		<div class = "row scroll-header">
+			<div class = "cols wide">
+				<div class = "row inset wide white tight">
 
-				<button cv-on = "click:selectParent(event);" class = "flat tight white">
-					<img src = "/ui/dir-up.png" />
-				</button>
+					<button cv-on = "click:selectParent(event);" class = "flat tight white">
+						<img src = "/ui/dir-up.png" />
+					</button>
 
-				<input
-					type  = "text"
-					class = "inset wide flat white"
-					value = "File: [[filename]]"
-					readonly = "true"
-				/>
+					<input
+						type  = "text"
+						class = "inset white wide flat tight"
+						value = "File: [[filename]]"
+						readonly = "true"
+					/>
+				</div>
 			</div>
 
-			<div class = "row tight tabs">
-				<div class = "tab" tabindex="0">
-					<img class = "icon16" src = "/w98/file_lines-16-4bit.png" />
-				</div>
-				<div class = "tab" tabindex="0">
-					<img class = "icon16" src = "/w98/xml_gear-16-8bit.png" />
+			<div class = "row tight">
+				<div class = "row tight tabs">
+					<div class = "tab" tabindex="0">
+						<img class = "icon16" src = "/w98/file_lines-16-4bit.png" />
+					</div>
+					<div class = "tab" tabindex="0">
+						<img class = "icon16" src = "/w98/xml_gear-16-8bit.png" />
+					</div>
 				</div>
 			</div>
 
 		</div>
+
 
 		<div data-control-sector class = "white inset scroll">
 			<div class = "liquid abs-holder">
@@ -152,8 +170,18 @@
 
 	<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
 
-	<div data-section-right>
-		<div>[[right]] bar</div>
+	<div data-section-right class = "rows tight">
+		<div class = "row tight right tabs">
+
+			<div class = "tab" tabindex="0">
+				<img class = "icon16" src = "/w98/history-16-4bit.png"  title = "history" />
+			</div>
+
+		</div>
+
+		<div data-terminal-sector class = "liquid inset">
+			Something
+		</div>
 	</div>
 </div>
 

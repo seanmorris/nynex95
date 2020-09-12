@@ -121,17 +121,26 @@ export class RepoBrowser extends Task
 			headers.Authorization = `token ${gitHubToken.access_token}`;
 		}
 
-		this.window.args.repoIcons = [];
+		this.window.args.repoIcons = false;
 
 		this.print(`Scanning repos.`);
+
+		this.window.args.repos = false;
 
 		fetch(reposUrl, {headers}).then(r=>r.json()).then((repos)=>{
 
 			this.print(`Scanning complete.`);
 
+			if(!repos)
+			{
+				return;
+			}
+
 			this.window.args.repoIcons = [];
 
-			repos.map(repo => {
+			repos.map && repos.map(repo => {
+
+				this.window.args.repos = true;
 
 				this.print(`Found repo ${repo.name}`);
 
@@ -147,6 +156,12 @@ export class RepoBrowser extends Task
 				}));
 			});
 		});
+
+		const home = Home.instance();
+
+		this.window.githubLogin = (event) => {
+			home.run('github');
+		};
 	}
 
 	attached()

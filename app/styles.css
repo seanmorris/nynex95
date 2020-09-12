@@ -383,7 +383,7 @@ label.icon-frame label {
 }
 
 .json-view.main-content {
-	background-color: #aaa;
+	/*background-color: #aaa;*/
 	color: black
 }
 
@@ -478,6 +478,14 @@ label.icon-frame label {
 	image-rendering: pixelated;
 }
 
+.tight button {
+	align-self: center;
+}
+
+.tight .tight {
+	margin: 0px !important;
+}
+
 .ace_line:last-child {
 	background-color: #322;
 	color: white;
@@ -504,9 +512,11 @@ label.icon-frame label {
 .repos-dropdown {
 	position: absolute;
 	padding: 0px !important;
-	top: -4px;
-	left: -4px;
+	top: calc(100% + 1px);
+	/*left: -4px;*/
+	right: 0px;
 	width: calc(100% + 6px);
+	min-width: 440px;
 	border-right: none;
 }
 
@@ -614,6 +624,7 @@ label.icon-frame label {
 	width: 4px;
 	margin-left: -2px;
 	margin-right: -2px;
+	z-index: 1;
 }
 
 [data-horizontal-resize] {
@@ -623,6 +634,7 @@ label.icon-frame label {
 	height: 4px;
 	margin-top: -2px;
 	margin-bottom: -2px;
+	z-index: 1;
 }
 
 [data-control-sector]{
@@ -642,6 +654,7 @@ label.icon-frame label {
 }
 
 [data-tint] {
+	position: relative;
 }
 
 [data-tint]::before {
@@ -657,4 +670,14 @@ label.icon-frame label {
 	height: calc(100% + 4px);
 	content: ' ';
 	padding: 0px;
+}
+
+[data-center-col] {
+	z-index: 1;
+}
+
+button.dropdown {
+	padding: 0px;
+	padding-left: 4px;
+	padding-right: 4px;
 }

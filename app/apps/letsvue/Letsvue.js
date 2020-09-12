@@ -30,10 +30,10 @@ export class Letsvue extends Task
 			console.log(event);
 		};
 
-		const frame = this.findTags('iframe');
+		const frame = this.window.findTag('iframe');
 
 		frame.addEventListener('message', event);
 
-		this.onRemove(frame.removeEventListener('message', event));
+		this.window.onRemove(()=>frame.removeEventListener('message', event));
 	}
 }

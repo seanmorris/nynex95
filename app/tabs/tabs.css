@@ -8,6 +8,7 @@
 }
 
 .tabs {
+	margin-top:    1px;
 	padding-top:   3px;
 	padding-left:  2px;
 	margin-bottom: 0px;
@@ -18,6 +19,7 @@
 
 .tabs > .tab:focus,
 .tabs > .tab:hover {
+	margin-top:   -1px;
 	color: #000;
 	margin-left: -1px;
 	margin-right: 1px;

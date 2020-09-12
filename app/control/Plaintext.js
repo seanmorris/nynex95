@@ -32,6 +32,7 @@ export class Plaintext extends View
 		{
 			case 'html': mode = 'ace/mode/html'; break;
 			case 'yml':  mode = 'ace/mode/yaml'; break;
+			case 'lua':  mode = 'ace/mode/lua'; break;
 			case 'css':  mode = 'ace/mode/css'; break;
 			case 'php':  mode = 'ace/mode/php'; break;
 			case 'js':   mode = 'ace/mode/javascript'; break;

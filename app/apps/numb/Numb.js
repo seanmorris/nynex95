@@ -26,10 +26,12 @@ export class Numb extends Task
 			console.log(event);
 		};
 
-		const frame = this.findTags('iframe');
+		console.log(this.window);
+
+		const frame = this.window.findTag('iframe');
 
 		frame.addEventListener('message', event);
 
-		this.onRemove(frame.removeEventListener('message', event));
+		this.window.onRemove(()=>frame.removeEventListener('message', event));
 	}
 }

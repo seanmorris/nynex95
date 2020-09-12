@@ -992,7 +992,7 @@ label.icon-frame label {
 }
 
 .json-view.main-content {
-	background-color: #aaa;
+	/*background-color: #aaa;*/
 	color: black
 }
 
@@ -1087,6 +1087,14 @@ label.icon-frame label {
 	image-rendering: pixelated;
 }
 
+.tight button {
+	align-self: center;
+}
+
+.tight .tight {
+	margin: 0px !important;
+}
+
 .ace_line:last-child {
 	background-color: #322;
 	color: white;
@@ -1113,9 +1121,11 @@ label.icon-frame label {
 .repos-dropdown {
 	position: absolute;
 	padding: 0px !important;
-	top: -4px;
-	left: -4px;
+	top: calc(100% + 1px);
+	/*left: -4px;*/
+	right: 0px;
 	width: calc(100% + 6px);
+	min-width: 440px;
 	border-right: none;
 }
 
@@ -1223,6 +1233,7 @@ label.icon-frame label {
 	width: 4px;
 	margin-left: -2px;
 	margin-right: -2px;
+	z-index: 1;
 }
 
 [data-horizontal-resize] {
@@ -1232,6 +1243,7 @@ label.icon-frame label {
 	height: 4px;
 	margin-top: -2px;
 	margin-bottom: -2px;
+	z-index: 1;
 }
 
 [data-control-sector]{
@@ -1251,6 +1263,7 @@ label.icon-frame label {
 }
 
 [data-tint] {
+	position: relative;
 }
 
 [data-tint]::before {
@@ -1268,6 +1281,16 @@ label.icon-frame label {
 	padding: 0px;
 }
 
+[data-center-col] {
+	z-index: 1;
+}
+
+button.dropdown {
+	padding: 0px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
 .tabs > .tab {
 	align-self: flex-end;
 	padding: 4px;
@@ -1278,6 +1301,7 @@ label.icon-frame label {
 }
 
 .tabs {
+	margin-top:    1px;
 	padding-top:   3px;
 	padding-left:  2px;
 	margin-bottom: 0px;
@@ -1288,6 +1312,7 @@ label.icon-frame label {
 
 .tabs > .tab:focus,
 .tabs > .tab:hover {
+	margin-top:   -1px;
 	color: #000;
 	margin-left: -1px;
 	margin-right: 1px;
