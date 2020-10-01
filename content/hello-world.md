@@ -8,6 +8,8 @@ The interface is capable of editing files in its own repository, if the logged i
 
 I call this user interface "Nynex". The name comes from the version identifier Windows **9x**, as well as the first phone company to ever provide me with dialup internet access, way back in the '90s.
 
+For more information on the UI, see [whats Nynex?](repo-browser/seanmorris/nynex95/content/hello-world.md)
+
 I plan to add some terraform scripting to spin up a websocket server on Heroku, using redis `PubSub`. This would allow multiple users on the server to interact in real time.
 
 The aim is to allow users to simply fork the project on github, clear out the content directory, add their API keys for cloudflare & heroku to their github secrets. Once this is done, the new instance can callback to the old and join a swarm.
