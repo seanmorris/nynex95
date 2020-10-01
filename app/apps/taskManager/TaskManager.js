@@ -82,6 +82,6 @@ export class TaskManager extends Task
 
 		this.window.args.tasks = Home.instance().tasks.list;
 
-		this.window.args.menuBar  = new MenuBar(this.args, this.window);
+		// this.window.args.menuBar  = new MenuBar(this.args, this.window);
 	}
 }

@@ -1,3 +1,4 @@
+import { Router } from 'curvature/base/Router';
 import { Bag  } from 'curvature/base/Bag';
 import { View } from 'curvature/base/View';
 
@@ -70,10 +71,30 @@ export class Home extends View
 		// this.args.tray     = this.tray.list;
 
 		this.args.taskBar  = taskBar;
+
+		this.routes = {
+			'*': (args) => {
+				const taskName = args.pathparts.shift();
+				const taskPath = args.pathparts.slice();
+
+				if(taskName)
+				{
+					this.run(taskName, taskPath);
+				}
+
+
+			}
+		};
 	}
 
-	run(taskName)
+	run(taskName, taskPath)
 	{
+		const taskPathString = taskPath
+			? '/' + taskPath.join('/')
+			: '';
+
+		Router.go('/' + taskName + taskPathString, 2);
+
 		const taskType = Home.path[taskName] || false;
 
 		if(!taskType)
@@ -82,7 +103,9 @@ export class Home extends View
 			return false;
 		}
 
-		const task = new taskType(this.tasks);
+		const task = new taskType(this.tasks, taskName, taskPath);
+
+		task.cmd = taskName;
 
 		this.tasks.add(task);
 

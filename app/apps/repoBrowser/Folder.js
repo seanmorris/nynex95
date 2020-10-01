@@ -1,3 +1,4 @@
+import { Router } from 'curvature/base/Router';
 import { View } from 'curvature/base/View';
 import { Bindable } from 'curvature/base/Bindable';
 import { GitHub } from '../gitHub/GitHub';
@@ -55,6 +56,17 @@ export class Folder extends View
 			if(!Array.isArray(files))
 			{
 				return;
+			}
+
+			if(this.args.file)
+			{
+				Router.go(
+					`/${this.args.browser.cmd}`
+					+`/${this.args.browser.username}`
+					+`/${this.args.browser.reponame}`
+					+`/${this.args.file.path}`
+					, 2
+				);
 			}
 
 			const iconList = new IconControl({}, this);
@@ -153,9 +165,9 @@ export class Folder extends View
 		const name = file.name;
 		const type = name.split('.').pop();
 
-		this.args.browser.window.args.filename = '';
+		// this.args.browser.window.args.filename = '';
 		this.args.browser.window.args.content  = 'loading...';
-		this.args.browser.window.args.url      = url;
+		this.args.browser.window.args.url      = '';
 
 		const gitHubToken = GitHub.getToken();
 
@@ -164,6 +176,7 @@ export class Folder extends View
 		const renderable = (type === 'md' || type === 'html');
 
 		headers.Accept = 'application/vnd.github.v3.raw';
+
 
 		// if(type === 'md')
 		// {
@@ -183,6 +196,19 @@ export class Folder extends View
 		const url = renderable
 			? file.url
 			: file.download_url;
+
+		if(file.path)
+		{
+			console.log(file.path);
+			const path = `/${this.args.browser.repoName}/${file.path}`;
+			Router.go(`/${this.args.browser.cmd}${path}`, 2);
+		}
+
+
+		// this.args.browser.path = path;
+
+		// console.log(this.args.browser.cmd, path);
+
 
 		this.args.browser.window.args.url = url;
 

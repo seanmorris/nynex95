@@ -16,7 +16,7 @@ export class Menu extends View
 
 	postRender()
 	{
-		console.log(this.tags.menu);
+		// console.log(this.tags.menu);
 	}
 
 	join(list)
@@ -26,8 +26,6 @@ export class Menu extends View
 
 	call(event, item)
 	{
-		console.log(this.items[item]());
-
 		event.target.blur();
 		// callback(event);
 	}

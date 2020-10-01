@@ -10,6 +10,7 @@ import { GitHub } from '../gitHub/GitHub';
 import { Folder } from './Folder';
 import { Icons as IconControl } from '../../control/Icons';
 import { Html as HtmlControl }  from '../../control/Html';
+import { Markdown as MarkdownControl }  from '../../control/Markdown';
 import { Json as JsonControl } from '../../control/Json';
 import { Image as ImageControl } from '../../control/Image';
 import { Plaintext as PlaintextControl } from '../../control/Plaintext';
@@ -22,9 +23,15 @@ export class RepoBrowser extends Task
 	icon     = '/w95/73-16-4bit.png';
 	template = require('./main.tmp');
 
-	constructor(taskList)
+	constructor(taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList);
+		super(taskList, taskCmd, taskPath);
+
+		console.log(taskPath);
+
+		this.username = taskPath.shift() || 'seanmorris';
+		this.reponame = taskPath.shift() || 'nynex95';
+		this.filepath = taskPath.join('/');
 
 		this.current = null;
 
@@ -32,6 +39,14 @@ export class RepoBrowser extends Task
 
 		this.window.args.width  = `760px`;
 		this.window.args.height = `640px`;
+
+		this.window.args.viewRaw = 'view-control-rendered';
+
+		this.window.args.hasSource = false;
+
+		this.window.viewControl = (type) => {
+			this.window.args.viewRaw = `view-control-${type}`;
+		}
 
 		this.window.selectParent = (event) => {
 
@@ -52,7 +67,6 @@ export class RepoBrowser extends Task
 		};
 
 		this.window.classes['hide-right'] = true;
-
 
 		this.window.save = (event) => {
 
@@ -114,7 +128,14 @@ export class RepoBrowser extends Task
 		const reposUrl    = 'https://nynex.unholysh.it/github-proxy/user/repos'
 		const headers     = {};
 
-		this.window.args.repoName = 'seanmorris/nynex95';
+		this.endpoint = 'https://nynex.unholysh.it/github-proxy/';
+		this.endpointRepos = `${this.endpoint}repos/`
+
+		this.startingRepo = `${this.username || 'seanmorris'}/${this.reponame || 'nynex95'}`;
+
+		this.window.args.repoUrl = `${this.endpointRepos}${this.startingRepo}/`;
+
+		this.window.args.repoName = this.startingRepo;
 
 		if(gitHubToken && gitHubToken.access_token)
 		{
@@ -172,7 +193,7 @@ export class RepoBrowser extends Task
 
 		this.console.args.prompt = '';
 
-		this.window.args.menuBar  = new MenuBar(this.args, this.window);
+		// this.window.args.menuBar  = new MenuBar(this.args, this.window);
 
 		this.window.args.filetype = '';
 		this.window.args.chars    = '';
@@ -198,12 +219,19 @@ export class RepoBrowser extends Task
 
 			this.window.args.files.push(folder);
 
-			folder.select();
+			if(!this.filepath)
+			{
+				folder.select();
+			}
+			else
+			{
+				folder.expand();
+			}
 		});
 
-		this.window.args.repoUrl = 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/';
-
 		this.window.args.bindTo('filename', v => {
+
+			console.log(v, this.window.args.url);
 
 			const gitHubToken = GitHub.getToken();
 
@@ -223,15 +251,34 @@ export class RepoBrowser extends Task
 
 			this.window.args.chars = 0;
 
+			this.window.args.plain = new PlaintextControl(
+				{
+					filetype
+					, sha: this.window.args.sha
+					, url: this.window.args.url
+					, content: this.window.args.content
+				}
+				, this
+			);
+
+			this.window.args.hasSource = false;
+
 			switch(filetype)
 			{
-				// case 'md':
-				// case 'html':
-				// 	this.window.args.control = new HtmlControl(
-				// 		{srcdoc:this.window.args.content}
-				// 		, this
-				// 	);
-				// 	break;
+				case 'md':
+					this.window.args.hasSource = true;
+					this.window.args.control = new MarkdownControl({
+						source: this.window.args.content
+					});
+					break;
+
+				case 'html':
+					this.window.args.hasSource = true;
+					this.window.args.control = new HtmlControl(
+						{srcdoc:this.window.args.content}
+						, this
+					);
+					break;
 
 				case 'ico':
 				case 'gif':
@@ -239,6 +286,7 @@ export class RepoBrowser extends Task
 				case 'jpg':
 				case 'jpeg':
 				case 'webp':
+					this.window.args.viewRaw = 'view-control-rendered';
 					this.window.args.control = new ImageControl(
 						{src:this.window.args.url}
 						, this
@@ -246,6 +294,8 @@ export class RepoBrowser extends Task
 					break;
 
 				case 'json':
+					this.window.args.hasSource = true;
+
 					this.window.args.control = new JsonControl(
 						{
 							expanded: 'expanded'
@@ -272,6 +322,37 @@ export class RepoBrowser extends Task
 
 			this.window.args.chars = (this.window.args.content||'').length;
 		});
+
+		if(this.filepath)
+		{
+			const headers = {
+				accept: 'application/vnd.github.v3.json'
+			};
+
+			const fileUrl = this.window.args.repoUrl+ 'contents/' + this.filepath;
+
+			console.log(fileUrl);
+
+
+			fetch(fileUrl, {headers}).then(r=>r.json()).then(file=>{
+				const type = file.name.split('.').pop();
+
+				const renderable = (type === 'md' || type === 'html');
+
+				const url = renderable
+					? file.download_url
+					: file.download_url;
+
+				console.log(url, type, renderable, file);
+
+				fetch(url, {headers}).then(r => r.text()).then(body => {
+					this.window.args.content  = body;
+					this.window.args.url      = file.url;
+					this.window.args.sha      = file.sha;
+					this.window.args.filename = file.name;
+				});
+			});
+		}
 	}
 
 	print(line)

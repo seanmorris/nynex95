@@ -1,7 +1,14 @@
 import { Home }    from 'home/Home';
 import { Window }  from 'window/Window';
 
+import { Router }  from 'curvature/base/Router';
+
+const homeView = Home.instance();
+
+
 document.addEventListener('DOMContentLoaded', function() {
+
+	Router.listen(homeView);
 
 	const tag  = document.querySelector('body');
 
@@ -10,11 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		return;
 	}
 
-	const homeView = Home.instance();
-
 	homeView.render(tag);
 
 	const win = new Window({content: 'Window #0.'});
+
 
 	// setTimeout(()=> homeView.windows.add(win), 1000);
 

@@ -200,15 +200,22 @@ button {
 	padding: 2px 4px 2px 4px;
 }
 
+input.tight,
 button.tight {
 	height: 22px;
+	padding: 0px 6px;
+}
+
+.lower {
+	align-self: flex-end;
+	align-items: stretch;
 }
 
 .tight > button.square {
-	margin-bottom: -1px;
 	border-bottom-width: 1px;
-	height: 30px;
-	min-width: 30px;
+	margin-bottom: -1px;
+	min-width: 24px;
+	height: 24px;
 }
 
 .tight > button.square.flat {
@@ -449,8 +456,18 @@ label.icon-frame label {
 	overflow: hidden;
 }
 
-.scroll-header {
-	min-height: 24px;
+.outer {
+	position: relative;
+	overflow: visible !important;
+}
+
+button.dropdown {
+	display: flex;
+	min-height: 100%;
+	align-items:center;
+	justify-content: center;
+	align-self: stretch !important;
+	width: 19px;
 }
 
 .left-align {
@@ -524,16 +541,16 @@ label.icon-frame label {
 	margin: 0px !important;
 }
 
-.outer.scroll-header {
+.outer {
 	position: relative;
 	overflow: visible;
 }
 
-.outer.scroll-header .repos-dropdown {
+.outer .repos-dropdown {
 	display: none;
 }
 
-.outer.scroll-header .repos-dropdown .scroll{
+.outer .repos-dropdown .scroll{
 	height: 300px;
 }
 .outer:focus .repos-dropdown,
@@ -577,7 +594,15 @@ label.icon-frame label {
 	height: 100%;
 }
 
-.abs-fill pre,
+.view-control-rendered .abs-fill.plain {
+	display: none;
+}
+
+.view-control-plain .abs-fill.control {
+	display: none;
+}
+
+.abs-fill pre.ace_editor,
 .abs-fill {
 	margin: -1px -1px -1px -1px;
 	border: none;

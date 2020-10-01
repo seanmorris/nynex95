@@ -24,7 +24,7 @@ export class Nynepad extends Task
 
 	attached()
 	{
-		this.window.args.menuBar  = new MenuBar(this.args, this.window);
+		// this.window.args.menuBar  = new MenuBar(this.args, this.window);
 
 		this.window.args.bindTo('document', (v,k,t,d) => {
 

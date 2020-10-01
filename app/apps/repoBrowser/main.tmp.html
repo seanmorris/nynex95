@@ -13,33 +13,33 @@
 	<button cv-on = "click:save(event)" class = "square" title = "save file">
 		<img src = "/ui/save.png" />
 	</button>
-
+<!--
 	<button class = "square"  title = "download file">
 		<img class = "icon16" src = "/w98/download-16-4bit.png" />
 	</button>
 
 	<button class = "square" title = "upload file">
 		<img class = "icon16" src = "/w98/system_restore-16-8bit.png" />
-	</button>
+	</button> -->
 
-	<button class = "square" title = "Github">
+<!-- 	<button class = "square" title = "Github">
 		<img class = "icon16" src = "/apps/github-16-2bit.png" />
-	</button>
+	</button> -->
 
 	<button class = "square" title = "toggle left bar" cv-on = "click:toggleSection('left')">
 		<img data-section-antileft class = "icon16" src = "/ui/left-sidebar-expand.png" />
 		<img data-section-left class = "icon16" src = "/ui/left-sidebar-collapse.png" />
 	</button>
 
-	<button class = "square" title = "toggle right bar" cv-on = "click:toggleSection('right')">
+<!-- 	<button class = "square" title = "toggle right bar" cv-on = "click:toggleSection('right')">
 		<img data-section-antiright class = "icon16" src = "/ui/right-sidebar-expand.png" />
 		<img data-section-right class = "icon16" src = "/ui/right-sidebar-collapse.png" />
-	</button>
-
+	</button> -->
+<!--
 	<button class = "square" title = "toggle terminal" cv-on = "click:toggleSection('term')">
 		<img class = "icon16" src = "/w98/console_prompt-16-4bit.png" />
 	</button>
-
+ -->
 	<button class = "square"  title = "help">
 		<img class = "icon16" src = "/w98/help_book_small-16-4bit.png" />
 	</button>
@@ -48,14 +48,14 @@
 		<div class = "row wide">
 		</div>
 
-		<div class = "inset wide row tight scroll-header outer white" tabindex = "-1">
+		<div class = "inset wide row lower tight outer white" tabindex = "-1">
 
 			<button class = "flat tight white" class = "tight">
 				<img src = "/w98/network_drive-16-4bit.png" />
 			</button>
 
 			<input
-				class = "inset wide flat white"
+				class = "inset wide flat tight white"
 				value = "Repo: [[repoName]] [ [[branch]] ]"
 				readonly = "true"
 			/>
@@ -87,15 +87,15 @@
 		<div class = "row tight tabs">
 
 			<div class = "tab" tabindex="0">
-				<img class = "icon16" src = "/w98/homepage-16-4bit.png" title = "repo root" />
+				<img class = "icon16" src = "/w98/network_drive-16-4bit.png" title = "repo root" />
+			</div>
+
+			<!-- <div class = "tab" tabindex="0">
+				<img class = "icon16" src = "/w98/notepad-16-4bit.png" title = "view readme" />
 			</div>
 
 			<div class = "tab" tabindex="0">
-				<img class = "icon16" src = "/w98/message_tack-16-4bit.png" title = "view readme" />
-			</div>
-
-			<div class = "tab" tabindex="0">
-				<img class = "icon16" src = "/w98/diskettes_copy-16-4bit.png"  title = "branches" />
+				<img class = "icon16" src = "/w98/world_network_directories-16-4bit.png"  title = "branches" />
 			</div>
 
 			<div class = "tab" tabindex="0">
@@ -104,7 +104,7 @@
 
 			<div class = "tab" tabindex="0">
 				<img class = "icon16" src = "/w98/directory_program_group_small-16-4bit.png"  title = "actions" />
-			</div>
+			</div> -->
 		</div>
 
 		<div class = "inset liquid white">
@@ -118,9 +118,9 @@
 
 	<div data-center-col class = "content rows">
 
-		<div class = "row scroll-header">
+		<div class = "row">
 			<div class = "cols wide">
-				<div class = "row inset wide white tight">
+				<div class = "row inset lower wide white tight">
 
 					<button cv-on = "click:selectParent(event);" class = "flat tight white">
 						<img src = "/ui/dir-up.png" />
@@ -135,12 +135,14 @@
 				</div>
 			</div>
 
-			<div class = "row tight">
+			<div class = "row tight [[viewRaw]]">
 				<div class = "row tight tabs">
-					<div class = "tab" tabindex="0">
-						<img class = "icon16" src = "/w98/file_lines-16-4bit.png" />
-					</div>
-					<div class = "tab" tabindex="0">
+					<span class = "content" cv-if = "hasSource">
+						<div class = "tab" tabindex="0"  cv-on = "click:viewControl('plain')">
+							<img class = "icon16" src = "/w98/file_lines-16-4bit.png" />
+						</div>
+					</span>
+					<div class = "tab" tabindex="0" cv-on = "click:viewControl('rendered')">
 						<img class = "icon16" src = "/w98/xml_gear-16-8bit.png" />
 					</div>
 				</div>
@@ -150,8 +152,11 @@
 
 
 		<div data-control-sector class = "white inset scroll">
-			<div class = "liquid abs-holder">
-				<div class = "abs-fill">
+			<div class = "liquid abs-holder [[viewRaw]]">
+				<div class = "abs-fill plain">
+					[[[plain]]]
+				</div>
+				<div class = "abs-fill control">
 					[[control]]
 				</div>
 			</div>

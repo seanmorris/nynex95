@@ -54,7 +54,7 @@ export class Drupal extends Task
 
 	attached()
 	{
-		this.window.args.menuBar  = new MenuBar(this.args, this.window);
+		// this.window.args.menuBar  = new MenuBar(this.args, this.window);
 
 		this.window.args.bindTo('document', (v,k,t,d) => {
 

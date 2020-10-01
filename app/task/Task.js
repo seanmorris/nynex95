@@ -21,11 +21,14 @@ export class Task
 		this[Reject] = reject;
 	});
 
-	constructor(taskList)
+	constructor(taskList, taskCmd = '', taskPath = [])
 	{
 		// super();
 
 		this.id = taskId++;
+
+		this.cmd  = taskCmd;
+		this.path = taskPath;
 
 		console.log('Thread initialized.');
 

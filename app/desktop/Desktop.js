@@ -50,24 +50,24 @@ export class Desktop extends View
 				, icon: 'document'
 				, path: 'w98'
 			})
-			, new Icon({
-				action: 'window'
-				, name: 'Application Window'
-				, icon: 3
-			})
+			// , new Icon({
+			// 	action: 'window'
+			// 	, name: 'Application Window'
+			// 	, icon: 3
+			// })
 			, new Icon({
 				action: 'task-manager'
 				, name: 'Task Manager'
 				, icon: 'computer_taskmgr'
 				, path: 'w98'
 			})
-			, new Icon({
-				action: 'navigator'
-				, path: 'apps'
-				, name: 'Navigator'
-				, icon: 'navigator'
-				, bits: 4
-			})
+			// , new Icon({
+			// 	action: 'navigator'
+			// 	, path: 'apps'
+			// 	, name: 'Navigator'
+			// 	, icon: 'navigator'
+			// 	, bits: 4
+			// })
 			, new Icon({
 				action: 'console'
 				, path: 'apps'
@@ -75,20 +75,20 @@ export class Desktop extends View
 				, icon: 'console'
 				, bits: 24
 			})
-			, new Icon({
-				action: 'console'
-				, path: 'apps'
-				, name: 'Network Terminal'
-				, icon: 'console'
-				, bits: 24
-			})
-			, new Icon({
-				action: 'curvature'
-				, path: 'apps'
-				, name: 'Curvature 0.0.61'
-				, icon: 'curvature'
-				, bits: 8
-			})
+			// , new Icon({
+			// 	action: 'console'
+			// 	, path: 'apps'
+			// 	, name: 'Network Terminal'
+			// 	, icon: 'console'
+			// 	, bits: 24
+			// })
+			// , new Icon({
+			// 	action: 'curvature'
+			// 	, path: 'apps'
+			// 	, name: 'Curvature 0.0.61'
+			// 	, icon: 'curvature'
+			// 	, bits: 8
+			// })
 			, new Icon({
 				action: 'widgets'
 				, name: 'Widget Viewer'
@@ -97,14 +97,14 @@ export class Desktop extends View
 		];
 
 		this.args.endIcons = [
-			new Icon({
-				action: 'nynex-help'
-				, name: 'What\'s Nynex?'
-				, icon: 'help_book_big'
-				, path: 'w98'
-				, bits: 4
-				, size: 32
-			})
+			// new Icon({
+			// 	action: 'nynex-help'
+			// 	, name: 'What\'s Nynex?'
+			// 	, icon: 'help_book_big'
+			// 	, path: 'w98'
+			// 	, bits: 4
+			// 	, size: 32
+			// })
 			, new Icon({
 				action: 'npm-unpkgr'
 				, name: 'npm-unpkgr'
@@ -114,7 +114,7 @@ export class Desktop extends View
 			})
 			, new Icon({
 				action: 'github'
-				, name: 'GitHub'
+				, name: 'GitHub Login'
 				, icon: 'github'
 				, path: 'apps'
 				, bits: 2
@@ -161,13 +161,21 @@ export class Desktop extends View
 				, icon: 'numb'
 				, path: 'apps'
 				, bits: 8
-			}), new Icon({
+			})
+			, new Icon({
 				action: 'letsvue'
 				, name: 'Letsvue'
 				, icon: 'letsvue'
 				, path: 'apps'
 				, bits: 24
 			})
+			// , new Icon({
+			// 	action: 'flashair'
+			// 	, name: 'Flashair'
+			// 	, icon: 'flashair'
+			// 	, path: 'ui'
+			// 	, bits: 24
+			// })
 		];
 
 		// this.windows = new Bag((win, meta, action, index)=>{

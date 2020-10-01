@@ -1,3 +1,4 @@
+import { Router   } from 'curvature/base/Router';
 import { View     } from 'curvature/base/View';
 import { Bindable } from 'curvature/base/Bindable';
 import { MenuBar  } from './MenuBar';
@@ -263,6 +264,14 @@ let Base = class extends View
 		if(this.outWindow)
 		{
 			this.outWindow.focus();
+		}
+		else if(!this.classes.focused && this.args.cmd)
+		{
+			const path = this.args.path
+				? `/${this.args.path.join('/')}`
+				: '';
+
+			Router.go(`/${this.args.cmd}${path}`, 2);
 		}
 
 		const prevZ = this.pos.z;
