@@ -14,6 +14,8 @@ For more information on the UI, see [whats Nynex?](repo-browser/seanmorris/nynex
 
 ## To do
 
+There is **a lot** left to do. I want to be able to upload & asset files directly through this UI, as well as perhaps even design & develop javascript compontents with it.
+
 I plan to add some terraform scripting to spin up a websocket server on Heroku, using redis `PubSub`. This would allow multiple users on the server to interact in real time.
 
 ## Aim
