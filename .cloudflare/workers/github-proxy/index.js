@@ -29,7 +29,7 @@ async function handleRequest(request) {
 		const headers = new Headers(response.headers);
 
 		headers.set('Access-Control-Allow-Origin', '*');
-		headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS, PUT DELETE');
+		headers.set('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS, PUT, DELETE');
 		headers.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
 		const rawBody = responseText.replace(/api\.github\.com/g, originalUrl.host + '/github-proxy');

@@ -81,7 +81,6 @@ export class RepoBrowser extends Task
 			const sha     = this.window.args.control.args.sha;
 			const url     = new URL(this.window.args.control.args.url).pathname;
 
-			const gitHubToken = GitHub.getToken();
 			const postChange  = {message, content, sha};
 
 			const headers = {
@@ -89,6 +88,7 @@ export class RepoBrowser extends Task
 				, accept:       'application/vnd.github.v3.json'
 			};
 
+			const gitHubToken = GitHub.getToken();
 			if(gitHubToken && gitHubToken.access_token)
 			{
 				headers.authorization = `token ${gitHubToken.access_token}`;
@@ -129,11 +129,11 @@ export class RepoBrowser extends Task
 		const headers     = {};
 
 		this.endpoint = 'https://nynex.unholysh.it/github-proxy/';
-		this.endpointRepos = `${this.endpoint}repos/`
+		this.endpointRepos = `${this.endpoint}repos`
 
 		this.startingRepo = `${this.username || 'seanmorris'}/${this.reponame || 'nynex95'}`;
 
-		this.window.args.repoUrl = `${this.endpointRepos}${this.startingRepo}/`;
+		this.window.args.repoUrl = `${this.endpointRepos}/${this.startingRepo}`;
 
 		this.window.args.repoName = this.startingRepo;
 
@@ -147,6 +147,8 @@ export class RepoBrowser extends Task
 		this.print(`Scanning repos.`);
 
 		this.window.args.repos = false;
+
+		console.log(reposUrl);
 
 		fetch(reposUrl, {headers}).then(r=>r.json()).then((repos)=>{
 
@@ -326,8 +328,14 @@ export class RepoBrowser extends Task
 		if(this.filepath)
 		{
 			const headers = {
-				accept: 'application/vnd.github.v3.json'
+				Accept: 'application/vnd.github.v3.json'
 			};
+
+			const gitHubToken = GitHub.getToken();
+			if(gitHubToken && gitHubToken.access_token)
+			{
+				headers.Authorization = `token ${gitHubToken.access_token}`;
+			}
 
 			const fileUrl = this.window.args.repoUrl+ 'contents/' + this.filepath;
 

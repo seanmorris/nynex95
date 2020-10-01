@@ -177,21 +177,12 @@ export class Folder extends View
 
 		headers.Accept = 'application/vnd.github.v3.raw';
 
+		console.log(gitHubToken);
 
-		// if(type === 'md')
-		// {
-		// 	headers.Accept = 'application/vnd.github.v3.html+json';
-		// }
-
-		// if(type === 'html')
-		// {
-		// 	headers.Accept = 'application/vnd.github.v3.raw+json';
-		// }
-
-		// if(renderable && gitHubToken && gitHubToken.access_token)
-		// {
-		// 	headers.Authorization = `token ${gitHubToken.access_token}`;
-		// }
+		if(gitHubToken && gitHubToken.access_token)
+		{
+			headers.authorization = `token ${gitHubToken.access_token}`;
+		}
 
 		const url = renderable
 			? file.url
@@ -203,12 +194,6 @@ export class Folder extends View
 			const path = `/${this.args.browser.repoName}/${file.path}`;
 			Router.go(`/${this.args.browser.cmd}${path}`, 2);
 		}
-
-
-		// this.args.browser.path = path;
-
-		// console.log(this.args.browser.cmd, path);
-
 
 		this.args.browser.window.args.url = url;
 
