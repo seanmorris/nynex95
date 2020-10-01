@@ -10,7 +10,7 @@ async function handleRequest(request) {
 	const originalUrl = new URL(request.url);
 	const githubUrl   = 'https://api.github.com' + originalUrl.pathname.replace(/^\/github-proxy/, '');
 
-	const headers = new Headers(request.headers);
+	const headers = new Headers();
 	const method  = request.method;
 	const body    = request.body;
 
@@ -18,7 +18,7 @@ async function handleRequest(request) {
 	headers.append('Cache-Control', 'no-cache');
 	headers.append('pragma',        'no-cache');
 
-	return fetch(githubUrl, {method, headers, body}).then(response => {
+	return fetch(githubUrl, {method, request.headers, body}).then(response => {
 
 		return response.text().then(responseText => {
 			return {response, responseText};
