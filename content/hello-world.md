@@ -10,7 +10,7 @@ The interface is capable of editing files in its own repository, if the logged i
 
 I call this user interface "Nynex". The name comes from the version identifier Windows **9x**, as well as the first phone company to ever provide me with dialup internet access, way back in the '90s.
 
-For more information on the UI, see [whats Nynex?](repo-browser/seanmorris/nynex95/content/hello-world.md)
+For more information on the UI, see [whats Nynex?](/repo-browser/seanmorris/nynex95/content/hello-world.md)
 
 ## To do
 
