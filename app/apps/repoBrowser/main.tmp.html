@@ -13,18 +13,18 @@
 	<button cv-on = "click:save(event)" class = "square" title = "save file">
 		<img src = "/ui/save.png" />
 	</button>
-<!--
+
 	<button class = "square"  title = "download file">
 		<img class = "icon16" src = "/w98/download-16-4bit.png" />
 	</button>
 
 	<button class = "square" title = "upload file">
 		<img class = "icon16" src = "/w98/system_restore-16-8bit.png" />
-	</button> -->
+	</button>
 
-<!-- 	<button class = "square" title = "Github">
+	<button class = "square" title = "Github">
 		<img class = "icon16" src = "/apps/github-16-2bit.png" />
-	</button> -->
+	</button>
 
 	<button class = "square" title = "toggle left bar" cv-on = "click:toggleSection('left')">
 		<img data-section-antileft class = "icon16" src = "/ui/left-sidebar-expand.png" />
@@ -35,11 +35,11 @@
 		<img data-section-antiright class = "icon16" src = "/ui/right-sidebar-expand.png" />
 		<img data-section-right class = "icon16" src = "/ui/right-sidebar-collapse.png" />
 	</button> -->
-<!--
+
 	<button class = "square" title = "toggle terminal" cv-on = "click:toggleSection('term')">
 		<img class = "icon16" src = "/w98/console_prompt-16-4bit.png" />
 	</button>
- -->
+
 	<button class = "square"  title = "help">
 		<img class = "icon16" src = "/w98/help_book_small-16-4bit.png" />
 	</button>
@@ -191,6 +191,6 @@
 </div>
 
 <div class = "status row">
-	<div class = "label inset">[[filename]]</div>
+	<div class = "label inset">[[filename]]&nbsp;</div>
 	<div class = "label inset" cv-if = "chars">type: [[filetype]] size: [[chars]]</div>
 </div>

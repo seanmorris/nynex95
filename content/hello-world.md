@@ -10,7 +10,7 @@ The interface is capable of editing files in its own repository, if the logged i
 
 I call this user interface "Nynex". The name comes from the version identifier Windows **9x**, as well as the first phone company to ever provide me with dialup internet access, way back in the '90s.
 
-For more information on the UI, see [whats Nynex?](/repo-browser/seanmorris/nynex95/content/hello-world.md)
+For more information on the UI, see [whats Nynex?](/repo-browser/seanmorris/nynex95/content/whats-nynex.md)
 
 ## To do
 
@@ -24,4 +24,4 @@ The aim is to allow users to simply fork the project on github, clear out the co
 
 Users communicating with one instance will be able to communicate with users on all instances, and the need for social networks will hopefully be completely obviated.
 
-I was originally inspired by Jeff Hunter & JC Stanton's work in linking up `NirvanaNET` BBSs in the 1990s.
+I was originally inspired by Jeff Hunter & JC Stanton's work in linking up the `NirvanaNET` BBSs in the 1990s.
