@@ -12,9 +12,9 @@ The interface is capable of editing files in its own repository, via the Github 
 
 I call this user interface "Nynex95". The name comes from the version identifier Windows **9x**, as well as the first phone company to ever provide me with dialup internet access, way back in the '90s.
 
-For more information on the UI, see [using Nynex?](/repo-browser/seanmorris/nynex95/content/using-nynex.md)
+For more information on the UI, see [using Nynex](/repo-browser/seanmorris/nynex95/content/using-nynex.md).
 
-For more information on Curvature, the JS framework, see [Curvature Playground?](https://curvature.unholysh.it)
+For more information on Curvature, the JS framework, see [Curvature Playground](https://curvature.unholysh.it).
 
 ## To do
 
