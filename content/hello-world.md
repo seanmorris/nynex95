@@ -26,10 +26,10 @@ I also want to add an indexer-action to generate RSS feeds for the `content/` di
 
 The aim is to allow users to serve social content over cloud services with free accounts.
 
-Users should be able to simply fork the project on github, clear out the content directory, add their API keys for cloudflare & heroku to their github secrets.
-
-Once this is done, the new instance will be able to call back to the one it was forked from, and join the swarm.
+Users should be able to simply fork the project on github, clear out the content directory, add their API keys for Cloudflare & Heroku to their github secrets, and go.
 
 Users communicating with one instance will be able to communicate with users on all instances, and the need for social networks will hopefully be completely obviated.
+
+The new instance should also have the ablility to call back to the one it was forked from, and join a swarm.
 
 I was originally inspired by Jeff Hunter & JC Stanton's work in linking up the `NirvanaNET` BBSs in the 1990s.
