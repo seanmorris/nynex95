@@ -18,7 +18,7 @@ async function handleRequest(request) {
 	headers.append('Cache-Control', 'no-cache');
 	headers.append('pragma',        'no-cache');
 
-	return fetch(githubUrl, {method, request.headers, body}).then(response => {
+	return fetch(githubUrl, {method, headers: request.headers, body}).then(response => {
 
 		return response.text().then(responseText => {
 			return {response, responseText};
