@@ -20,9 +20,13 @@ There is **a lot** left to do. I want to be able to upload & asset files directl
 
 I plan to add some terraform scripting to spin up a websocket server on Heroku, using redis `PubSub`. This would allow multiple users on the server to interact in real time.
 
+I also want to add an indexer-action to generate RSS feeds for the `content/` directory.
+
 ## Aim
 
-The aim is to allow users to simply fork the project on github, clear out the content directory, add their API keys for cloudflare & heroku to their github secrets.
+The aim is to allow users to serve social content over cloud services with free accounts.
+
+Users should be able to simply fork the project on github, clear out the content directory, add their API keys for cloudflare & heroku to their github secrets.
 
 Once this is done, the new instance will be able to call back to the one it was forked from, and join the swarm.
 
