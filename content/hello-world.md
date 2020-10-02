@@ -20,7 +20,9 @@ I plan to add some terraform scripting to spin up a websocket server on Heroku, 
 
 ## Aim
 
-The aim is to allow users to simply fork the project on github, clear out the content directory, add their API keys for cloudflare & heroku to their github secrets. Once this is done, the new instance can callback to the old and join a swarm.
+The aim is to allow users to simply fork the project on github, clear out the content directory, add their API keys for cloudflare & heroku to their github secrets.
+
+Once this is done, the new instance will be able to call back to the one it was forked from, and join the swarm.
 
 Users communicating with one instance will be able to communicate with users on all instances, and the need for social networks will hopefully be completely obviated.
 
