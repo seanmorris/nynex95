@@ -1,6 +1,6 @@
-# Hello, World!
+![](/sm/player-64-24bit.png)
 
-![](/sm/player-32-24bit.png)
+# Hello, World!
 
 Welcome to my **new** blog! This is an *extremely* experimental engine powered mostly by github actions & cloudflare workers. Its hosted in github pages and cached in cloudflare's cdn.
 
