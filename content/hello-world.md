@@ -14,7 +14,7 @@ I call this user interface "Nynex95". The name comes from the version identifier
 
 For more information on the UI, see [using Nynex](/repo-browser/seanmorris/nynex95/content/using-nynex.md).
 
-For more information on Curvature, the JS framework, see [Curvature Playground](https://curvature.unholysh.it).
+For more information on Curvature, the JS framework, see the [Curvature Playground](https://curvature.unholysh.it).
 
 ## To do
 
