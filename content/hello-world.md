@@ -1,5 +1,7 @@
 # Hello, World!
 
+![](/sm/player-32-24bit.png)
+
 Welcome to my **new** blog! This is an *extremely* experimental engine powered mostly by github actions & cloudflare workers. Its hosted in github pages and cached in cloudflare's cdn.
 
 The workers are managed by terraform, and indexes are rebuild when a content file is changed, all of this runs on `git commit` via the github actions.
