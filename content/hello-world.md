@@ -4,7 +4,7 @@ Welcome to my **new** blog! This is an *extremely* experimental engine powered m
 
 The workers are managed by terraform, and indexes are rebuild when a content file is changed, all of this runs on `git commit` via the github actions.
 
-The interface is capable of editing files in its own repository, if the logged in user has the rights on github. These edits **will** trigger github actions. You can toggle to/from the source code of this document with the icons in the top right. You can view your changes, but cannot save them without edit permissions on the github repo.
+The interface is capable of editing files in its own repository, via the Github API, so long as the logged in user has the rights on github. These edits **will** trigger github actions. You can toggle to/from the source code of this document with the icons in the top right. You can view your changes, but cannot save them without edit permissions on the github repo.
 
 ## UI
 
