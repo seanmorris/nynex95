@@ -20,7 +20,7 @@ export class Letsvue extends Task
 		this.window.args.src = 'https://letsvue.com/post/'
 		this.window.args.width  = `440px`;
 		this.window.args.height = `800px`;
-		this.window.args.menuBar  = new MenuBar(this.args, this.window);
+		// this.window.args.menuBar  = new MenuBar(this.args, this.window);
 	}
 
 	attached()

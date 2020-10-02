@@ -67,7 +67,7 @@ async function handleRequest(request) {
 			return new Response(readable, {
 				status:       response.status
 				, statusText: response.statusText
-				, headers:    headers
+				, headers
 			});
 		}
 

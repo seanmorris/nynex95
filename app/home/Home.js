@@ -57,7 +57,6 @@ export class Home extends View
 			console.log(this.open.x, this.open.y);
 		});
 
-
 		// this.windows.type = Window;
 		// this.tasks.type   = Task;
 
@@ -67,13 +66,16 @@ export class Home extends View
 		});
 
 		this.args.windows  = this.windows.list;
+		this.args.taskBar  = taskBar;
 		// this.args.tasks    = this.tasks.list;
 		// this.args.tray     = this.tray.list;
 
-		this.args.taskBar  = taskBar;
 
 		this.routes = {
-			'*': (args) => {
+
+			'': ()=> Router.go('/repo-browser/seanmorris/nynex95/content/hello-world.md?win=max:true')
+
+			, '*': (args) => {
 				const taskName = args.pathparts.shift();
 				const taskPath = args.pathparts.slice();
 
@@ -82,8 +84,8 @@ export class Home extends View
 					this.run(taskName, taskPath);
 				}
 
-
 			}
+
 		};
 	}
 

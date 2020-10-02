@@ -169,6 +169,12 @@ export class Desktop extends View
 				, path: 'apps'
 				, bits: 24
 			})
+			, new Icon({
+				action: 'harp'
+				, name: 'Jasmine \'s Harp'
+				, icon: 1
+				, bits: 4
+			})
 			// , new Icon({
 			// 	action: 'flashair'
 			// 	, name: 'Flashair'

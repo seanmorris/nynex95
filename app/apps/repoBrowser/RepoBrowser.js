@@ -70,7 +70,7 @@ export class RepoBrowser extends Task
 
 		this.window.save = (event) => {
 
-			const raw     = this.window.args.control.args.content
+			const raw = this.window.args.plain.args.content
 
 			console.log(raw);
 
@@ -78,8 +78,11 @@ export class RepoBrowser extends Task
 			const branch  = 'master';
 			const message = 'Nynex self-edit.';
 			const content = btoa(unescape(encodeURIComponent(raw)));
-			const sha     = this.window.args.control.args.sha;
-			const url     = new URL(this.window.args.control.args.url).pathname;
+			const sha     = this.window.args.sha;
+
+			console.log(this.window.args.control.args);
+
+			const url     = new URL(this.window.args.url).pathname;
 
 			const postChange  = {message, content, sha};
 
@@ -99,10 +102,12 @@ export class RepoBrowser extends Task
 
 			console.log(body);
 
-			return fetch(
-				'https://nynex.unholysh.it' + url
-				, {method, headers, body}
-			).then(response => response.json());
+			return fetch('https://nynex.unholysh.it' + url, {method, headers, body})
+				.then(response => response.json())
+				.then(json => {
+					console.log(json.content);
+					this.window.args.sha = json.content.sha;
+				});
 		}
 
 		this.window.toggleSection = (section) => {
@@ -113,14 +118,30 @@ export class RepoBrowser extends Task
 
 			this.window.classes[clas] = !!!this.window.classes[clas];
 
-			const centerCol = this.window.findTag('[data-center-col]');
+			const center   = this.window.findTag('[data-center-col]');
+			const control  = this.window.findTag('[data-control-sector]')
+			const terminal = this.window.findTag('[data-terminal-sector]');
 
-			console.log(centerCol);
+			console.log(center);
+			console.log(control);
+			console.log(terminal);
 
-			if(centerCol)
+			if(center)
 			{
-				centerCol.style.minWidth = '';
-				centerCol.style.height   = '';
+				center.style.minWidth = null;
+				center.style.height   = null;
+			}
+
+			if(control)
+			{
+				control.style.maxHeight = null;
+				control.style.height    = null;
+			}
+
+			if(terminal)
+			{
+				terminal.style.maxHeight = terminal.style.minHeight || '5em';
+				terminal.style.height    = null;
 			}
 		}
 
@@ -253,74 +274,94 @@ export class RepoBrowser extends Task
 
 			this.window.args.chars = 0;
 
-			this.window.args.plain = new PlaintextControl(
-				{
-					filetype
-					, sha: this.window.args.sha
-					, url: this.window.args.url
-					, content: this.window.args.content
-				}
-				, this
-			);
 
 			this.window.args.hasSource = false;
 
-			switch(filetype)
+			if(this.contentDebind)
 			{
-				case 'md':
-					this.window.args.hasSource = true;
-					this.window.args.control = new MarkdownControl({
-						source: this.window.args.content
-					});
-					break;
-
-				case 'html':
-					this.window.args.hasSource = true;
-					this.window.args.control = new HtmlControl(
-						{srcdoc:this.window.args.content}
-						, this
-					);
-					break;
-
-				case 'ico':
-				case 'gif':
-				case 'png':
-				case 'jpg':
-				case 'jpeg':
-				case 'webp':
-					this.window.args.viewRaw = 'view-control-rendered';
-					this.window.args.control = new ImageControl(
-						{src:this.window.args.url}
-						, this
-					);
-					break;
-
-				case 'json':
-					this.window.args.hasSource = true;
-
-					this.window.args.control = new JsonControl(
-						{
-							expanded: 'expanded'
-							, tree: this.window.args.content
-								? JSON.parse(this.window.args.content)
-								: []
-						}
-						, this
-					);
-					break;
-
-				default:
-					this.window.args.control = new PlaintextControl(
-						{
-							filetype
-							, sha: this.window.args.sha
-							, url: this.window.args.url
-							, content: this.window.args.content
-						}
-						, this
-					);
-					break;
+				this.contentDebind();
 			}
+
+			this.window.args.plain = new PlaintextControl(
+				this.window.args, this
+			);
+
+			this.window.args.plain.args.url = this.window.args.url;
+
+			this.contentDebind = this.window.args.bindTo('content', vv => {
+
+				const filetype = String(this.window.args.filename).split('.').pop();
+
+
+				this.window.args.filetype = filetype || '';
+
+				switch(filetype)
+				{
+					case 'md':
+						this.window.args.hasSource = true;
+
+						this.window.args.control = new MarkdownControl(
+							{source: vv}
+						);
+
+						this.window.args.control.args.source = v;
+
+						break;
+
+					case 'html':
+						this.window.args.hasSource = true;
+
+						this.window.args.control = new HtmlControl(
+							{srcdoc: vv}
+							, this
+						);
+
+						break;
+
+					case 'ico':
+					case 'gif':
+					case 'png':
+					case 'jpg':
+					case 'jpeg':
+					case 'webp':
+						this.window.args.viewRaw = 'view-control-rendered';
+						this.window.args.control = new ImageControl(
+							{src:this.window.args.url}
+							, this
+						);
+						break;
+
+					case 'json':
+						this.window.args.hasSource = true;
+
+						console.log(this.window.args.filename, vv);
+
+						this.window.args.control = new JsonControl(
+							{
+								expanded: 'expanded'
+								, tree: vv
+									? JSON.parse(vv)
+									: []
+							}
+							, this
+						);
+						break;
+
+					default:
+						this.window.args.control = new PlaintextControl(
+							{
+								filetype
+								, sha: this.window.args.sha
+								, url: this.window.args.url
+								, content: vv
+							}
+							, this
+						);
+						break;
+				}
+
+			}, {wait: 16});
+
 
 			this.window.args.chars = (this.window.args.content||'').length;
 		});
@@ -337,26 +378,26 @@ export class RepoBrowser extends Task
 				headers.Authorization = `token ${gitHubToken.access_token}`;
 			}
 
-			const fileUrl = this.window.args.repoUrl+ 'contents/' + this.filepath;
-
-			console.log(fileUrl);
-
+			const fileUrl = this.window.args.repoUrl+ '/contents/' + this.filepath;
 
 			fetch(fileUrl, {headers}).then(r=>r.json()).then(file=>{
 				const type = file.name.split('.').pop();
 
 				const renderable = (type === 'md' || type === 'html');
 
-				const url = renderable
+				const url = file.download_url
 					? file.download_url
-					: file.download_url;
+					: file.url;
 
-				console.log(url, type, renderable, file);
+				this.window.args.url      = file.url;
+				this.window.args.sha      = file.sha;
+				this.window.args.content  = '';
+				this.window.args.filename = file.name;
 
-				fetch(url, {headers}).then(r => r.text()).then(body => {
+				headers['Accept'] = 'application/vnd.github.v3.raw';
+
+				fetch(fileUrl, {headers}).then(r=>r.text()).then(body=>{
 					this.window.args.content  = body;
-					this.window.args.url      = file.url;
-					this.window.args.sha      = file.sha;
 					this.window.args.filename = file.name;
 				});
 			});

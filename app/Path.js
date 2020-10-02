@@ -14,6 +14,7 @@ import { Numb         } from 'apps/numb/Numb';
 import { WidgetViewer } from 'apps/widgetViewer/WidgetViewer';
 import { Dosbox       } from 'apps/dosbox/Dosbox';
 import { Letsvue      } from 'apps/letsvue/Letsvue';
+import { Harp         } from 'apps/harp/Harp';
 
 import { ClonesNBarrels } from 'apps/clonesNBarrels/ClonesNBarrels';
 export const Path = {
@@ -34,4 +35,5 @@ export const Path = {
 	, 'numb':         Numb
 	, 'dos':          Dosbox
 	, 'letsvue':      Letsvue
+	, 'harp':         Harp
 };

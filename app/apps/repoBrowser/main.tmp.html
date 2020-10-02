@@ -31,10 +31,10 @@
 		<img data-section-left class = "icon16" src = "/ui/left-sidebar-collapse.png" />
 	</button>
 
-<!-- 	<button class = "square" title = "toggle right bar" cv-on = "click:toggleSection('right')">
+	<button class = "square" title = "toggle right bar" cv-on = "click:toggleSection('right')">
 		<img data-section-antiright class = "icon16" src = "/ui/right-sidebar-expand.png" />
 		<img data-section-right class = "icon16" src = "/ui/right-sidebar-collapse.png" />
-	</button> -->
+	</button>
 
 	<button class = "square" title = "toggle terminal" cv-on = "click:toggleSection('term')">
 		<img class = "icon16" src = "/w98/console_prompt-16-4bit.png" />
@@ -134,22 +134,19 @@
 					/>
 				</div>
 			</div>
-
 			<div class = "row tight [[viewRaw]]">
 				<div class = "row tight tabs">
+					<div class = "tab" tabindex="0" cv-on = "click:viewControl('rendered')">
+						<img class = "icon16" src = "/w98/xml_gear-16-8bit.png" />
+					</div>
 					<span class = "content" cv-if = "hasSource">
 						<div class = "tab" tabindex="0"  cv-on = "click:viewControl('plain')">
 							<img class = "icon16" src = "/w98/file_lines-16-4bit.png" />
 						</div>
 					</span>
-					<div class = "tab" tabindex="0" cv-on = "click:viewControl('rendered')">
-						<img class = "icon16" src = "/w98/xml_gear-16-8bit.png" />
-					</div>
 				</div>
 			</div>
-
 		</div>
-
 
 		<div data-control-sector class = "white inset scroll">
 			<div class = "liquid abs-holder [[viewRaw]]">
@@ -185,7 +182,7 @@
 		</div>
 
 		<div data-terminal-sector class = "liquid inset">
-			Something
+			File history goes here.
 		</div>
 	</div>
 </div>

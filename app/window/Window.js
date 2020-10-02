@@ -48,7 +48,6 @@ let Base = class extends View
 			{
 				this.outWindow.document.title = v;
 			}
-
 		});
 	}
 
@@ -386,9 +385,6 @@ let Base = class extends View
 			}
 
 			child.style.maxHeight = `${child.clientHeight}px`;
-
-			console.log(child);
-
 		});
 
 		//
@@ -406,12 +402,8 @@ let Base = class extends View
 		const beforeHeight = before.clientHeight;
 		const afterHeight  = after.clientHeight;
 
-		// before.style.height = `${beforeHeight}px`;
-		// after.style.height  = `${afterHeight}px`;
-
-		console.log(beforeHeight);
-
 		const onMove = (event) => {
+
 			const delta = start - event.clientY;
 
 			if(beforeHeight - delta < 0)
@@ -423,8 +415,6 @@ let Base = class extends View
 			{
 				return;
 			}
-
-			console.log(start, delta, beforeHeight);
 
 			before.style.maxHeight = `${-1 + beforeHeight - delta}px`;
 			after.style.maxHeight  = `${-1 + afterHeight  + delta}px`;

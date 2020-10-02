@@ -48,6 +48,8 @@ export class Plaintext extends View
 			editor.session.setMode(mode);
 		}
 
+		editor.session.setOption("wrap", true);
+
 		const aceChanged = (event) => {
 			this.args.content = editor.session.getValue();
 		};
@@ -61,10 +63,20 @@ export class Plaintext extends View
 			, readOnly:               false
 		});
 
+		editor.$blockScrolling = Infinity;
+
 		this.onRemove(()=>{
 			editor.session.off('change', aceChanged);
 			editor.container.remove();
 			editor.destroy();
+		});
+
+		this.args.bindTo('content', v => {
+
+			if(!editor.isFocused() && editor.getValue() !== v)
+			{
+				editor.setValue(v);
+			}
 		});
 
 	}

@@ -165,7 +165,7 @@ export class Folder extends View
 		const name = file.name;
 		const type = name.split('.').pop();
 
-		// this.args.browser.window.args.filename = '';
+		this.args.browser.window.args.filename = '';
 		this.args.browser.window.args.content  = 'loading...';
 		this.args.browser.window.args.url      = '';
 
@@ -181,12 +181,14 @@ export class Folder extends View
 
 		if(gitHubToken && gitHubToken.access_token)
 		{
-			headers.authorization = `token ${gitHubToken.access_token}`;
+			headers.Authorization = `token ${gitHubToken.access_token}`;
 		}
 
-		const url = renderable
+		const url = file.download_url
 			? file.url
 			: file.download_url;
+
+		console.log(file.url, file.download_url);
 
 		if(file.path)
 		{
@@ -195,11 +197,15 @@ export class Folder extends View
 			Router.go(`/${this.args.browser.cmd}${path}`, 2);
 		}
 
+		this.args.browser.window.args.content = '';
+
 		this.args.browser.window.args.url = url;
+		this.args.browser.window.args.sha = file.sha;
+		this.args.browser.window.args.content  = '';
+		this.args.browser.window.args.filename = file.name;
 
 		fetch(url, {headers}).then(r => r.text()).then(body => {
 			this.args.browser.window.args.content  = body;
-			this.args.browser.window.args.sha      = file.sha;
 			this.args.browser.window.args.filename = file.name;
 			this.args.browser.parent               = dir;
 		});
@@ -215,12 +221,12 @@ export class Folder extends View
 		const gitHubToken = GitHub.getToken();
 
 		const headers = {
-			accept: 'application/vnd.github.v3.json'
+			Accept: 'application/vnd.github.v3.json'
 		};
 
 		if(gitHubToken && gitHubToken.access_token)
 		{
-			headers.authorization = `token ${gitHubToken.access_token}`;
+			headers.Authorization = `token ${gitHubToken.access_token}`;
 		}
 
 		this.args.files = [];
