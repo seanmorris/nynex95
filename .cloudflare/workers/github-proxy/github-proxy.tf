@@ -26,7 +26,7 @@ resource "cloudflare_worker_script" "proxy_script" {
 }
 
 resource "cloudflare_worker_route" "proxy_route" {
-  zone_id     = "b21b77428081428499303482dae542bd"
-  pattern     = "nynex.unholysh.it/github-proxy/*"
+  zone_id     = "10cff77358ca096762803358c52f5502"
+  pattern     = "nynex.seanmorr.is/github-proxy/*"
   script_name = cloudflare_worker_script.proxy_script.name
 }

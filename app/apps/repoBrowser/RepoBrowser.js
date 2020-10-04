@@ -102,7 +102,7 @@ export class RepoBrowser extends Task
 
 			console.log(body);
 
-			return fetch('https://nynex.unholysh.it' + url, {method, headers, body})
+			return fetch('https://nynex.seanmorr.is' + url, {method, headers, body})
 				.then(response => response.json())
 				.then(json => {
 					console.log(json.content);
@@ -146,10 +146,10 @@ export class RepoBrowser extends Task
 		}
 
 		const gitHubToken = GitHub.getToken();
-		const reposUrl    = 'https://nynex.unholysh.it/github-proxy/user/repos'
+		const reposUrl    = 'https://nynex.seanmorr.is/github-proxy/user/repos'
 		const headers     = {};
 
-		this.endpoint = 'https://nynex.unholysh.it/github-proxy/';
+		this.endpoint = 'https://nynex.seanmorr.is/github-proxy/';
 		this.endpointRepos = `${this.endpoint}repos`
 
 		this.startingRepo = `${this.username || 'seanmorris'}/${this.reponame || 'nynex95'}`;
@@ -378,9 +378,14 @@ export class RepoBrowser extends Task
 				headers.Authorization = `token ${gitHubToken.access_token}`;
 			}
 
-			const fileUrl = this.window.args.repoUrl+ '/contents/' + this.filepath;
+			const fileUrl = this.window.args.repoUrl
+				+ '/contents/'
+				+ this.filepath;
 
 			fetch(fileUrl, {headers}).then(r=>r.json()).then(file=>{
+
+				console.log(file);
+
 				const type = file.name.split('.').pop();
 
 				const renderable = (type === 'md' || type === 'html');

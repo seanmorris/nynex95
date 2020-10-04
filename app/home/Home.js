@@ -67,26 +67,40 @@ export class Home extends View
 
 		this.args.windows  = this.windows.list;
 		this.args.taskBar  = taskBar;
+
+		this.args.hideOutline = 'hide';
+
 		// this.args.tasks    = this.tasks.list;
 		// this.args.tray     = this.tray.list;
 
-
 		this.routes = {
 
-			'': ()=> Router.go('/repo-browser/seanmorris/nynex95/content/hello-world.md?win=max:true')
+			'': () => Router.go('/repo-browser/seanmorris/nynex95/content/hello-world.md')
 
 			, '*': (args) => {
-				const taskName = args.pathparts.shift();
-				const taskPath = args.pathparts.slice();
+				const taskName = args.pathparts.shift() || 'repo-browser';
+				const taskPath = args.pathparts.slice() || 'seanmorris/nynex95/content/hello-world.md'.split('/');
 
 				if(taskName)
 				{
-					this.run(taskName, taskPath);
+					this.startTask = this.run(taskName, taskPath);
 				}
 
 			}
-
 		};
+
+		this.args.outlineTop    = 0;
+		this.args.outlineLeft   = 0;
+		this.args.outlineWidth  = 0;
+		this.args.outlineHeight = 0;
+	}
+
+	attached()
+	{
+		if(this.startTask)
+		{
+			this.onTimeout(1500, () => this.startTask.window.maximize());
+		}
 	}
 
 	run(taskName, taskPath)
@@ -114,5 +128,25 @@ export class Home extends View
 		this.onTimeout(250, () => {
 			task.signal(new CustomEvent('start'))
 		});
+
+		return task;
+	}
+
+	showOutline()
+	{
+		this.args.hideOutline = '';
+	}
+
+	moveOutline(l, t, w, h)
+	{
+		this.args.outlineTop    = t;
+		this.args.outlineLeft   = l;
+		this.args.outlineWidth  = w;
+		this.args.outlineHeight = h;
+	}
+
+	hideOutline()
+	{
+		this.args.hideOutline = 'hide';
 	}
 }

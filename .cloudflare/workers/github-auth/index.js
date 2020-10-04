@@ -14,7 +14,7 @@ async function handleRequest(request)
 		Object.entries({
 			client_id:       GHAPI_CLIENT_ID
 			, client_secret: GHAPI_CLIENT_SECRET
-			, redirect_uri:  'https://nynex.unholysh.it/github-auth/accept'
+			, redirect_uri:  'https://nynex.seanmorr.is/github-auth/accept'
 			, code:          GET.get('code')
 			, state:         '---'
 		}).map(
@@ -29,7 +29,7 @@ async function handleRequest(request)
 			const returnHtml =
 `<script>
 	opener.postMessage('${apiResponse}', 'http://localhost:3333');
-	opener.postMessage('${apiResponse}', 'https://nynex.unholysh.it');
+	opener.postMessage('${apiResponse}', 'https://nynex.seanmorr.is');
 </script>`
 			return new Response(returnHtml, {
 				headers: new Headers({'content-type': 'text/html'})

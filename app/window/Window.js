@@ -4,6 +4,8 @@ import { Bindable } from 'curvature/base/Bindable';
 import { MenuBar  } from './MenuBar';
 import { TitleBar } from './TitleBar';
 
+import { Home } from '../home/Home';
+
 import { Target        } from '../mixin/Target';
 import { CssSwitch     } from '../mixin/CssSwitch';
 import { ViewProcessor } from '../mixin/ViewProcessor';
@@ -186,44 +188,85 @@ let Base = class extends View
 
 	restore()
 	{
-		const canceled = this.dispatchEvent(new CustomEvent(
-			'restoring', {detail:{ target:this }}
-		));
+		const home = Home.instance();
 
-		if(canceled)
-		{
-			return;
-		}
+		home.showOutline();
 
-		this.classes.minimized = false;
-		this.classes.maximized = false;
+		home.moveOutline(
+			`${this.pos.x}px`
+			, `${this.pos.y}px`
+			, this.tags.window
+				? (this.tags.window.element.style.width  || `${this.args.width}`)
+				: `${this.args.width}`
+			, this.tags.window
+				? (this.tags.window.element.style.height || `${this.args.height}`)
+				: `${this.args.height}`
+		);
 
-		this.dispatchEvent(new CustomEvent(
-			'restored', {detail:{ target:this }}
-		));
+		this.onTimeout(250, ()=>{
+			const canceled = this.dispatchEvent(new CustomEvent(
+				'restoring', {detail:{ target:this }}
+			));
 
-		this.pause(false);
+			if(canceled)
+			{
+				return;
+			}
+
+			this.classes.minimized = false;
+			this.classes.maximized = false;
+
+			this.onTimeout(250, ()=>home.hideOutline());
+
+			this.dispatchEvent(new CustomEvent(
+				'restored', {detail:{ target:this }}
+			));
+
+			this.pause(false);
+		});
 	}
 
 	maximize()
 	{
-		const canceled = this.dispatchEvent(new CustomEvent(
-			'maximizing', {detail:{ target:this }}
-		));
+		const home = Home.instance();
 
-		if(canceled)
-		{
-			return;
-		}
+		home.moveOutline(
+			`${this.pos.x}px`
+			, `${this.pos.y}px`
+			, this.tags.window
+				? (this.tags.window.element.style.width  || `${this.args.width}`)
+				: `${this.args.width}`
+			, this.tags.window
+				? (this.tags.window.element.style.height || `${this.args.height}`)
+				: `${this.args.height}`
+		);
 
-		this.classes.minimized = false;
-		this.classes.maximized = true;
+		this.onTimeout(0, () => home.showOutline());
 
-		this.dispatchEvent(new CustomEvent(
-			'maximized', {detail:{ target:this }}
-		));
+		home.moveOutline(0,0,'100%','100%');
 
-		this.pause(false);
+		this.onTimeout(250, () => {
+
+			home.hideOutline();
+
+			const canceled = this.dispatchEvent(new CustomEvent(
+				'maximizing', {detail:{ target:this }}
+			));
+
+			if(canceled)
+			{
+				return;
+			}
+
+			this.classes.minimized = false;
+			this.classes.maximized = true;
+
+			this.dispatchEvent(new CustomEvent(
+				'maximized', {detail:{ target:this }}
+			));
+
+			this.pause(false);
+		});
 	}
 
 	close()
@@ -271,6 +314,19 @@ let Base = class extends View
 				: '';
 
 			Router.go(`/${this.args.cmd}${path}`, 2);
+
+			const home = Home.instance();
+
+			home.moveOutline(
+				`${this.pos.x}px`
+				, `${this.pos.y}px`
+				, this.tags.window
+					? (this.tags.window.element.style.width  || `${this.args.width}`)
+					: `${this.args.width}`
+				, this.tags.window
+					? (this.tags.window.element.style.height || `${this.args.height}`)
+					: `${this.args.height}`
+			);
 		}
 
 		const prevZ = this.pos.z;
@@ -386,8 +442,6 @@ let Base = class extends View
 
 			child.style.maxHeight = `${child.clientHeight}px`;
 		});
-
-		//
 
 		while(before.nodeType !== Node.ELEMENT_NODE && before.previousSibling)
 		{
