@@ -151,6 +151,11 @@ html, body, input, button, select {
 	margin: 2px !important;
 }
 
+img.inset {
+	object-fit: contain;
+	object-position: top center;
+}
+
 .inset:not(.scroll){
 	overflow: hidden;
 }
@@ -224,9 +229,9 @@ button.tight {
 	min-width: 36px;
 }
 
-.rows > *,
-.cols > *{
-	/*overflow:hidden;*/
+.hide-term .rows > *,
+.hide-term .cols > *{
+	overflow:hidden;
 }
 
 button:active {

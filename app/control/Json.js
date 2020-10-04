@@ -14,7 +14,7 @@ let Base = class extends View
 		this.args.openBracket  = '{';
 		this.args.closeBracket = '}';
 
-		this.args.expanded   = args.expanded === undefined
+		this.args.expanded = args.expanded === undefined
 			? 'expanded'
 			: '';
 
@@ -24,10 +24,18 @@ let Base = class extends View
 
 		this.args.tree = this.args.tree || {};
 		this.args.json = this.args.json || {};
-	}
 
-	attached()
-	{
+		this.args.bindTo('content', v => {
+			try
+			{
+				this.args.tree = v ? JSON.parse(v) : null;
+			}
+			catch(error)
+			{
+				this.args.tree = null;
+			}
+		});
+
 		this.args.bindTo('tree', v => {
 
 			if(!v)
@@ -41,19 +49,28 @@ let Base = class extends View
 				this.args.closeBracket = ']';
 			}
 
+			this.args.json = {};
+
+			let ii = 0;
+
 			for(const i in v)
 			{
-				if(typeof v[i] === 'object')
-				{
-					this.args.json[i] = new Json({expanded: ''}, this);
-				}
-				else
-				{
-					this.args.json[i] = v[i];
-				}
+				this.onTimeout(35 * ii, ()=>{
+					if(typeof v[i] === 'object')
+					{
+						this.args.json[i] = new Json({expanded: ''}, this);
+					}
+					else
+					{
+						this.args.json[i] = v[i];
+					}
+				});
 			}
 		});
+	}
 
+	attached()
+	{
 		if(!this.parent || !(this.parent instanceof Json))
 		{
 			this.args.topLevel = 'top-level main-content';

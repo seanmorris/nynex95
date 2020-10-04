@@ -54,7 +54,7 @@ export class Home extends View
 			this.open.x %= Math.floor(window.innerWidth / 2);
 			this.open.y %= Math.floor(window.innerHeight / 2);
 
-			console.log(this.open.x, this.open.y);
+			// console.log(this.open.x, this.open.y);
 		});
 
 		// this.windows.type = Window;

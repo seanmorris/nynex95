@@ -18,8 +18,6 @@ import 'brace/theme/monokai';
 
 import { Console as Terminal } from 'subspace-console/Console';
 
-console.log(ace);
-
 const Range = ace.acequire('ace/range').Range;
 
 export class PhpEditor extends Task

@@ -55,7 +55,6 @@ export class Folder extends View
 
 			if(!Array.isArray(files))
 			{
-				return;
 			}
 
 			if(this.args.file)
@@ -71,39 +70,41 @@ export class Folder extends View
 
 			const iconList = new IconControl({}, this);
 
-			const icons = files.map((file, key) => {
-				const name = file.name;
-				const action = () => {
+			if(files)
+			{
+				const icons = files.map((file, key) => {
+					const name = file.name;
+					const action = () => {
 
-					if(file.type === 'dir')
-					{
-						if(this.files[name])
+						if(file.type === 'dir')
 						{
-							this.files[name].expand(event, child, this, true);
-							this.files[name].select();
-
-
-							return;
+							if(this.files[name])
+							{
+								this.files[name].expand(event, child, this, true);
+								this.files[name].select();
+								return;
+							}
 						}
-					}
-					else if(file.download_url)
-					{
-						this.showControl(file, this);
-					}
+						else if(file.download_url)
+						{
+							this.showControl(file, this);
+						}
 
-				};
+					};
 
-				const icon = new Icon({icon:file.type === 'dir' ? 4:60, name, action});
+					const icon = new Icon({icon:file.type === 'dir' ? 4:60, name, action});
 
-				this.onTimeout(key * 20, () => {
-					iconList.args.icons.push(icon);
+					this.onTimeout(key * 20, () => {
+						iconList.args.icons.push(icon);
+					});
+
+					return icon;
 				});
+			}
 
-				return icon;
-			});
 
 			this.args.browser.window.args.filename = this.args.name;
-			this.args.browser.window.args.control = iconList;
+			this.args.browser.window.args.control  = iconList;
 		});
 	}
 
@@ -113,6 +114,8 @@ export class Folder extends View
 		{
 			return this.expanding;
 		}
+
+		this.args.browser.window.args.file = this.args.file;
 
 		this.expanding = new Promise((accept) => {
 
@@ -165,9 +168,12 @@ export class Folder extends View
 		const name = file.name;
 		const type = name.split('.').pop();
 
-		this.args.browser.window.args.filename = '';
-		this.args.browser.window.args.content  = 'loading...';
-		this.args.browser.window.args.url      = '';
+		if(file.type === 'file')
+		{
+			this.args.browser.window.args.content  = '';
+			this.args.browser.window.args.url      = '';
+			this.args.browser.window.args.filename = '';
+		}
 
 		const gitHubToken = GitHub.getToken();
 
@@ -176,8 +182,6 @@ export class Folder extends View
 		const renderable = (type === 'md' || type === 'html');
 
 		headers.Accept = 'application/vnd.github.v3.raw';
-
-		console.log(gitHubToken);
 
 		if(gitHubToken && gitHubToken.access_token)
 		{
@@ -188,27 +192,30 @@ export class Folder extends View
 			? file.url
 			: file.download_url;
 
-		console.log(file.url, file.download_url);
-
 		if(file.path)
 		{
-			console.log(file.path);
 			const path = `/${this.args.browser.repoName}/${file.path}`;
 			Router.go(`/${this.args.browser.cmd}${path}`, 2);
 		}
 
-		this.args.browser.window.args.content = '';
-
 		this.args.browser.window.args.url = url;
 		this.args.browser.window.args.sha = file.sha;
-		this.args.browser.window.args.content  = '';
-		this.args.browser.window.args.filename = file.name;
 
-		fetch(url, {headers}).then(r => r.text()).then(body => {
-			this.args.browser.window.args.content  = body;
+		if(file.content)
+		{
+			this.args.browser.window.args.content  = decodeURIComponent(escape(atob(file.content)));
 			this.args.browser.window.args.filename = file.name;
-			this.args.browser.parent               = dir;
-		});
+		}
+		else
+		{
+			fetch(url, {headers}).then(r => r.text()).then(body => {
+				this.args.browser.window.args.content  = body;
+				this.args.browser.window.args.filename = file.name;
+				this.args.browser.parent               = dir;
+			});
+		}
+
+
 	}
 
 	populate(url)
@@ -232,6 +239,7 @@ export class Folder extends View
 		this.args.files = [];
 
 		return this.populating = fetch(url, {headers}).then(r => r.json()).then(files => {
+
 			if(Array.isArray(files))
 			{
 				this.dir = true;
@@ -278,6 +286,10 @@ export class Folder extends View
 				return new Promise(accept => {
 					this.onTimeout(files.length*20, () => accept(files));
 				});
+			}
+			else
+			{
+				this.args.browser.window.args.download = files.download_url;
 			}
 
 

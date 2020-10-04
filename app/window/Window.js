@@ -16,8 +16,8 @@ let Base = class extends View
 {
 	static idInc = 0;
 
-	outlineSpeed = 400;
-	outlineDelay = 200;
+	outlineSpeed = 350;
+	outlineDelay = 350;
 
 	constructor(args = {})
 	{
@@ -170,8 +170,91 @@ let Base = class extends View
 
 	minimize()
 	{
+		const home = Home.instance();
+
+		if(this.classes.maximized)
+		{
+			home.moveOutline(0, 0, '100%', '100%', true);
+		}
+		else
+		{
+			home.moveOutline(
+				`${this.pos.x}px`
+				, `${this.pos.y}px`
+				, this.tags.window
+					? (this.tags.window.element.style.width  || `${this.args.width}`)
+					: `${this.args.width}`
+				, this.tags.window
+					? (this.tags.window.element.style.height || `${this.args.height}`)
+					: `${this.args.height}`
+				, true
+			);
+		}
+
+		this.pause(true);
+
+		home.showOutline();
+
+		this.onTimeout(this.outlineDelay, ()=>{
+
+			const taskRect = this.args.taskButton.getBoundingClientRect();
+
+			home.moveOutline(
+				taskRect.x + 'px'
+				, taskRect.y + 'px'
+				, taskRect.width + 'px'
+				, taskRect.height + 'px'
+			);
+
+			const canceled = this.dispatchEvent(new CustomEvent(
+				'minimizing', {detail:{ target:this }}
+			));
+
+			if(canceled)
+			{
+				return;
+			}
+
+			this.classes.minimized = true;
+			this.classes.maximized = false;
+
+			this.onTimeout(this.outlineSpeed, ()=>{
+
+				home.hideOutline();
+
+				this.dispatchEvent(new CustomEvent(
+					'minimized', {detail:{ target:this }}
+				));
+			});
+
+		});
+	}
+
+	restore()
+	{
+		const home = Home.instance();
+
+		if(this.classes.maximized)
+		{
+			home.moveOutline(0, 0, '100%', '100%', true);
+		}
+		else if(this.classes.minimized)
+		{
+			const taskRect = this.args.taskButton.getBoundingClientRect();
+
+			home.moveOutline(
+				taskRect.x + 'px'
+				, taskRect.y + 'px'
+				, taskRect.width + 'px'
+				, taskRect.height + 'px'
+			);
+		}
+
+
+		home.showOutline();
+
 		const canceled = this.dispatchEvent(new CustomEvent(
-			'minimizing', {detail:{ target:this }}
+			'restoring', {detail:{ target:this }}
 		));
 
 		if(canceled)
@@ -179,30 +262,7 @@ let Base = class extends View
 			return;
 		}
 
-		this.classes.minimized = true;
-		this.classes.maximized = false;
-
-		this.dispatchEvent(new CustomEvent(
-			'minimized', {detail:{ target:this }}
-		));
-
-		this.pause(true);
-	}
-
-	restore()
-	{
-		const home = Home.instance();
-
-		home.moveOutline(0, 0, '100%', '100%', true);
-
-		home.showOutline();
-
-		this.onTimeout(this.outlineSpeed, ()=>{
-
-			const canceled = this.dispatchEvent(new CustomEvent(
-				'restoring', {detail:{ target:this }}
-			));
-
+		this.onTimeout(this.outlineDelay, ()=>{
 			home.moveOutline(
 				`${this.pos.x}px`
 				, `${this.pos.y}px`
@@ -214,21 +274,13 @@ let Base = class extends View
 					: `${this.args.height}`
 			);
 
-			if(canceled)
-			{
-				return;
-			}
-
 			this.onTimeout(this.outlineSpeed, ()=>{
+				home.hideOutline();
 				this.classes.minimized = false;
 				this.classes.maximized = false;
-
-				this.onTimeout(this.outlineDelay, ()=>home.hideOutline());
-
 				this.dispatchEvent(new CustomEvent(
 					'restored', {detail:{ target:this }}
 				));
-
 				this.pause(false);
 			});
 		});
@@ -257,7 +309,12 @@ let Base = class extends View
 			home.moveOutline(0,0,'100%','100%');
 
 			this.onTimeout(this.outlineSpeed, ()=>{
-				home.hideOutline()
+
+				home.hideOutline();
+
+				this.classes.minimized = false;
+				this.classes.maximized = true;
+
 				const canceled = this.dispatchEvent(new CustomEvent(
 					'maximizing', {detail:{ target:this }}
 				));
@@ -266,9 +323,6 @@ let Base = class extends View
 				{
 					return;
 				}
-
-				this.classes.minimized = false;
-				this.classes.maximized = true;
 
 				this.dispatchEvent(new CustomEvent(
 					'maximized', {detail:{ target:this }}

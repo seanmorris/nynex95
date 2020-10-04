@@ -50,4 +50,9 @@ export class TaskBar extends View
 
 		task.window.maximize();
 	}
+
+	attachTask(event, task)
+	{
+		task.taskButton = event.target;
+	}
 }

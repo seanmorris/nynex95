@@ -5,11 +5,7 @@ import { Home } from '../../home/Home';
 import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
-
-// import { default as SimpleMDE } from "simplemde/src/js/simplemde";
 import { default as SimpleMDE } from "simplemde/dist/simplemde.min";
-
-console.log(SimpleMDE);
 
 export class Nynemark extends Task
 {

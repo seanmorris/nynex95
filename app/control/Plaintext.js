@@ -11,15 +11,11 @@ import 'brace/mode/markdown';
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 
-console.log(ace);
-
 export class Plaintext extends View
 {
 	constructor(args, parent)
 	{
 		super(args, parent);
-
-		console.log(args);
 
 		this.template  = require('./plaintext.tmp');
 	}
@@ -75,9 +71,18 @@ export class Plaintext extends View
 
 			if(!editor.isFocused() && editor.getValue() !== v)
 			{
-				editor.setValue(v);
+				editor.setValue(v || '');
+				editor.clearSelection();
 			}
 		});
 
+		this.editor = editor;
+	}
+
+	resize()
+	{
+		this.onNextFrame(()=>{
+			this.editor && this.editor.resize();
+		});
 	}
 }

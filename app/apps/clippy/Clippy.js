@@ -18,6 +18,9 @@ export class Clippy extends Task
 		this.xFrame = 0;
 		this.yFrame = 0;
 
+		this.window.args.width  = '128px';
+		this.window.args.height = '118px';
+
 		this.window.maximize = () => {};
 		this.window.classes.focused = false;
 

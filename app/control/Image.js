@@ -9,6 +9,8 @@ export class Image extends View
 	{
 		super(args, parent);
 
+		this.args.src = args.src || '';
+
 		this.template  = require('./image.tmp');
 	}
 }

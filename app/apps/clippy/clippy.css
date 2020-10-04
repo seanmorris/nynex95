@@ -1,6 +1,6 @@
 .clippy-win:not(.minimized) .clippy {
 	width:  128px;
-	height: 94px;
+	height: 96px;
 	background-image: url('/clippy-sprite.png');
 	/*background-position: 128px 96px;*/
 }

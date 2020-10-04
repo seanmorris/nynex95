@@ -7,7 +7,7 @@ export class Markdown extends View
 	{
 		super(args, parent);
 
-		this.template  = require('./markdown.tmp');
-		this.args.content = new CvMarkdown({source:args.source});
+		this.template      = require('./markdown.tmp');
+		this.args.rendered = new CvMarkdown({source:args.content});
 	}
 }

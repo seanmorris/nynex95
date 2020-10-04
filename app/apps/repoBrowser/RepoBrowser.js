@@ -29,7 +29,7 @@ export class RepoBrowser extends Task
 
 		this.username = taskPath.shift()   || 'seanmorris';
 		this.reponame = taskPath.shift()   || 'nynex95';
-		this.filepath = taskPath.join('/') || 'README.md';
+		this.filepath = taskPath.join('/');
 
 		this.current = null;
 
@@ -73,8 +73,6 @@ export class RepoBrowser extends Task
 			const content = btoa(unescape(encodeURIComponent(raw)));
 			const sha     = this.window.args.sha;
 
-			console.log(this.window.args.control.args);
-
 			const url = new URL(this.window.args.url).pathname;
 
 			const postChange  = {message, content, sha};
@@ -97,7 +95,6 @@ export class RepoBrowser extends Task
 			return fetch('https://nynex.seanmorr.is' + url, {method, headers, body})
 				.then(response => response.json())
 				.then(json => {
-					console.log(json.content);
 					this.window.args.sha = json.content.sha;
 				});
 		}
@@ -191,6 +188,7 @@ export class RepoBrowser extends Task
 
 			if(!this.filepath)
 			{
+				this.loadFile('README.md');
 				folder.select();
 			}
 			else
@@ -201,11 +199,10 @@ export class RepoBrowser extends Task
 
 		this.window.args.bindTo('filename', v => {
 
-			console.log(v, this.window.args.url);
-
-			const gitHubToken = GitHub.getToken();
-
-			const filetype = (v||'').split('.').pop();
+			if(this.window.args.plain)
+			{
+				this.window.args.plain.remove();
+			}
 
 			if(this.window.args.control)
 			{
@@ -217,142 +214,137 @@ export class RepoBrowser extends Task
 				return;
 			}
 
+			const gitHubToken = GitHub.getToken();
+			const filetype = (v||'').split('.').pop();
+
+			this.print(`Loading file: ${v}`);
+
 			this.window.args.filetype = filetype || '';
 
 			this.window.args.chars = 0;
 
-
 			this.window.args.hasSource = false;
 
-			if(this.contentDebind)
-			{
-				this.contentDebind();
-			}
-
-			this.window.args.plain = new PlaintextControl(
+			this.window.args.plain   = new PlaintextControl(
 				this.window.args, this
 			);
 
 			this.window.args.plain.args.url = this.window.args.url;
 
-			this.contentDebind = this.window.args.bindTo('content', vv => {
+			switch(filetype)
+			{
+				case 'md':
+					this.window.args.viewRaw   = 'view-control-rendered';
 
-				const filetype = String(this.window.args.filename).split('.').pop();
+					this.window.args.hasSource = true;
 
+					this.window.args.control = new MarkdownControl(
+						{content:this.window.args.content}, this
+					);
 
-				this.window.args.filetype = filetype || '';
+					this.window.args.source = v;
 
-				switch(filetype)
-				{
-					case 'md':
-						this.window.args.hasSource = true;
+					break;
 
-						this.window.args.control = new MarkdownControl(
-							{source: vv}
-						);
+				case 'html':
+					this.window.args.viewRaw   = 'view-control-rendered';
 
-						this.window.args.control.args.source = v;
+					this.window.args.hasSource = true;
 
-						break;
+					this.window.args.control = new HtmlControl(
+						{content:this.window.args.content}, this
+					);
 
-					case 'html':
-						this.window.args.hasSource = true;
+					break;
 
-						this.window.args.control = new HtmlControl(
-							{srcdoc: vv}
-							, this
-						);
+				case 'ico':
+				case 'gif':
+				case 'png':
+				case 'jpg':
+				case 'jpeg':
+				case 'webp':
 
-						break;
+					this.window.args.viewRaw = 'view-control-rendered';
 
-					case 'ico':
-					case 'gif':
-					case 'png':
-					case 'jpg':
-					case 'jpeg':
-					case 'webp':
-						this.window.args.viewRaw = 'view-control-rendered';
-						this.window.args.control = new ImageControl(
-							{src:this.window.args.url}
-							, this
-						);
-						break;
+					this.window.args.control = new ImageControl(
+						{src:this.window.args.download}
+						, this
+					);
+					break;
 
-					case 'json':
-						this.window.args.hasSource = true;
+				case 'json':
+					this.window.args.hasSource = true;
 
-						console.log(this.window.args.filename, vv);
+					this.window.args.expanded = true;
+					this.window.args.control = new JsonControl(
+						{
+							expanded:  true
+							, content: this.window.args.content
+						}, this
+					);
 
-						this.window.args.control = new JsonControl(
-							{
-								expanded: 'expanded'
-								, tree: vv
-									? JSON.parse(vv)
-									: []
-							}
-							, this
-						);
-						break;
+					break;
 
-					default:
-						this.window.args.control = new PlaintextControl(
-							{
-								filetype
-								, sha: this.window.args.sha
-								, url: this.window.args.url
-								, content: vv
-							}
-							, this
-						);
-						break;
-				}
-
-			}, {wait: 16});
-
+				default:
+					this.window.args.viewRaw = 'view-control-plain';
+					this.window.args.control = new PlaintextControl(
+						{content:this.window.args.content}, this
+					);
+					break;
+			}
 
 			this.window.args.chars = (this.window.args.content||'').length;
 		});
 
+		this.window.args.bindTo('content', v => {
+			if(this.window.args.control)
+			{
+				this.window.args.control.args.content = v;
+			}
+			if(this.window.args.plain)
+			{
+				this.window.args.plain.args.content = v;
+			}
+		});
+
+		this.window.addEventListener('maximized', (event) => {
+			if(this.window.args.control && this.window.args.control.resize)
+			{
+				this.window.args.control.resize();
+			}
+			if(this.window.args.plain && this.window.args.plain.resize)
+			{
+				this.window.args.plain.resize();
+			}
+		});
+
+		this.window.addEventListener('minimized', (event) => {
+			if(this.window.args.control && this.window.args.control.resize)
+			{
+				this.window.args.control.resize();
+			}
+			if(this.window.args.plain && this.window.args.plain.resize)
+			{
+				this.window.args.plain.resize();
+			}
+		});
+
+		this.window.addEventListener('restored', (event) => {
+			if(this.window.args.control && this.window.args.control.resize)
+			{
+				this.window.args.control.resize();
+				return
+			}
+			if(this.window.args.plain && this.window.args.plain.resize)
+			{
+				this.window.args.plain.resize();
+			}
+		});
+
+
 		if(this.filepath)
 		{
-			const headers = {
-				Accept: 'application/vnd.github.v3.json'
-			};
-
-			const gitHubToken = GitHub.getToken();
-			if(gitHubToken && gitHubToken.access_token)
-			{
-				headers.Authorization = `token ${gitHubToken.access_token}`;
-			}
-
-			const fileUrl = this.window.args.repoUrl
-				+ '/contents/'
-				+ this.filepath;
-
-			fetch(fileUrl, {headers}).then(r=>r.json()).then(file=>{
-
-				console.log(file);
-
-				const type = file.name.split('.').pop();
-
-				const renderable = (type === 'md' || type === 'html');
-
-				const url = file.download_url
-					? file.download_url
-					: file.url;
-
-				this.window.args.url      = file.url;
-				this.window.args.sha      = file.sha;
-				this.window.args.content  = '';
-				this.window.args.filename = file.name;
-
-				headers['Accept'] = 'application/vnd.github.v3.raw';
-
-				fetch(fileUrl, {headers}).then(r=>r.text()).then(body=>{
-					this.window.args.content  = body;
-					this.window.args.filename = file.name;
-				});
-			});
+			this.loadFile(this.filepath);
 		}
 	}
 
@@ -364,15 +356,70 @@ export class RepoBrowser extends Task
 		}
 	}
 
+	loadFile(filepath)
+	{
+		const headers = {
+			Accept: 'application/vnd.github.v3.json'
+		};
+
+		const gitHubToken = GitHub.getToken();
+		if(gitHubToken && gitHubToken.access_token)
+		{
+			headers.Authorization = `token ${gitHubToken.access_token}`;
+		}
+
+		const fileUrl = this.window.args.repoUrl
+			+ '/contents/'
+			+ filepath;
+
+		fetch(fileUrl, {headers}).then(r=>r.json()).then(file=>{
+
+			if(!file || !file.name)
+			{
+				this.window.args.url      = '';
+				this.window.args.sha      = '';
+				this.window.args.content  = '';
+				this.window.args.filename = '';
+				return;
+			}
+
+			const type = file.name.split('.').pop();
+
+			const renderable = (type === 'md' || type === 'html');
+
+			const url = file.download_url
+				? file.download_url
+				: file.url;
+
+			this.window.args.url      = file.url;
+			this.window.args.download = url;
+			this.window.args.sha      = file.sha;
+
+			if(file.content)
+			{
+				try
+				{
+					this.window.args.content = decodeURIComponent(escape(atob(file.content)));
+				}
+				catch(error)
+				{
+					console.warn(error);
+				}
+			}
+
+			this.window.args.filename = file.name;
+		});
+	}
+
 	loadRepos(page = 0)
 	{
 		const gitHubToken = GitHub.getToken();
 
 		this.print(`Scanning repos.`);
 
-		this.window.args.repos = false;
+		this.window.args.repos = this.window.args.repos || false;
 
-		const reposUrl = `https://nynex.seanmorr.is/github-proxy/user/repos?per_page=100&page=${parseInt(page)}`
+		const reposUrl = `https://nynex.seanmorr.is/github-proxy/user/repos?per_page=100&page=${1+parseInt(page)}`
 		const headers  = {};
 
 		if(gitHubToken && gitHubToken.access_token)
@@ -384,7 +431,7 @@ export class RepoBrowser extends Task
 
 			this.print(`Scanning complete.`);
 
-			if(!repos)
+			if(!repos || !repos.length)
 			{
 				return;
 			}
@@ -407,7 +454,7 @@ export class RepoBrowser extends Task
 				}));
 			});
 
-			if(repos)
+			if(repos && repos.length)
 			{
 				this.loadRepos(page + 1);
 			}
