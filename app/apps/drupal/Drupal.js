@@ -19,7 +19,7 @@ export class Drupal extends Task
 
 		this.init = Date.now();
 
-		this.php = new PHP;
+		this.php = new PHP({locateFile: (x) => `/${x}`});
 
 		this.window.classes.loading = true;
 

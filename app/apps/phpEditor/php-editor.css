@@ -37,6 +37,11 @@
 	min-height: initial;
 }
 
+.phpEditor iframe {
+	flex-grow: 1;
+	border: none;
+}
+
 .phpEditor .ace_editor {
 	margin: 0px;
 	padding: 1em 0px;

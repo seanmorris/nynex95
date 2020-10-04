@@ -14,7 +14,7 @@ export class PhpTask extends Task
 	init()
 	{
 		const Php = require('php-wasm/PhpWeb').PhpWeb;
-		const php = new Php();
+		const php = new Php({locateFile: (x) => `/${x}`});
 
 		this.php = php;
 
@@ -26,7 +26,7 @@ export class PhpTask extends Task
 				return;
 			}
 
-			console.log(Number(output), output,Number(output) != output);
+			// console.log(Number(output), output,Number(output) != output);
 
 			if(Number(output) != output)
 			{

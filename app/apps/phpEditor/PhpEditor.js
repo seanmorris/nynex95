@@ -46,6 +46,8 @@ export class PhpEditor extends Task
 		this.outputConsole = new Terminal;
 		this.errorConsole  = new Terminal;
 
+		this.window.args.exitCode = 'NUL';
+
 		this.inputConsole.runCommand('php');
 		this.inputConsole.runCommand('/clear');
 
@@ -79,7 +81,7 @@ export class PhpEditor extends Task
 	global $count;
 
 	fwrite($stdout, sprintf(
-		"Ran %d time%s!\\n"
+		"Ran %d time%s!<br />\\n"
 		, ++$count
 		, $count==1?'':'s'
 	));
@@ -91,8 +93,7 @@ export class PhpEditor extends Task
 })();`;
 
 		const Php = require('php-wasm/PhpWeb').PhpWeb;
-
-		const php = new Php();
+		const php = new Php({locateFile: (x) => `/${x}`});
 
 		php.addEventListener('ready', () => {
 			this.window.classes.loading = false;
@@ -141,14 +142,15 @@ export class PhpEditor extends Task
 				.replace(/^<\?php/,'')
 				.replace(/;$/,'');
 
-			php.exec(code).then(exitCode => {
+			php.exec(code).then(retVal => {
 
-				this.returnConsole.args.output.push(exitCode);
+				this.returnConsole.args.output.push(retVal);
 
-				this.window.args.exitCode = exitCode;
 				// php.refresh();
 
 			});
+
+			// this.window.args.exitCode = exitCode;
 		};
 
 		this.window.ruleSet.add('textarea[data-php]', ({element}) => {
@@ -167,7 +169,6 @@ export class PhpEditor extends Task
 			}
 
 			editor.setTheme('ace/theme/monokai');
-
 			editor.session.setMode('ace/mode/php');
 
 			// editor.session.setMode('ace/mode/markdown', () => {

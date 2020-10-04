@@ -28,23 +28,27 @@
 				&nbsp;
 			</span>
 
-
 			<button cv-on = "click:refresh(event)" class = "square" title = "refresh">
 				<span cv-if = "persist" class = "contents">
-					<img src = "arrow-circle.png" />
+					<img src = "/arrow-circle.png" />
 				</span>
 				<span cv-if = "!persist" class = "contents">
-					<img src = "arrow-circle.png" class = "desat" />
+					<img src = "/arrow-circle.png" class = "desat" />
 				</span>
 			</button>
 
 			<button cv-on = "click:toggle('persist')" class = "square" title = "toggle persistent memory">
-				<img src = "/w98/memory-16-4bit.png" />
+				<span cv-if = "persist" class = "contents">
+					<img src = "/w98/memory-16-4bit.png" />
+				</span>
+				<span cv-if = "!persist" class = "contents">
+					<img src = "/w98/memory-16-4bit.png" class = "desat" />
+				</span>
 			</button>
 
-			<button class = "square"  title = "help">
+			<!-- <button class = "square"  title = "help">
 				<img class = "icon16" src = "/w98/help_book_small-16-4bit.png" />
-			</button>
+			</button> -->
 
 		</div>
 
@@ -64,7 +68,7 @@
 			</div>
 
 			<div class = "wide scroll zfront">
-				<textarea data-php rows = "14" spellcheck="false" cv-bind = "input"></textarea>
+				<textarea name = "php-source" data-php rows = "14" spellcheck="false" cv-bind = "input"></textarea>
 			</div>
 		</div>
 
@@ -78,8 +82,7 @@
 		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
 				<label class = "pane wide">Return</label>
-				<button class = "pane tight">HTML</button>
-				<button class = "pane tight">Text</button>
+				<!-- <label class = "pane">exit: [[exitCode]]</label> -->
 			</div>
 			[[returnConsole]]
 		</div>
@@ -89,11 +92,18 @@
 		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
 				<label class = "pane wide">StdOut</label>
-				<!-- <label class = "pane">exit</label>
-				<label class = "tight">[[exitCode]]</label> -->
+				<button cv-on = "click:toggle('html')" class = "pane tight">
+					<span cv-if = "!html">HTML</span>
+					<span cv-if = "!html">Text</span>
+					Text
+				</button>
 			</div>
-			[[htmlFrame]]
-			[[outputConsole]]
+			<span class = "contents" cv-if = "html">
+				[[htmlFrame]]
+			</span>
+			<span class = "contents" cv-if = "!html">
+				[[outputConsole]]
+			</span>
 		</div>
 
 		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>

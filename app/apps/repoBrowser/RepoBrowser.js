@@ -188,12 +188,12 @@ export class RepoBrowser extends Task
 
 			if(!this.filepath)
 			{
-				this.loadFile('README.md');
-				folder.select();
+				this.window.onNextFrame(()=>this.loadFile('README.md'));
+				folder.expand();
 			}
 			else
 			{
-				folder.expand();
+				folder.select();
 			}
 		});
 
@@ -202,11 +202,13 @@ export class RepoBrowser extends Task
 			if(this.window.args.plain)
 			{
 				this.window.args.plain.remove();
+				this.window.args.plain = '';
 			}
 
 			if(this.window.args.control)
 			{
 				this.window.args.control.remove();
+				this.window.args.control = '';
 			}
 
 			if(!v)
@@ -239,10 +241,8 @@ export class RepoBrowser extends Task
 					this.window.args.hasSource = true;
 
 					this.window.args.control = new MarkdownControl(
-						{content:this.window.args.content}, this
+						{content:''}, this
 					);
-
-					this.window.args.source = v;
 
 					break;
 
@@ -252,7 +252,7 @@ export class RepoBrowser extends Task
 					this.window.args.hasSource = true;
 
 					this.window.args.control = new HtmlControl(
-						{content:this.window.args.content}, this
+						{content:''}, this
 					);
 
 					break;
@@ -279,7 +279,7 @@ export class RepoBrowser extends Task
 					this.window.args.control = new JsonControl(
 						{
 							expanded:  true
-							, content: this.window.args.content
+							, content: ''
 						}, this
 					);
 
@@ -288,10 +288,12 @@ export class RepoBrowser extends Task
 				default:
 					this.window.args.viewRaw = 'view-control-plain';
 					this.window.args.control = new PlaintextControl(
-						{content:this.window.args.content}, this
+						{content:''}, this
 					);
 					break;
 			}
+
+			this.window.args.control.args.content = this.window.args.content || '';
 
 			this.window.args.chars = (this.window.args.content||'').length;
 		});

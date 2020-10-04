@@ -55,6 +55,7 @@ export class Folder extends View
 
 			if(!Array.isArray(files))
 			{
+				return;
 			}
 
 			if(this.args.file)
@@ -105,6 +106,7 @@ export class Folder extends View
 
 			this.args.browser.window.args.filename = this.args.name;
 			this.args.browser.window.args.control  = iconList;
+			this.args.browser.window.args.viewRaw  = 'view-control-rendered';
 		});
 	}
 

@@ -8,6 +8,9 @@ export class Markdown extends View
 		super(args, parent);
 
 		this.template      = require('./markdown.tmp');
-		this.args.rendered = new CvMarkdown({source:args.content});
+		this.args.rendered = 'loading';
+		this.args.bindTo('content', v => {
+			this.args.rendered = new CvMarkdown({source:v});
+		});
 	}
 }
