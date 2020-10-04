@@ -30,11 +30,15 @@
 	z-index: 999999;
 	pointer-events: none;
 	transition:
-		0.20s ease-out top
-		, 0.20s ease-out left
-		, 0.20s ease-out width
-		, 0.20s ease-out height
-		, 0.05s ease-out opacity;
+		  0.10s 0.20s ease-in top
+		, 0.10s 0.20s ease-in left
+		, 0.10s 0.20s ease-in width
+		, 0.10s 0.20s ease-in height
+		, 0.20s 0.00s ease-in opacity;
+}
+
+.shiny-outline.teleport {
+	transition: initial;
 }
 
 .shiny-outline.hide {

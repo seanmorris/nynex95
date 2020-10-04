@@ -137,12 +137,28 @@ export class Home extends View
 		this.args.hideOutline = '';
 	}
 
-	moveOutline(l, t, w, h)
+	moveOutline(l, t, w, h, now = false)
 	{
-		this.args.outlineTop    = t;
-		this.args.outlineLeft   = l;
-		this.args.outlineWidth  = w;
-		this.args.outlineHeight = h;
+
+
+		requestAnimationFrame(()=>{
+			const orig = this.args.hideOutline;
+			if(now)
+			{
+				this.args.hideOutline = 'hide teleport';
+			}
+			this.args.outlineTop    = t;
+			this.args.outlineLeft   = l;
+			this.args.outlineWidth  = w;
+			this.args.outlineHeight = h;
+			requestAnimationFrame(()=>{
+				if(now)
+				{
+					this.args.hideOutline = orig;
+				}
+			});
+		});
+
 	}
 
 	hideOutline()
