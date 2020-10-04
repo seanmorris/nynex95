@@ -8,7 +8,9 @@ addEventListener('fetch', event => {
 
 async function handleRequest(request) {
 	const originalUrl = new URL(request.url);
-	const githubUrl   = 'https://api.github.com' + originalUrl.pathname.replace(/^\/github-proxy/, '');
+	const githubUrl   = 'https://api.github.com'
+		+ originalUrl.pathname.replace(/^\/github-proxy/, '')
+		+ originalUrl.search;
 
 	const headers = new Headers();
 	const method  = request.method;

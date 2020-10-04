@@ -99,7 +99,7 @@ export class Home extends View
 	{
 		if(this.startTask)
 		{
-			this.onTimeout(1500, () => this.startTask.window.maximize());
+			this.onTimeout(150, () => this.startTask.window.maximize());
 		}
 	}
 

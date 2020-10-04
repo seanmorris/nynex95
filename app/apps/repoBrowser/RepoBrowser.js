@@ -27,11 +27,9 @@ export class RepoBrowser extends Task
 	{
 		super(taskList, taskCmd, taskPath);
 
-		console.log(taskPath);
-
-		this.username = taskPath.shift() || 'seanmorris';
-		this.reponame = taskPath.shift() || 'nynex95';
-		this.filepath = taskPath.join('/');
+		this.username = taskPath.shift()   || 'seanmorris';
+		this.reponame = taskPath.shift()   || 'nynex95';
+		this.filepath = taskPath.join('/') || 'README.md';
 
 		this.current = null;
 
@@ -50,12 +48,10 @@ export class RepoBrowser extends Task
 
 		this.window.selectParent = (event) => {
 
-			console.log(this.parent);
-
-			// if(!this.parent || !(this.parent instanceof Folder))
-			// {
-			// 	return;
-			// }
+			if(!this.parent)
+			{
+				return;
+			}
 
 			this.parent.select();
 
@@ -72,9 +68,6 @@ export class RepoBrowser extends Task
 
 			const raw = this.window.args.plain.args.content
 
-			console.log(raw);
-
-			// const branch  = 'nynex-changes';
 			const branch  = 'master';
 			const message = 'Nynex self-edit.';
 			const content = btoa(unescape(encodeURIComponent(raw)));
@@ -82,25 +75,24 @@ export class RepoBrowser extends Task
 
 			console.log(this.window.args.control.args);
 
-			const url     = new URL(this.window.args.url).pathname;
+			const url = new URL(this.window.args.url).pathname;
 
 			const postChange  = {message, content, sha};
 
 			const headers = {
 				'Content-Type': 'application/json'
-				, accept:       'application/vnd.github.v3.json'
+				, Accept:       'application/vnd.github.v3.json'
 			};
 
 			const gitHubToken = GitHub.getToken();
+
 			if(gitHubToken && gitHubToken.access_token)
 			{
-				headers.authorization = `token ${gitHubToken.access_token}`;
+				headers.Authorization = `token ${gitHubToken.access_token}`;
 			}
 
 			const method = 'PUT';
-			const body   = JSON.stringify(postChange)
-
-			console.log(body);
+			const body   = JSON.stringify(postChange);
 
 			return fetch('https://nynex.seanmorr.is' + url, {method, headers, body})
 				.then(response => response.json())
@@ -112,8 +104,6 @@ export class RepoBrowser extends Task
 
 		this.window.toggleSection = (section) => {
 
-			console.log(section,this.window.classes);
-
 			const clas = 'hide-' + section;
 
 			this.window.classes[clas] = !!!this.window.classes[clas];
@@ -121,10 +111,6 @@ export class RepoBrowser extends Task
 			const center   = this.window.findTag('[data-center-col]');
 			const control  = this.window.findTag('[data-control-sector]')
 			const terminal = this.window.findTag('[data-terminal-sector]');
-
-			console.log(center);
-			console.log(control);
-			console.log(terminal);
 
 			if(center)
 			{
@@ -145,67 +131,28 @@ export class RepoBrowser extends Task
 			}
 		}
 
-		const gitHubToken = GitHub.getToken();
-		const reposUrl    = 'https://nynex.seanmorr.is/github-proxy/user/repos'
-		const headers     = {};
-
-		this.endpoint = 'https://nynex.seanmorr.is/github-proxy/';
-		this.endpointRepos = `${this.endpoint}repos`
-
-		this.startingRepo = `${this.username || 'seanmorris'}/${this.reponame || 'nynex95'}`;
-
-		this.window.args.repoUrl = `${this.endpointRepos}/${this.startingRepo}`;
-
-		this.window.args.repoName = this.startingRepo;
-
-		if(gitHubToken && gitHubToken.access_token)
-		{
-			headers.Authorization = `token ${gitHubToken.access_token}`;
-		}
-
-		this.window.args.repoIcons = false;
-
-		this.print(`Scanning repos.`);
-
-		this.window.args.repos = false;
-
-		console.log(reposUrl);
-
-		fetch(reposUrl, {headers}).then(r=>r.json()).then((repos)=>{
-
-			this.print(`Scanning complete.`);
-
-			if(!repos)
-			{
-				return;
-			}
-
-			this.window.args.repoIcons = [];
-
-			repos.map && repos.map(repo => {
-
-				this.window.args.repos = true;
-
-				this.print(`Found repo ${repo.name}`);
-
-				this.window.args.repoIcons.push(new Icon({
-					action: () => {
-						this.window.args.repoName = repo.full_name;
-						this.window.args.repoUrl  = repo.url;
-					}
-					, name:  repo.name
-					, icon: 'network_drive'
-					, path: 'w98'
-					, bits: 4
-				}));
-			});
-		});
-
 		const home = Home.instance();
 
 		this.window.githubLogin = (event) => {
-			home.run('github');
+
+			home.run('github').thread.then(result=>{
+
+				this.window.args.repoIcons = [];
+				this.loadRepos();
+
+			});
 		};
+
+		this.endpoint      = 'https://nynex.seanmorr.is/github-proxy/';
+		this.endpointRepos = `${this.endpoint}repos`
+		this.startingRepo  = `${this.username || 'seanmorris'}/${this.reponame || 'nynex95'}`;
+
+		this.window.args.repoUrl   = `${this.endpointRepos}/${this.startingRepo}`;
+		this.window.args.repoName  = this.startingRepo;
+		this.window.args.repoIcons = false;
+
+		this.window.args.repoIcons = [];
+		this.loadRepos();
 	}
 
 	attached()
@@ -415,5 +362,55 @@ export class RepoBrowser extends Task
 		{
 			this.console.args.output.push(line);
 		}
+	}
+
+	loadRepos(page = 0)
+	{
+		const gitHubToken = GitHub.getToken();
+
+		this.print(`Scanning repos.`);
+
+		this.window.args.repos = false;
+
+		const reposUrl = `https://nynex.seanmorr.is/github-proxy/user/repos?per_page=100&page=${parseInt(page)}`
+		const headers  = {};
+
+		if(gitHubToken && gitHubToken.access_token)
+		{
+			headers.Authorization = `token ${gitHubToken.access_token}`;
+		}
+
+		fetch(reposUrl, {headers}).then(r=>r.json()).then((repos)=>{
+
+			this.print(`Scanning complete.`);
+
+			if(!repos)
+			{
+				return;
+			}
+
+			repos.map && repos.map(repo => {
+
+				this.window.args.repos = true;
+
+				this.print(`Found repo ${repo.name}`);
+
+				this.window.args.repoIcons.push(new Icon({
+					action: () => {
+						this.window.args.repoName = repo.full_name;
+						this.window.args.repoUrl  = repo.url;
+					}
+					, name:  repo.name
+					, icon: 'network_drive'
+					, path: 'w98'
+					, bits: 4
+				}));
+			});
+
+			if(repos)
+			{
+				this.loadRepos(page + 1);
+			}
+		});
 	}
 }

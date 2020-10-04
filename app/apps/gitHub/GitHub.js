@@ -32,8 +32,6 @@ export class GitHub extends Task
 
 			const token = GitHub.getToken();
 
-			console.log(token);
-
 			if(token.access_token)
 			{
 				this.trayIcon = this.trayIcon || new Icon({
@@ -54,6 +52,7 @@ export class GitHub extends Task
 			else
 			{
 				GitHub.setToken('{}');
+
 				this.trayIcon.flicker();
 
 				setTimeout(750, ()=>{
