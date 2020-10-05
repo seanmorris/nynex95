@@ -217,9 +217,10 @@ export class Folder extends View
 			headers.Authorization = `token ${gitHubToken.access_token}`;
 		}
 
-		const url = file.download_url
+		const url = (file.download_url
 			? file.download_url
-			: file.url;
+			: file.url
+		) + `?t_=${Date.now()}`;
 
 		if(file.path)
 		{

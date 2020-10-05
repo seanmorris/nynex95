@@ -84,24 +84,47 @@ export class RepoBrowser extends Task
 
 			const gitHubToken = GitHub.getToken();
 
+			let loginPromise = Promise.resolve();
+
 			if(gitHubToken && gitHubToken.access_token)
 			{
 				headers.Authorization = `token ${gitHubToken.access_token}`;
 			}
+			else
+			{
+				loginPromise = home.run('github').thread
 
-			const method = 'PUT';
-			const body   = JSON.stringify(postChange);
-			const mode   = 'cors';
+				loginPromise.then(result=>{
+					this.window.args.repoIcons = [];
+					this.loadRepos();
+				});
+			}
 
-			const credentials = 'omit';
+			loginPromise.then(()=>{
+				const gitHubToken = GitHub.getToken();
+				const method = 'PUT';
+				const body   = JSON.stringify(postChange);
+				const mode   = 'cors';
 
-			return fetch(
-				this.window.args.repoUrl + '/contents/' + this.window.args.file.path
-				, {method, headers, body, mode}
-			).then(response => response.json())
-				.then(json => {
+				const credentials = 'omit';
+
+				if(gitHubToken && gitHubToken.access_token)
+				{
+					headers.Authorization = `token ${gitHubToken.access_token}`;
+				}
+				else
+				{
+					return;
+				}
+
+				return fetch(
+					this.window.args.repoUrl + '/contents/' + this.window.args.file.path
+					, {method, headers, body, mode}
+				).then(response => response.json()
+				).then(json => {
 					this.window.args.sha = json.content.sha;
 				});
+			});
 		}
 
 		this.window.toggleSection = (section) => {
