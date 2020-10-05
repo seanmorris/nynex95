@@ -171,7 +171,7 @@ export class Desktop extends View
 			})
 			, new Icon({
 				action: 'harp'
-				, name: 'Jasmine \'s Harp'
+				, name: 'Jasmine\'s Harp'
 				, icon: 1
 				, bits: 4
 			})
