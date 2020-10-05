@@ -30,8 +30,6 @@ The aim is to allow users to serve social content over cloud services with free 
 
 Users should be able to simply fork the project on github, clear out the content directory, add their API keys for Cloudflare & Heroku to their github secrets, and go.
 
-Users communicating with one instance will be able to communicate with users on all instances, and the need for social networks will hopefully be completely obviated.
-
-The new instance should also have the ablility to call back to the one it was forked from, and join a swarm.
+The new instance should also have the ablility to call back to the one it was forked from, and join a swarm. Users communicating with one instance will then be able to communicate with users on all instances, and the need for social networks will hopefully be completely obviated.
 
 I was originally inspired by Jeff Hunter & JC Stanton's work in linking up the `NirvanaNET` BBSs in the 1990s.
