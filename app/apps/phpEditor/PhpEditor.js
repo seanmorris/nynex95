@@ -159,14 +159,14 @@ export class PhpEditor extends Task
 
 			let editor = ace.edit(element);
 
-			if(ResizeObserver)
-			{
-				const resizeObserver = new ResizeObserver(entries => {
-					editor && editor.resize();
-				});
+			// if(ResizeObserver)
+			// {
+			// 	const resizeObserver = new ResizeObserver(entries => {
+			// 		editor && editor.resize();
+			// 	});
 
-				resizeObserver.observe(resizer);
-			}
+			// 	resizeObserver.observe(resizer);
+			// }
 
 			editor.setTheme('ace/theme/monokai');
 			editor.session.setMode('ace/mode/php');

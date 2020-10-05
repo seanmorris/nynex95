@@ -31,21 +31,21 @@
 	pointer-events: none;
 	box-shadow: 0 1em 1em rgba(0,0,0,0.5);
 	transition:
-		  0.3s 0.1s ease-in top
-		, 0.3s 0.1s ease-in left
-		, 0.3s 0.1s ease-in width
-		, 0.3s 0.1s ease-in height
-		, 0.1s 0.0s ease-in opacity;
+		  0.35s 0.1s ease-out top
+		, 0.35s 0.1s ease-out left
+		, 0.35s 0.1s ease-out width
+		, 0.35s 0.1s ease-out height
+		, 0.15s 0.0s ease-in  opacity;
 }
 
 .shiny-outline.hide {
 	opacity: 0;
 	transition:
-		  0.3s 0.1s ease-out top
-		, 0.3s 0.1s ease-out left
-		, 0.3s 0.1s ease-out width
-		, 0.3s 0.1s ease-out height
-		, 0.1s 0.3s ease-out opacity;
+		  0.35s 0.1s ease-out top
+		, 0.35s 0.1s ease-out left
+		, 0.35s 0.1s ease-out width
+		, 0.35s 0.1s ease-out height
+		, 0.15s 0.3s ease-in  opacity;
 }
 
 .shiny-outline.teleport {

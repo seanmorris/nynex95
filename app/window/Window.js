@@ -16,8 +16,8 @@ let Base = class extends View
 {
 	static idInc = 0;
 
-	outlineSpeed = 350;
-	outlineDelay = 350;
+	outlineSpeed = 450;
+	outlineDelay = 450;
 
 	constructor(args = {})
 	{
@@ -127,6 +127,12 @@ let Base = class extends View
 			this.args.poppedOut = false;
 		});
 
+		this.outWindow.addEventListener('resize', event => {
+			this.dispatchEvent(new CustomEvent(
+				'resized', {detail:{ target:this, original:event }}
+			));
+		});
+
 		const base = this.outWindow.document.createElement('base');
 
 		base.setAttribute('href', origin);
@@ -206,8 +212,14 @@ let Base = class extends View
 				, taskRect.height + 'px'
 			);
 
+			const event = new CustomEvent(
+				'restored', {detail:{ target:this }}
+			);
+
+			this.dispatchEvent(event);
+
 			const canceled = this.dispatchEvent(new CustomEvent(
-				'minimizing', {detail:{ target:this }}
+				'minimizing', {detail:{ target:this, original:event }}
 			));
 
 			if(canceled)
@@ -278,8 +290,15 @@ let Base = class extends View
 				home.hideOutline();
 				this.classes.minimized = false;
 				this.classes.maximized = false;
-				this.dispatchEvent(new CustomEvent(
+
+				const event = new CustomEvent(
 					'restored', {detail:{ target:this }}
+				);
+
+				this.dispatchEvent(event);
+
+				this.dispatchEvent(new CustomEvent(
+					'resized', {detail:{ target:this, original:event }}
 				));
 				this.pause(false);
 			});
@@ -324,8 +343,14 @@ let Base = class extends View
 					return;
 				}
 
-				this.dispatchEvent(new CustomEvent(
+				const event = new CustomEvent(
 					'maximized', {detail:{ target:this }}
+				);
+
+				this.dispatchEvent(event);
+
+				this.dispatchEvent(new CustomEvent(
+					'resized', {detail:{ target:this, original:event }}
 				));
 
 				this.pause(false);

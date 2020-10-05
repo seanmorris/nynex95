@@ -314,7 +314,7 @@ export class RepoBrowser extends Task
 			}
 		});
 
-		this.window.addEventListener('maximized', (event) => {
+		this.window.addEventListener('resized', (event) => {
 			if(this.window.args.control && this.window.args.control.resize)
 			{
 				this.window.args.control.resize();
@@ -324,30 +324,6 @@ export class RepoBrowser extends Task
 				this.window.args.plain.resize();
 			}
 		});
-
-		this.window.addEventListener('minimized', (event) => {
-			if(this.window.args.control && this.window.args.control.resize)
-			{
-				this.window.args.control.resize();
-			}
-			if(this.window.args.plain && this.window.args.plain.resize)
-			{
-				this.window.args.plain.resize();
-			}
-		});
-
-		this.window.addEventListener('restored', (event) => {
-			if(this.window.args.control && this.window.args.control.resize)
-			{
-				this.window.args.control.resize();
-				return
-			}
-			if(this.window.args.plain && this.window.args.plain.resize)
-			{
-				this.window.args.plain.resize();
-			}
-		});
-
 
 		if(this.filepath)
 		{

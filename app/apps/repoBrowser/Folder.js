@@ -123,7 +123,7 @@ export class Folder extends View
 
 					const icon = new Icon({icon:file.type === 'dir' ? 4:60, name, action});
 
-					this.onTimeout(key * 20, () => {
+					this.onTimeout(key * 16, () => {
 						iconList.args.icons.push(icon);
 					});
 
@@ -218,8 +218,10 @@ export class Folder extends View
 		}
 
 		const url = file.download_url
-			? file.url
-			: file.download_url;
+			? file.download_url
+			: file.url;
+
+		console.log(url);
 
 		if(file.path)
 		{
@@ -309,7 +311,7 @@ export class Folder extends View
 
 					this.files[name] = folder;
 
-					this.onTimeout(key * 20, () => this.args.files.push(folder));
+					this.onTimeout(key * 16, () => this.args.files.push(folder));
 
 				});
 
