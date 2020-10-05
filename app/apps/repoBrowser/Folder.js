@@ -221,8 +221,6 @@ export class Folder extends View
 			? file.download_url
 			: file.url;
 
-		console.log(url);
-
 		if(file.path)
 		{
 			const path = `/${this.args.browser.repoName}/${file.path}`;
@@ -239,7 +237,9 @@ export class Folder extends View
 		}
 		else
 		{
-			fetch(url, {headers}).then(r => r.text()).then(body => {
+			const credentials = 'omit';
+			const mode = 'cors';
+			fetch(url).then(r => r.text()).then(body => {
 				this.args.browser.window.args.content  = body;
 				this.args.browser.window.args.filename = file.name;
 				this.args.browser.parent               = dir;
