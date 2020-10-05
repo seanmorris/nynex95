@@ -73,7 +73,7 @@ export class RepoBrowser extends Task
 			const content = btoa(unescape(encodeURIComponent(raw)));
 			const sha     = this.window.args.sha;
 
-			const url = new URL(this.window.args.url).pathname;
+			// const url = new URL(this.window.args.url).pathname;
 
 			const postChange  = {message, content, sha};
 
@@ -91,9 +91,14 @@ export class RepoBrowser extends Task
 
 			const method = 'PUT';
 			const body   = JSON.stringify(postChange);
+			const mode   = 'cors';
 
-			return fetch('https://nynex.seanmorr.is' + url, {method, headers, body})
-				.then(response => response.json())
+			const credentials = 'omit';
+
+			return fetch(
+				this.window.args.repoUrl + '/contents/' + this.window.args.file.path
+				, {method, headers, body, mode}
+			).then(response => response.json())
 				.then(json => {
 					this.window.args.sha = json.content.sha;
 				});
