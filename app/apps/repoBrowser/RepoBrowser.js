@@ -179,22 +179,27 @@ export class RepoBrowser extends Task
 			this.print(`Scanning repo @ ${v}.`);
 
 			const folder = new Folder({
-				expanded:  true
-				, browser: this
-				, url:     v + '/contents?ref=master&t=' + Date.now()
+				expanded:   true
+				, browser:  this
+				, pathOpen: this.filepath
+				, url:      v + '/contents?ref=master&t=' + Date.now()
 			}, this.window);
 
 			this.window.args.files.push(folder);
 
+			console.log(this.filepath);
+
 			if(!this.filepath)
 			{
 				this.window.onNextFrame(()=>this.loadFile('README.md'));
-				folder.expand();
 			}
 			else
 			{
-				folder.select();
+				// this.window.onNextFrame(()=>this.loadFile(this.filepath));
+				// folder.select();
 			}
+
+			folder.expand();
 		});
 
 		this.window.args.bindTo('filename', v => {
@@ -346,7 +351,7 @@ export class RepoBrowser extends Task
 
 		if(this.filepath)
 		{
-			this.loadFile(this.filepath);
+			// this.loadFile(this.filepath);
 		}
 	}
 

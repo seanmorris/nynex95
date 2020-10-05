@@ -14,7 +14,8 @@ export class Folder extends View
 
 		this.files = {};
 
-		this.args.expanded = args.expanded;
+		this.args.expanded = args.expanded || false;
+		this.args.pathOpen = args.pathOpen || null;
 
 		this.args.files = [];
 
@@ -41,6 +42,31 @@ export class Folder extends View
 		this.template  = require('./folder.tmp');
 	}
 
+	attached()
+	{
+		if(!this.args.pathOpen)
+		{
+			return;
+		}
+
+		if(!this.args.file)
+		{
+			return;
+		}
+
+		const path = this.args.file.path;
+
+		if(this.args.pathOpen.substr(0, path.length) === path)
+		{
+			this.expand();
+		}
+
+		if(this.args.pathOpen === path)
+		{
+			this.select();
+		}
+	}
+
 	select(event, child)
 	{
 		if(event)
@@ -48,6 +74,8 @@ export class Folder extends View
 			event.stopImmediatePropagation();
 			event.stopPropagation();
 		}
+
+		this.tags.focus.element.focus();
 
 		this.args.browser.current = this;
 
@@ -102,7 +130,6 @@ export class Folder extends View
 					return icon;
 				});
 			}
-
 
 			this.args.browser.window.args.filename = this.args.name;
 			this.args.browser.window.args.control  = iconList;
@@ -277,6 +304,7 @@ export class Folder extends View
 						, name
 						, icon: img
 						, file
+						, pathOpen: this.args.pathOpen
 					}, this);
 
 					this.files[name] = folder;
