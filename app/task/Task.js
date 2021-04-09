@@ -1,9 +1,8 @@
 import { Home     } from '../home/Home';
 import { Sealed   } from '../mixin/Sealed';
 import { Window   } from '../window/Window';
-import { Bindable } from 'curvature/base/Bindable';
-
 import { Target   } from '../mixin/Target';
+import { Bindable } from 'curvature/base/Bindable';
 
 let taskId = 0;
 const Accept = Symbol('accept');
@@ -30,9 +29,9 @@ export class Task
 		this.cmd  = taskCmd;
 		this.path = taskPath;
 
-		console.log('Thread initialized.');
+		// console.log('Thread initialized.');
 
-		this.thread.finally(() => console.log('Thread closed.'));
+		// this.thread.finally(() => console.log('Thread closed.'));
 
 		this.window = new Window(this);
 
@@ -46,6 +45,7 @@ export class Task
 				this.signal(event);
 
 				taskList.remove(this);
+				taskList.remove(Bindable.make(this));
 
 			});
 
@@ -103,7 +103,7 @@ export class Task
 	{
 		return new Promise(() => {
 
-			console.log('Thread continued.');
+			// console.log('Thread continued.');
 
 		});
 	}

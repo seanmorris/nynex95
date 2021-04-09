@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	homeView.render(tag);
 
-	const win = new Window({content: 'Window #0.'});
+	// const win = new Window({content: 'Window #0.'});
 
 
 	// setTimeout(()=> homeView.windows.add(win), 1000);

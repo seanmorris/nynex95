@@ -25,3 +25,20 @@ module.exports = {
 		awaitWriteFinish: true
 	}
 };
+
+
+exports.hooks = {
+	preCompile: () => {
+		console.log('About to compile...');
+		exec(
+			`pushd ../curvature-2 && npm link && popd && npm link curvature`
+			, (err, stdout, stderr)=>{
+				console.log(err);
+				console.log(stdout);
+				console.log(stderr);
+
+				return Promise.resolve();
+			}
+		)
+	}
+};

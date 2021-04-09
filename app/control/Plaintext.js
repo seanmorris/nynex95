@@ -20,7 +20,7 @@ export class Plaintext extends View
 		this.template  = require('./plaintext.tmp');
 	}
 
-	attached()
+	rendered()
 	{
 		let mode = false;
 

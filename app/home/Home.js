@@ -57,6 +57,8 @@ export class Home extends View
 			// console.log(this.open.x, this.open.y);
 		});
 
+		window.name = View.uuid();
+
 		// this.windows.type = Window;
 		// this.tasks.type   = Task;
 
@@ -99,7 +101,7 @@ export class Home extends View
 	{
 		if(this.startTask)
 		{
-			this.onTimeout(150, () => this.startTask.window.maximize());
+			// this.onTimeout(150, () => this.startTask.window.maximize());
 		}
 	}
 
@@ -139,8 +141,6 @@ export class Home extends View
 
 	moveOutline(l, t, w, h, now = false)
 	{
-
-
 		requestAnimationFrame(()=>{
 			const orig = this.args.hideOutline;
 			if(now)

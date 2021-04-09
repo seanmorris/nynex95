@@ -26,8 +26,9 @@ export class WidgetViewer extends Task
 
 	attached()
 	{
-		this.window.classes.transparent   = true;
-		this.window.classes.pane          = false;
 		this.window.classes['widget-viewer-win'] = true;
+
+		this.window.classes.transparent = true;
+		this.window.classes.pane        = false;
 	}
 }

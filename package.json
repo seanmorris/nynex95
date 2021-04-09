@@ -12,11 +12,12 @@
     "dos": "cp -rfv node_modules/js-dos/dist/wdosbox.wasm.js docs/"
   },
   "dependencies": {
-    "curvature": "^0.0.66",
+    "curvature": "^0.0.66-l",
     "cv-markdown": "^1.0.4",
     "js-dos": "^6.22.59",
-    "php-wasm": "^0.0.1",
-    "simplemde": "^1.11.2"
+    "php-wasm": "0.0.1",
+    "simplemde": "^1.11.2",
+    "subspace-console": "^0.0.1-b"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

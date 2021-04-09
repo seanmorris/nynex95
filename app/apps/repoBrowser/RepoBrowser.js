@@ -22,6 +22,7 @@ export class RepoBrowser extends Task
 	title    = 'Repo Browser';
 	icon     = '/w95/73-16-4bit.png';
 	template = require('./main.tmp');
+	useProxy = false;
 
 	constructor(taskList, taskCmd = '', taskPath = [])
 	{
@@ -66,7 +67,7 @@ export class RepoBrowser extends Task
 
 		this.window.save = (event) => {
 
-			const raw = this.window.args.plain.args.content
+			const raw = this.window.args.plain.args.content;
 
 			const branch  = 'master';
 			const message = 'Nynex self-edit.';
@@ -118,7 +119,11 @@ export class RepoBrowser extends Task
 				}
 
 				return fetch(
-					this.window.args.repoUrl + '/contents/' + this.window.args.file.path
+					this.window.args.repoUrl
+						+ '/contents/'
+						+ this.window.args.filepath
+						+ (this.window.args.filepath ? '/' : '')
+						+ this.window.args.filename
 					, {method, headers, body, mode}
 				).then(response => response.json()
 				).then(json => {
@@ -168,7 +173,200 @@ export class RepoBrowser extends Task
 			});
 		};
 
-		this.endpoint      = 'https://nynex.seanmorr.is/github-proxy/';
+		this.window.onRendered = () => {
+			this.console = new Terminal({scroller: this.window.tags.termscroll.element });
+
+			this.console.addEventListener('listRendered', event => {
+				this.window.onTimeout(300, () => {
+					const height = this.window.tags.termscroll.element.clientHeight;
+					const scroll = this.window.tags.termscroll.element.scrollHeight;
+
+					this.window.tags.termscroll.scrollTo({
+						top: scroll + height, behavior: 'smooth'
+					});
+				});
+			});
+
+			this.window.args.terminal = this.console;
+
+			this.console.args.prompt = '';
+
+			// this.window.args.menuBar  = new MenuBar(this.args, this.window);
+
+			this.window.args.filetype = '';
+			this.window.args.chars    = '';
+
+			this.window.classes['repo-browser'] = true;
+
+			this.window.args.bindTo('repoUrl', v => {
+
+				this.print(`Scanning repository @ ${v}.`);
+
+				this.window.args.files = [];
+
+				if(!v)
+				{
+					return;
+				}
+
+				const folder = new Folder({
+					expanded:   true
+					, browser:  this
+					, pathOpen: this.filepath
+					, url:      v + '/contents?ref=master&t=' + Date.now()
+				}, this.window);
+
+				this.window.args.files.push(folder);
+
+				if(!this.filepath)
+				{
+					this.window.onNextFrame(()=>this.loadFile('README.md'));
+				}
+				else
+				{
+					// this.window.onNextFrame(()=>this.loadFile(this.filepath));
+					// folder.select();
+				}
+
+				this.loadRepos();
+
+				folder.expand();
+			});
+
+			this.window.args.bindTo('filename', v => {
+
+				// v && this.print(`Loading file: "${v}"`);
+
+				if(this.window.args.plain)
+				{
+					this.window.args.plain.remove();
+					this.window.args.plain = '';
+				}
+
+				if(this.window.args.control)
+				{
+					this.window.args.control.remove();
+					this.window.args.control = '';
+				}
+
+				if(!v)
+				{
+					return;
+				}
+
+				const gitHubToken = GitHub.getToken();
+				const filetype = (v||'').split('.').pop();
+
+				this.window.args.filetype = filetype || '';
+
+				this.window.args.chars = 0;
+
+				this.window.args.hasSource = false;
+
+				this.window.args.plain   = new PlaintextControl(
+					this.window.args, this
+				);
+
+				this.window.args.plain.args.url = this.window.args.url;
+
+				switch(filetype)
+				{
+					case 'md':
+						this.window.args.viewRaw   = 'view-control-rendered';
+
+						this.window.args.hasSource = true;
+
+						this.window.args.control = new MarkdownControl(
+							{content:''}, this
+						);
+
+						break;
+
+					case 'html':
+						this.window.args.viewRaw   = 'view-control-rendered';
+
+						this.window.args.hasSource = true;
+
+						this.window.args.control = new HtmlControl(
+							{content:''}, this
+						);
+
+						break;
+
+					case 'ico':
+					case 'gif':
+					case 'png':
+					case 'jpg':
+					case 'jpeg':
+					case 'webp':
+
+						this.window.args.viewRaw = 'view-control-rendered';
+
+						this.window.args.control = new ImageControl(
+							{src:this.window.args.download}
+							, this
+						);
+						break;
+
+					case 'json':
+						this.window.args.hasSource = true;
+
+						this.window.args.expanded = true;
+						this.window.args.control = new JsonControl(
+							{
+								expanded:  true
+								, content: ''
+							}, this
+						);
+
+						break;
+
+					default:
+						this.window.args.viewRaw = 'view-control-plain';
+						this.window.args.control = new PlaintextControl(
+							{content:''}, this
+						);
+						break;
+				}
+
+				this.window.args.control.args.content = this.window.args.content || '';
+
+				this.window.args.chars = (this.window.args.content||'').length;
+			});
+
+			this.window.args.bindTo('content', v => {
+				if(this.window.args.control)
+				{
+					this.window.args.control.args.content = v;
+				}
+				if(this.window.args.plain)
+				{
+					this.window.args.plain.args.content = v;
+				}
+			});
+
+			this.window.addEventListener('resized', (event) => {
+				if(this.window.args.control && this.window.args.control.resize)
+				{
+					this.window.args.control.resize();
+				}
+				if(this.window.args.plain && this.window.args.plain.resize)
+				{
+					this.window.args.plain.resize();
+				}
+			});
+
+			if(this.filepath)
+			{
+				// this.loadFile(this.filepath);
+			}
+		};
+
+		this.endpoint = this.useProxy
+			? 'https://nynex.seanmorr.is/github-proxy/'
+			: 'https://api.github.com/'
+		;
+
 		this.endpointRepos = `${this.endpoint}repos`
 		this.startingRepo  = `${this.username || 'seanmorris'}/${this.reponame || 'nynex95'}`;
 
@@ -177,186 +375,6 @@ export class RepoBrowser extends Task
 		this.window.args.repoIcons = false;
 
 		this.window.args.repoIcons = [];
-		this.loadRepos();
-	}
-
-	attached()
-	{
-		this.console = new Terminal({scroller:this.window.tags.termscroll.element});
-
-		this.window.args.terminal = this.console;
-
-		this.console.args.prompt = '';
-
-		// this.window.args.menuBar  = new MenuBar(this.args, this.window);
-
-		this.window.args.filetype = '';
-		this.window.args.chars    = '';
-
-		this.window.classes['repo-browser'] = true;
-
-		this.window.args.bindTo('repoUrl', v => {
-
-			this.window.args.files = [];
-
-			if(!v)
-			{
-				return;
-			}
-
-			this.print(`Scanning repo @ ${v}.`);
-
-			const folder = new Folder({
-				expanded:   true
-				, browser:  this
-				, pathOpen: this.filepath
-				, url:      v + '/contents?ref=master&t=' + Date.now()
-			}, this.window);
-
-			this.window.args.files.push(folder);
-
-			console.log(this.filepath);
-
-			if(!this.filepath)
-			{
-				this.window.onNextFrame(()=>this.loadFile('README.md'));
-			}
-			else
-			{
-				// this.window.onNextFrame(()=>this.loadFile(this.filepath));
-				// folder.select();
-			}
-
-			folder.expand();
-		});
-
-		this.window.args.bindTo('filename', v => {
-
-			if(this.window.args.plain)
-			{
-				this.window.args.plain.remove();
-				this.window.args.plain = '';
-			}
-
-			if(this.window.args.control)
-			{
-				this.window.args.control.remove();
-				this.window.args.control = '';
-			}
-
-			if(!v)
-			{
-				return;
-			}
-
-			const gitHubToken = GitHub.getToken();
-			const filetype = (v||'').split('.').pop();
-
-			this.print(`Loading file: ${v}`);
-
-			this.window.args.filetype = filetype || '';
-
-			this.window.args.chars = 0;
-
-			this.window.args.hasSource = false;
-
-			this.window.args.plain   = new PlaintextControl(
-				this.window.args, this
-			);
-
-			this.window.args.plain.args.url = this.window.args.url;
-
-			switch(filetype)
-			{
-				case 'md':
-					this.window.args.viewRaw   = 'view-control-rendered';
-
-					this.window.args.hasSource = true;
-
-					this.window.args.control = new MarkdownControl(
-						{content:''}, this
-					);
-
-					break;
-
-				case 'html':
-					this.window.args.viewRaw   = 'view-control-rendered';
-
-					this.window.args.hasSource = true;
-
-					this.window.args.control = new HtmlControl(
-						{content:''}, this
-					);
-
-					break;
-
-				case 'ico':
-				case 'gif':
-				case 'png':
-				case 'jpg':
-				case 'jpeg':
-				case 'webp':
-
-					this.window.args.viewRaw = 'view-control-rendered';
-
-					this.window.args.control = new ImageControl(
-						{src:this.window.args.download}
-						, this
-					);
-					break;
-
-				case 'json':
-					this.window.args.hasSource = true;
-
-					this.window.args.expanded = true;
-					this.window.args.control = new JsonControl(
-						{
-							expanded:  true
-							, content: ''
-						}, this
-					);
-
-					break;
-
-				default:
-					this.window.args.viewRaw = 'view-control-plain';
-					this.window.args.control = new PlaintextControl(
-						{content:''}, this
-					);
-					break;
-			}
-
-			this.window.args.control.args.content = this.window.args.content || '';
-
-			this.window.args.chars = (this.window.args.content||'').length;
-		});
-
-		this.window.args.bindTo('content', v => {
-			if(this.window.args.control)
-			{
-				this.window.args.control.args.content = v;
-			}
-			if(this.window.args.plain)
-			{
-				this.window.args.plain.args.content = v;
-			}
-		});
-
-		this.window.addEventListener('resized', (event) => {
-			if(this.window.args.control && this.window.args.control.resize)
-			{
-				this.window.args.control.resize();
-			}
-			if(this.window.args.plain && this.window.args.plain.resize)
-			{
-				this.window.args.plain.resize();
-			}
-		});
-
-		if(this.filepath)
-		{
-			// this.loadFile(this.filepath);
-		}
 	}
 
 	print(line)
@@ -369,11 +387,10 @@ export class RepoBrowser extends Task
 
 	loadFile(filepath)
 	{
-		const headers = {
-			Accept: 'application/vnd.github.v3.json'
-		};
+		const headers = {Accept: 'application/vnd.github.v3.json'};
 
 		const gitHubToken = GitHub.getToken();
+
 		if(gitHubToken && gitHubToken.access_token)
 		{
 			headers.Authorization = `token ${gitHubToken.access_token}`;
@@ -426,11 +443,11 @@ export class RepoBrowser extends Task
 	{
 		const gitHubToken = GitHub.getToken();
 
-		this.print(`Scanning repos.`);
+		page || this.print(`Scanning for repositories...`);
 
 		this.window.args.repos = this.window.args.repos || false;
 
-		const reposUrl = `https://nynex.seanmorr.is/github-proxy/user/repos?per_page=100&page=${1+parseInt(page)}`
+		const reposUrl = `${this.endpoint}user/repos?per_page=100&page=${1+parseInt(page)}`
 		const headers  = {};
 
 		if(gitHubToken && gitHubToken.access_token)
@@ -440,20 +457,18 @@ export class RepoBrowser extends Task
 
 		fetch(reposUrl, {headers}).then(r=>r.json()).then((repos)=>{
 
-			this.print(`Scanning complete.`);
-
 			if(!repos || !repos.length)
 			{
 				return;
 			}
 
-			repos.map && repos.map(repo => {
+			repos.map && this.window.args.repoIcons.push(...repos.map(repo => {
 
 				this.window.args.repos = true;
 
-				this.print(`Found repo ${repo.name}`);
+				this.print(`Found repo "${repo.name}"`);
 
-				this.window.args.repoIcons.push(new Icon({
+				return new Icon({
 					action: () => {
 						this.window.args.repoName = repo.full_name;
 						this.window.args.repoUrl  = repo.url;
@@ -462,8 +477,8 @@ export class RepoBrowser extends Task
 					, icon: 'network_drive'
 					, path: 'w98'
 					, bits: 4
-				}));
-			});
+				});
+			}));
 
 			if(repos && repos.length)
 			{

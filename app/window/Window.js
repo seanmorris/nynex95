@@ -16,12 +16,15 @@ let Base = class extends View
 {
 	static idInc = 0;
 
-	outlineSpeed = 450;
-	outlineDelay = 450;
+	outlineSpeed = 350;
+	outlineDelay = 50;
 
 	constructor(args = {})
 	{
 		super(args);
+
+		this.name = window.name;
+		this.popBackIn = null;
 
 		this.args.classes = ['pane', 'resize'];
 		this.args.preview = '/w95/1-16-4bit.png';
@@ -70,6 +73,16 @@ let Base = class extends View
 			this.args.y = v;
 		});
 
+		this.args.bindTo('width', (v,k) => {
+			element.style.width = v;
+			this.args.width = v;
+		});
+
+		this.args.bindTo('height', (v,k) => {
+			element.style.height = v;
+			this.args.height = v;
+		});
+
 		this.pos.bindTo('z', (v,k) => {
 			element.style.zIndex = v;
 			this.args.z = v;
@@ -102,6 +115,10 @@ let Base = class extends View
 			+ `,width=${Math.floor(rect.width)}`
 			+ `,height=${Math.floor(rect.height)}`;
 
+		// const popupSource = '<html><head></head><body>Hello, world!</body></html>';
+		// const popupBlob   = new Blob([popupSource], {type: 'text/html'});
+		// const popupUrl    = URL.createObjectURL(popupBlob);
+
 		if(!(this.outWindow = window.open('', this._id, features)))
 		{
 			return;
@@ -115,16 +132,30 @@ let Base = class extends View
 			this.outWindow.close();
 		};
 
-		window.addEventListener('beforeunload', mainUnload);
+		this.popBackIn = () => {
+			const old = this.outWindow;
 
-		this.outWindow.addEventListener('beforeunload', () => {
-			window.removeEventListener('beforeunload', mainUnload);
 			this.outWindow = false;
 			this.args.hideTitleBar = false;
 			this.classes.maximized = this.wasMaximized;
 			this.restore();
 			this.render(orig);
 			this.args.poppedOut = false;
+			this.popBackIn = null;
+
+			return old;
+		};
+
+
+		this.name = window.name;
+
+		window.addEventListener('beforeunload', mainUnload);
+
+		this.outWindow.addEventListener('beforeunload', () => {
+
+			window.removeEventListener('beforeunload', mainUnload);
+
+			this.popBackIn && this.popBackIn();
 		});
 
 		this.outWindow.addEventListener('resize', event => {
@@ -137,9 +168,11 @@ let Base = class extends View
 
 		base.setAttribute('href', origin);
 
-		this.outWindow.document.head.append(base);
-
 		const newDoc = this.outWindow.document;
+
+		newDoc[ Symbol.for('SeanMorris::Nynex95::ViewRef') ] = this;
+
+		newDoc.head.append(base);
 
 		for(const sheet of document.styleSheets)
 		{
@@ -158,6 +191,57 @@ let Base = class extends View
 		this.args.hideTitleBar = true;
 		this.render(this.outWindow.document.body);
 		this.classes.maximized = true;
+
+		this.name = this.outWindow.name;
+
+		const subScript = document.createElement('script');
+
+		subScript.innerHTML = `(${ () => {
+
+			const interactionEvents = [
+				'click',
+				// 'contextmenu',
+				// 'dblclick',
+				// 'mousedown',
+				// 'mousemove',
+				// 'mouseup',
+				// 'pointerdown',
+				// 'pointermove',
+				// 'pointerup',
+				// 'touchend',
+				// 'touchmove',
+				// 'touchstart',
+				// 'keydown',
+				// 'keypress',
+				// 'keyup',
+				// 'change',
+				// 'compositionend',
+				// 'compositionstart',
+				// 'compositionupdate',
+				// 'input',
+				// 'reset',
+				// 'submit',
+			];
+
+			interactionEvents.map(eventName => {
+				document.addEventListener(
+					eventName
+					, event => {
+						const view = document[ Symbol.for('SeanMorris::Nynex95::ViewRef') ];
+
+						if(view && view.willFocus)
+						{
+							window.open('', view.willFocus);
+
+							view.willFocus = null;
+						}
+					}
+				);
+			});
+
+		} })()`;
+
+		this.outWindow.document.body.append(subScript);
 
 		this.outWindow.document.body.classList.add('sub-window');
 	}
@@ -197,8 +281,6 @@ let Base = class extends View
 			);
 		}
 
-		this.pause(true);
-
 		home.showOutline();
 
 		this.onTimeout(this.outlineDelay, ()=>{
@@ -212,17 +294,9 @@ let Base = class extends View
 				, taskRect.height + 'px'
 			);
 
-			const event = new CustomEvent(
-				'restored', {detail:{ target:this }}
-			);
+			const minimizing = new CustomEvent('minimizing', {detail:{ target:this, original:event }});
 
-			this.dispatchEvent(event);
-
-			const canceled = this.dispatchEvent(new CustomEvent(
-				'minimizing', {detail:{ target:this, original:event }}
-			));
-
-			if(canceled)
+			if(!this.dispatchEvent(minimizing))
 			{
 				return;
 			}
@@ -234,16 +308,25 @@ let Base = class extends View
 
 				home.hideOutline();
 
+				this.classes.minimized = true;
+				this.classes.maximized = false;
+
 				this.dispatchEvent(new CustomEvent(
 					'minimized', {detail:{ target:this }}
 				));
 			});
-
 		});
 	}
 
 	restore()
 	{
+		const restoring = new CustomEvent('restoring', {detail:{ target:this }});
+
+		if(!this.dispatchEvent(restoring))
+		{
+			return;
+		}
+
 		const home = Home.instance();
 
 		if(this.classes.maximized)
@@ -262,17 +345,7 @@ let Base = class extends View
 			);
 		}
 
-
 		home.showOutline();
-
-		const canceled = this.dispatchEvent(new CustomEvent(
-			'restoring', {detail:{ target:this }}
-		));
-
-		if(canceled)
-		{
-			return;
-		}
 
 		this.onTimeout(this.outlineDelay, ()=>{
 			home.moveOutline(
@@ -300,7 +373,6 @@ let Base = class extends View
 				this.dispatchEvent(new CustomEvent(
 					'resized', {detail:{ target:this, original:event }}
 				));
-				this.pause(false);
 			});
 		});
 	}
@@ -334,26 +406,20 @@ let Base = class extends View
 				this.classes.minimized = false;
 				this.classes.maximized = true;
 
-				const canceled = this.dispatchEvent(new CustomEvent(
-					'maximizing', {detail:{ target:this }}
-				));
+				const maximizing = new CustomEvent('maximizing', {detail:{ target:this }});
 
-				if(canceled)
+				if(!this.dispatchEvent(maximizing))
 				{
 					return;
 				}
 
-				const event = new CustomEvent(
-					'maximized', {detail:{ target:this }}
-				);
+				const maximized = new CustomEvent('maximized', {detail:{ target:this }});
 
-				this.dispatchEvent(event);
+				this.dispatchEvent(maximized);
 
 				this.dispatchEvent(new CustomEvent(
-					'resized', {detail:{ target:this, original:event }}
+					'resized', {detail:{ target:this, original:maximized }}
 				));
-
-				this.pause(false);
 			});
 
 		});
@@ -361,20 +427,19 @@ let Base = class extends View
 
 	close()
 	{
-		const canceled = this.dispatchEvent(new CustomEvent(
-			'closing', {detail:{ target:this }}
-		));
-
-		if(canceled)
+		if(!this.dispatchEvent(new CustomEvent('closing', {detail:{ target:this }})))
 		{
 			return;
 		}
+
+		Home.instance().hideOutline();
 
 		if(this.outWindow)
 		{
 			this.outWindow.close();
 		}
 
+		this.windows.remove(Bindable.make(this));
 		this.windows.remove(this);
 
 		this.dispatchEvent(new CustomEvent(
@@ -384,11 +449,7 @@ let Base = class extends View
 
 	focus()
 	{
-		const canceled = this.dispatchEvent(new CustomEvent(
-			'focusing', {detail:{ target:this }}
-		));
-
-		if(canceled)
+		if(!this.dispatchEvent(new CustomEvent('focusing', {detail:{ target:this }})))
 		{
 			return;
 		}
@@ -632,3 +693,4 @@ Base = CssSwitch.mix(Base);
 Base = ViewProcessor.mix(Base);
 
 export class Window extends Base{};
+
