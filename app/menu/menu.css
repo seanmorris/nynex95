@@ -8,10 +8,14 @@ ul.menu, .menu-bar * > ul {
 	z-index: 1000;
 	position: absolute;
 	left: -2px;
-	top: 100%;
+
 	margin: 0px;
 	padding: 0px;
 	list-style: none;
+}
+
+.menu-bar ul > div > .menu, .menu-bar * > ul {
+	left: -6px;
 }
 
 li:focus > ul.menu,
@@ -30,7 +34,7 @@ ul.menu li, .menu-bar ul li {
 }
 
 ul.menu li ul, .menu-bar ul li ul {
-	top: -2px;
+	/*top: -2px;*/
 	left: calc(100% + 1px);
 }
 
@@ -38,9 +42,16 @@ ul.menu [tabindex], .menu-bar ul [tabindex] {
 	color: black;
 }
 
-ul.menu [tabindex]:hover {
+ul.menu li[tabindex]:hover,
+ul.menu li[tabindex]:focus,
+ul.menu li[tabindex]:focus-within {
 	background-color: #000082;
 	color: white;
+}
+
+ul.menu li[tabindex] > .expand {
+	margin-right: 0;
+	margin-left: auto;
 }
 
 ul.context.menu {
@@ -50,8 +61,14 @@ ul.context.menu {
 	opacity: 0;
 }
 
+li:focus  ul.context.menu,
+li:active ul.context.menu,
 ul.context.menu:focus,
 ul.context.menu:focus-within {
 	pointer-events: initial;
 	opacity: 1;
+}
+
+.menu-bar hr:last-child {
+	display: none;
 }

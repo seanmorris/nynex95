@@ -70,6 +70,8 @@ export class Home extends View
 		this.args.windows  = this.windows.list;
 		this.args.taskBar  = taskBar;
 
+		this.onRemove(()=>delete this.args.windows);
+
 		this.args.hideOutline = 'hide';
 
 		// this.args.tasks    = this.tasks.list;
@@ -77,7 +79,8 @@ export class Home extends View
 
 		this.routes = {
 
-			'': () => Router.go('/repo-browser/seanmorris/nynex95/content/hello-world.md')
+			'': () => {}
+			// '': () => Router.go('/repo-browser/seanmorris/nynex95/content/hello-world.md')
 
 			, '*': (args) => {
 				const taskName = args.pathparts.shift() || 'repo-browser';
@@ -97,10 +100,11 @@ export class Home extends View
 		this.args.outlineHeight = 0;
 	}
 
-	attached()
+	onAttach()
 	{
 		if(this.startTask)
 		{
+			delete this.startTask;
 			// this.onTimeout(150, () => this.startTask.window.maximize());
 		}
 	}

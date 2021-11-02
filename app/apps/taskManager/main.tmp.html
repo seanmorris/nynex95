@@ -1,31 +1,57 @@
-<div class = "frame inset gridview" cv-attr = "data-thing">
+<div class = "frame liquid" cv-attr = "data-thing">
 <!-- 	<button cv-expand = "cycler" cv-on = ":click()">cycle [[cycler.at]]</button>
 	<span cv-attr = "cyat:cycler.at">[[cycler.at]]</span>
 	<button cv-expand = "cycler" cv-on = "click:recycle()">cycle</button> -->
-	<table>
-		<thead>
-			<tr>
-				<th>id</th>
-				<th class = "wide">title</th>
-				<th cv-if = "focusAttrs.disabled">!</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody cv-each = "tasks:task:t">
-			<tr>
-				<td>[[task.wid]]</td>
-				<td>[[task.title]]</td>
+	<div class = "liquid inset gridview scroll"  style = "max-height: auto;">
+		<table class = "white">
+			<thead>
+				<tr>
+					<th>id</th>
+					<th class = "wide">title</th>
+					<th cv-if = "focusAttrs.disabled">!</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody cv-each = "tasks:task:t">
+				<tr>
+					<td>[[task.wid]]</td>
+					<td>[[task.title]]</td>
 
-				<td>
-					<button cv-expand = "focusAttrs" cv-on = "click:focusTask(event, task);">
-						focus
-					</button>
-				</td>
+					<td>
+						<button cv-expand = "focusAttrs" cv-on = "click:focusTask(event, task);">
+							focus
+						</button>
+					</td>
 
-				<td>
-					<button cv-on = "click:endTask(event, task);">close</button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+					<td>
+						<button cv-on = "click:endTask(event, task);">close</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event)"></div>
+
+	<div class = "memory-usage row" style = "max-height: 10em;">
+		<div class = "current-memory inset tall" title = "[[usedJSHeapSize]]">
+			<div class = "used"  style = "--height:[[heapUsedPercent]]"></div>
+			<span>[[usedMb]] mb used</span>
+		</div>
+		<div class = "current-memory inset tall" title = "[[totalJSHeapSize]]">
+			<div class = "total" style = "--height:[[heapTotalPercent]]"></div>
+			<span>[[totalMb]] mb total</span>
+		</div>
+		<div class = "graph inset wide">
+			<canvas cv-ref = "graph"></canvas>
+			<div class = "marker">[[jsHeapSizeLimit]] b</div>
+			<div class = "marker">0 b</div>
+		</div>
+	</div>
 </div>
+
+<div class = "status row">
+	<div class = "label inset">[[tasksCount]] tasks</div>
+	<div class = "label inset">[[cores]] cores</div>
+</div>
+

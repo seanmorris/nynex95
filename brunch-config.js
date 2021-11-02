@@ -1,3 +1,5 @@
+const { exec } = require('child_process');
+
 module.exports = {
 	files: {
 		javascripts: {joinTo: 'app.js'}
@@ -5,8 +7,8 @@ module.exports = {
 	}
 	, plugins: {
 		babel: {
-			presets:   ['@babel/preset-env']
-			, plugins: ["@babel/plugin-proposal-class-properties"]
+			presets: ['@babel/preset-env', ['minify', {builtIns: false}]],
+			plugins: ["@babel/plugin-proposal-class-properties", "macros"]
 		}
 		, raw: {
 			pattern: /\.tmp\.(.+)$/,
@@ -26,19 +28,18 @@ module.exports = {
 	}
 };
 
+// module.exports.hooks = {
+// 	preCompile: () => {
+// 		console.log('About to compile...');
+// 		exec(
+// 			`npm link curvature subspace-console`
+// 			, (err, stdout, stderr)=>{
+// 				console.log(err);
+// 				console.log(stdout);
+// 				console.log(stderr);
 
-exports.hooks = {
-	preCompile: () => {
-		console.log('About to compile...');
-		exec(
-			`pushd ../curvature-2 && npm link && popd && npm link curvature`
-			, (err, stdout, stderr)=>{
-				console.log(err);
-				console.log(stdout);
-				console.log(stderr);
-
-				return Promise.resolve();
-			}
-		)
-	}
-};
+// 				return Promise.resolve();
+// 			}
+// 		)
+// 	}
+// };

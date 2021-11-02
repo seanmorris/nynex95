@@ -8,6 +8,8 @@
 
 		<div class = "spaced row wide right">
 
+			<span class = "contents">Change View&nbsp;</span>
+
 			<span class = "contents" data-mode-script>
 				<button cv-on = "click:layout('horizontal')" title = "horizontal view" class = "square">
 					<img src = "/ui/application-split-vertical.png" />
@@ -30,19 +32,25 @@
 
 			<button cv-on = "click:refresh(event)" class = "square" title = "refresh">
 				<span cv-if = "persist" class = "contents">
-					<img src = "/arrow-circle.png" />
+					Refresh Memory&nbsp;<img src = "/arrow-circle.png" />
 				</span>
 				<span cv-if = "!persist" class = "contents">
-					<img src = "/arrow-circle.png" class = "desat" />
+					Refresh Memory&nbsp;<img src = "/arrow-circle.png" class = "desat" />
 				</span>
 			</button>
 
 			<button cv-on = "click:toggle('persist')" class = "square" title = "toggle persistent memory">
 				<span cv-if = "persist" class = "contents">
-					<img src = "/w98/memory-16-4bit.png" />
+					Persist Memory&nbsp;<img src = "/w98/memory-16-4bit.png" />
 				</span>
-				<span cv-if = "!persist" class = "contents">
-					<img src = "/w98/memory-16-4bit.png" class = "desat" />
+				<span cv-if = "!persist" class = "contents ghost">
+					Persist Memory&nbsp;<img src = "/w98/memory-16-4bit.png" class = "desat" />
+				</span>
+			</button>
+
+			<button cv-on = "click:runCode(event)" class = "square" title = "Execute PHP">
+				<span class = "contents">
+					Execute PHP&nbsp;<img src = "/w98/chip_ramdrive-16-8bit.png" class = "desat" />
 				</span>
 			</button>
 
@@ -62,9 +70,6 @@
 		<div class = "rows inset wide scroll zfront">
 			<div class = "cols tight">
 				<label class = "pane wide">PHP Code</label>
-				<button cv-on = ":click(event)" class = "pane tight" data-tint = "red">
-					<i>RUN</i>
-				</button>
 			</div>
 
 			<div class = "wide scroll zfront">
@@ -81,10 +86,9 @@
 
 		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
-				<label class = "pane wide">Return</label>
-				<!-- <label class = "pane">exit: [[exitCode]]</label> -->
+				<label class = "pane wide">StdErr</label>
 			</div>
-			[[returnConsole]]
+			[[errorConsole]]
 		</div>
 
 		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
@@ -98,11 +102,11 @@
 					Text
 				</button>
 			</div>
-			<span class = "contents" cv-if = "html">
-				[[htmlFrame]]
-			</span>
 			<span class = "contents" cv-if = "!html">
 				[[outputConsole]]
+			</span>
+			<span class = "contents" cv-if = "html">
+				[[htmlFrame]]
 			</span>
 		</div>
 
@@ -110,9 +114,10 @@
 
 		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
-				<label class = "pane wide">StdErr</label>
+				<label class = "pane wide">Return</label>
+				<!-- <label class = "pane">exit: [[exitCode]]</label> -->
 			</div>
-			[[errorConsole]]
+			[[returnConsole]]
 		</div>
 
 	</div>
@@ -136,4 +141,5 @@
 
 <div class = "status row">
 	<div class = "label inset">[[status]]</div>
+	<div class = "label inset">Memory Persistence: [ [[persist]] ]</div>
 </div>

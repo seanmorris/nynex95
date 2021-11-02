@@ -29,30 +29,18 @@ export class Task
 		this.cmd  = taskCmd;
 		this.path = taskPath;
 
-		// console.log('Thread initialized.');
-
-		// this.thread.finally(() => console.log('Thread closed.'));
-
 		this.window = new Window(this);
 
-		// this.addEventListener('start', (event) => {
-		// });
-
-		if(!this.silent)
+		if(this.window)
 		{
-			this.window.addEventListener('closed', (event) => {
-
-				this.signal(event);
-
-				taskList.remove(this);
+			this.window.addEventListener('closed', event => {
 				taskList.remove(Bindable.make(this));
-
+				taskList.remove(this);
+				this.signal(event);
 			});
 
-			this.window.addEventListener('attached', (event) => {
-
+			this.window.addEventListener('attached', event => {
 				this.signal(event);
-
 				this.attached();
 			});
 

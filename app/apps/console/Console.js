@@ -28,6 +28,11 @@ export class Console extends Task
 
 		this.window.args.console = terminal;
 
-		terminal.args.output.push('## Welcome to the Nynex Terminal');
+		terminal.write('\u001b[38m\u001b[44m## Welcome to the Nynex Terminal ');
+		terminal.write('\u001b[2m\u001b[47m  \u001b[40m  \u001b[41m  \u001b[42m  \u001b[43m  \u001b[44m  \u001b[45m  \u001b[46m  ');
+		terminal.write('\u001b[47m  \u001b[40m  \u001b[41m  \u001b[42m  \u001b[43m  \u001b[44m  \u001b[45m  \u001b[46m  ');
+		terminal.write('\u001b[1m\u001b[47m  \u001b[40m  \u001b[41m  \u001b[42m  \u001b[43m  \u001b[44m  \u001b[45m  \u001b[46m  ');
+
+		terminal.runCommand('?');
 	}
 }

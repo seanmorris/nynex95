@@ -8,4 +8,11 @@ export class MenuBar extends View
 
 		this.template = require('./menuBar.tmp');
 	}
+
+	run(event, item, label)
+	{
+		item.callback(event, label);
+
+		document.activeElement.blur();
+	}
 }

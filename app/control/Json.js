@@ -19,8 +19,8 @@ let Base = class extends View
 			: '';
 
 		this.args.expandIcon = this.args.expanded
-			? '+'
-			: 'x';
+			? 'x'
+			: '+';
 
 		this.args.tree = this.args.tree || {};
 		this.args.json = this.args.json || {};
@@ -107,8 +107,8 @@ let Base = class extends View
 			: 'expanded';
 
 		this.args.expandIcon = this.args.expanded
-			? '+'
-			: 'x';
+			? 'x'
+			: '+';
 	}
 
 	type(value)

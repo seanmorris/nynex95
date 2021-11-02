@@ -2,7 +2,7 @@
 	style    = "--bg: url([[bg]])"
 	tabindex = "-1"
 	class    = "desktop"
-	cv-on    = ":focus(event));:contextmenu(event);"
+	cv-on    = "focus(event);contextmenu(event);drop(event);dragover(event)"
 >
 	<div data-role = "icon-list" cv-each = "icons:icon:i">
 		[[icon]]
@@ -11,4 +11,5 @@
 		[[icon]]
 	</div>
 </div>
+
 [[contextMenu]]

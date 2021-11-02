@@ -8,7 +8,7 @@ export class Icons extends View
 	{
 		super(args, parent);
 
-		this.args.icons = args.icons || [];
+		this.args.icons = this.args.icons || [];
 
 		this.template  = require('./icons.tmp');
 	}

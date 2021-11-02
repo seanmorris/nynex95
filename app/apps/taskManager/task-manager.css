@@ -1,0 +1,58 @@
+.memory-usage {
+	height: 100%;
+	max-height: 65%;
+}
+
+
+.memory-usage .current-memory {
+	position: relative;
+	width: 4em;
+}
+
+.memory-usage .current-memory div {
+	position: absolute;
+	height: calc(var(--height) * 1%);
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.memory-usage .current-memory span {
+	position: absolute;
+	z-index: 2;
+	bottom: 0;
+}
+
+.memory-usage .current-memory .used {
+	background-color: #0F0;
+	z-index: 0;
+}
+
+.memory-usage .current-memory .total {
+	background-color: #080;
+	z-index: 1;
+}
+
+.memory-usage .graph {
+	position: relative;
+}
+
+.memory-usage .graph .marker {
+	position: absolute;
+	color: white;
+	right: 0.25em;
+}
+
+.memory-usage .graph .marker:first-child {
+	top: 0;
+}
+
+.memory-usage .graph .marker:last-child {
+	bottom: 0;
+}
+
+.memory-usage .graph canvas {
+	background-color: black;
+	height: 100%;
+	width: 100%;
+}

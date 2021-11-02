@@ -5,8 +5,6 @@ import { Home } from '../../home/Home';
 import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
-import { PhpWeb as PHP } from 'php-wasm/PhpWeb';
-
 export class Drupal extends Task
 {
 	title    = 'Drupal 7';
@@ -19,7 +17,9 @@ export class Drupal extends Task
 
 		this.init = Date.now();
 
-		this.php = new PHP({locateFile: (x) => `/${x}`});
+		const Php = require('php-wasm/PhpWeb').PhpWeb;
+
+		this.php = new Php({locateFile: (x) => `/${x}`});
 
 		this.window.classes.loading = true;
 

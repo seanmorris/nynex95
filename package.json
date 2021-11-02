@@ -1,37 +1,38 @@
 {
-  "name": "Nynex95",
-  "description": "Windows 95-inspired UI for Curvature.",
-  "private": true,
-  "author": "Sean Morris",
-  "version": "0.0.1",
-  "repository": "https://github.com/seanmorris/nynex95",
-  "scripts": {
-    "start": "brunch watch --server",
-    "build": "brunch build --production",
-    "php": "cp -rfv node_modules/php-wasm/php-web.* docs/",
-    "dos": "cp -rfv node_modules/js-dos/dist/wdosbox.wasm.js docs/"
-  },
-  "dependencies": {
-    "curvature": "^0.0.66-l",
-    "cv-markdown": "^1.0.4",
-    "js-dos": "^6.22.59",
-    "php-wasm": "0.0.1",
-    "simplemde": "^1.11.2",
-    "subspace-console": "^0.0.1-b"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.7",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/preset-env": "^7.0.0",
-    "auto-reload-brunch": "^2",
-    "babel-brunch": "^7.0.1",
-    "babel-minify": "^0.5.1",
-    "brace": "^0.11.1",
-    "brunch": "^3",
-    "clean-css-brunch": "^3",
-    "terser-brunch": "^4",
-    "raw-brunch": "^1.0.2",
-    "uglify-es-brunch": "^1"
-  }
+	"name": "Nynex95",
+	"description": "Windows 95-inspired UI for Curvature.",
+	"private": true,
+	"author": "Sean Morris",
+	"version": "0.0.1",
+	"repository": "https://github.com/seanmorris/nynex95",
+	"scripts": {
+		"start": "brunch watch --server",
+		"build": "brunch build --production",
+		"php": "cp -rfv node_modules/php-wasm/php-web.* app/assets/",
+		"dos": "cp -rfv node_modules/js-dos/dist/wdosbox.wasm.js app/assets/"
+	},
+	"dependencies": {
+		"curvature": "^0.0.66-r",
+		"cv-markdown": "^1.0.4",
+		"php-wasm": "^0.0.4-a",
+		"punycode": "^1.4.1",
+		"subspace-console": "^0.0.1-f"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.8.4",
+		"@babel/core": "^7.8.7",
+		"@babel/plugin-proposal-class-properties": "^7.10.4",
+		"@babel/preset-env": "^7.0.0",
+		"auto-reload-brunch": "^2",
+		"babel-brunch": "^7.0.1",
+		"babel-minify": "^0.5.1",
+		"babel-plugin-macros": "^2.8.0",
+		"brace": "^0.11.1",
+		"brunch": "^4",
+		"brunch-preval": "^0.0.4",
+		"clean-css-brunch": "^3",
+		"raw-brunch": "^1.0.2",
+		"terser-brunch": "^4",
+		"uglify-es-brunch": "^1"
+	}
 }

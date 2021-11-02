@@ -1,5 +1,5 @@
 import { Mixin }    from 'curvature/base/Mixin';
-import { Bindable } from 'curvature/base//Bindable';
+import { Bindable } from 'curvature/base/Bindable';
 
 const target = Symbol('target');
 

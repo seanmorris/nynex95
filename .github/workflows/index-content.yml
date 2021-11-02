@@ -31,5 +31,3 @@ jobs:
               commit -nam 'Indexing content.' \
             && git push \
             || true
-
-

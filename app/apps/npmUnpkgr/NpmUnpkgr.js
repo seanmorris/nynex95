@@ -7,7 +7,7 @@ import { Bindable } from 'curvature/base/Bindable';
 
 export class NpmUnpkgr extends Task
 {
-	title    = 'npm-unpkgr';
+	title    = 'unpkgr';
 	icon     = '/apps/npm-16-24bit.png';
 	template = require('./main.tmp');
 

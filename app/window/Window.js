@@ -89,7 +89,7 @@ let Base = class extends View
 		});
 	}
 
-	attached(parent)
+	onAttach(parent)
 	{
 		this.classes.resize = true;
 		this.classes.pane   = true;
@@ -248,8 +248,6 @@ let Base = class extends View
 
 	menuFocus()
 	{
-		console.log(this.tags.window.element.isConnected);
-
 		this.classes['menu-open'] = true;
 	}
 
@@ -439,12 +437,14 @@ let Base = class extends View
 			this.outWindow.close();
 		}
 
-		this.windows.remove(Bindable.make(this));
-		this.windows.remove(this);
-
 		this.dispatchEvent(new CustomEvent(
 			'closed', {detail:{ target:this }}
 		));
+
+		this.windows.remove(Bindable.make(this));
+		this.windows.remove(this);
+
+		this.remove();
 	}
 
 	focus()
@@ -456,7 +456,7 @@ let Base = class extends View
 
 		if(this.outWindow)
 		{
-			this.outWindow.focus();
+			window.open('', this.outWindow.name);
 		}
 		else if(!this.classes.focused && this.args.cmd)
 		{
@@ -626,14 +626,16 @@ let Base = class extends View
 			after.style.maxHeight  = `${-1 + afterHeight  + delta}px`;
 		};
 
-		document.addEventListener('mousemove', onMove);
+		const localDoc = event.target.getRootNode();
+
+		localDoc.addEventListener('mousemove', onMove);
 
 		const onDrop = () => {
-			document.removeEventListener('mousemove', onMove);
-			document.removeEventListener('mouseup', onDrop);
+			localDoc.removeEventListener('mousemove', onMove);
+			localDoc.removeEventListener('mouseup', onDrop);
 		};
 
-		document.addEventListener('mouseup', onDrop);
+		localDoc.addEventListener('mouseup', onDrop);
 	}
 
 	verticalResizeGrabbed(event)
@@ -677,14 +679,16 @@ let Base = class extends View
 			after.style.minWidth  = `${afterWidth  + delta}px`;
 		};
 
-		document.addEventListener('mousemove', onMove);
+		const localDoc = event.target.getRootNode();
+
+		localDoc.addEventListener('mousemove', onMove);
 
 		const onDrop = () => {
-			document.removeEventListener('mousemove', onMove);
-			document.removeEventListener('mouseup', onDrop);
+			localDoc.removeEventListener('mousemove', onMove);
+			localDoc.removeEventListener('mouseup', onDrop);
 		};
 
-		document.addEventListener('mouseup', onDrop);
+		localDoc.addEventListener('mouseup', onDrop);
 	}
 }
 

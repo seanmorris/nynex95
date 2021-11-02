@@ -21,11 +21,12 @@ export class WidgetViewer extends Task
 		this.window.args.height = `320px`;
 
 		this.window.maximize = () => {};
-		this.window.classes.focused = false;
 	}
 
 	attached()
 	{
+		this.window.classes.focused = false;
+
 		this.window.classes['widget-viewer-win'] = true;
 
 		this.window.classes.transparent = true;

@@ -4,6 +4,9 @@ import { Home } from '../home/Home';
 import { Icon } from '../icon/Icon';
 import { Menu } from '../menu/Menu';
 
+import { FileModel } from '../files/FileModel';
+import { FileDatabase } from '../files/FileDatabase';
+
 import { Diskette } from '../widgets/diskette/Diskette';
 
 export class Desktop extends View
@@ -18,12 +21,20 @@ export class Desktop extends View
 		// this.args.bg = '/sm-disk.png';
 		this.args.bg = '/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg';
 
-		this.args.contextMenu = new Menu({items: {
-			'Create New File':      () => this.createFile()
-			, 'Desktop Background': () => {}
-			, 'Settings':           () => {}
-
-		}}, this);
+		this.args.contextMenu = new Menu({items:[
+			{
+				callback: () => this.createFile()
+				, name: 'Create New File'
+			}
+			, {
+				callback: () => {}
+				, name: 'Desktop Background'
+			}
+			, {
+				callback: () => {}
+				, name: 'Settings'
+			}
+		]}, this);
 
 		this.args.icons = [
 			new Icon({
@@ -44,12 +55,12 @@ export class Desktop extends View
 				, name: 'Nynepad'
 				, icon: 60
 			})
-			, new Icon({
-				action: 'nynemark'
-				, name: 'Nynemark'
-				, icon: 'document'
-				, path: 'w98'
-			})
+			// , new Icon({
+			// 	action: 'nynemark'
+			// 	, name: 'Nynemark'
+			// 	, icon: 'document'
+			// 	, path: 'w98'
+			// })
 			// , new Icon({
 			// 	action: 'window'
 			// 	, name: 'Application Window'
@@ -94,6 +105,11 @@ export class Desktop extends View
 				, name: 'Widget Viewer'
 				, icon: 61
 			})
+			, new Icon({
+				action: 'file-browser'
+				, name: 'File Browser'
+				, icon: 5
+			})
 		];
 
 		this.args.endIcons = [
@@ -105,13 +121,13 @@ export class Desktop extends View
 			// 	, bits: 4
 			// 	, size: 32
 			// })
-			, new Icon({
-				action: 'npm-unpkgr'
-				, name: 'npm-unpkgr'
-				, icon: 'npm'
-				, path: 'apps'
-				, bits: 24
-			})
+			// , new Icon({
+			// 	action: 'unpkgr'
+			// 	, name: 'unpkgr'
+			// 	, icon: 'npm'
+			// 	, path: 'apps'
+			// 	, bits: 24
+			// })
 			, new Icon({
 				action: 'github'
 				, name: 'GitHub Login'
@@ -134,13 +150,13 @@ export class Desktop extends View
 				, path: 'apps'
 				, bits: 24
 			})
-			, new Icon({
-				action: 'drupal'
-				, name: 'Drupal 7'
-				, icon: 'drupal'
-				, path: 'apps'
-				, bits: 24
-			})
+			// , new Icon({
+			// 	action: 'drupal'
+			// 	, name: 'Drupal 7'
+			// 	, icon: 'drupal'
+			// 	, path: 'apps'
+			// 	, bits: 24
+			// })
 			// , new Icon({
 			// 	action: 'dos'
 			// 	, name: 'Doom'
@@ -148,13 +164,13 @@ export class Desktop extends View
 			// 	, path: 'apps'
 			// 	, bits: 16
 			// })
-			, new Icon({
-				action: 'clones'
-				, name: 'Clones n Barrels'
-				, icon: 'barrel'
-				, path: 'sm'
-				, bits: 24
-			})
+			// , new Icon({
+			// 	action: 'clones'
+			// 	, name: 'Clones n Barrels'
+			// 	, icon: 'barrel'
+			// 	, path: 'sm'
+			// 	, bits: 24
+			// })
 			, new Icon({
 				action: 'numb'
 				, name: 'numb - linkin park.mp3.exe'
@@ -162,19 +178,19 @@ export class Desktop extends View
 				, path: 'apps'
 				, bits: 8
 			})
-			, new Icon({
-				action: 'letsvue'
-				, name: 'Letsvue'
-				, icon: 'letsvue'
-				, path: 'apps'
-				, bits: 24
-			})
-			, new Icon({
-				action: 'harp'
-				, name: 'Jasmine\'s Harp'
-				, icon: 1
-				, bits: 4
-			})
+			// , new Icon({
+			// 	action: 'letsvue'
+			// 	, name: 'Letsvue'
+			// 	, icon: 'letsvue'
+			// 	, path: 'apps'
+			// 	, bits: 24
+			// })
+			// , new Icon({
+			// 	action: 'harp'
+			// 	, name: 'Jasmine\'s Harp'
+			// 	, icon: 1
+			// 	, bits: 4
+			// })
 			// , new Icon({
 			// 	action: 'flashair'
 			// 	, name: 'Flashair'
@@ -184,13 +200,63 @@ export class Desktop extends View
 			// })
 		];
 
-		// this.windows = new Bag((win, meta, action, index)=>{
+		this.fileDb = FileDatabase.open('files', 1);
 
-		// 	// console.log(this.windows.list);
+		this.fileDb.then(db => {
 
-		// });
+			const onWrite = event => {
+				const file = event.detail.record;
 
-		// this.args.windows = this.windows.list;
+				if(file.directory === '~/desktop/')
+				{
+					const bytes = new Uint8Array(file.buffer);
+
+					const blobUrl = URL.createObjectURL(new Blob([file.buffer], {type:file.type}));
+
+					this.args.endIcons.push(
+						new Icon({
+							action: () => {
+								this.args.bg = blobUrl;
+							}
+							, name: file.name
+							, type: file.type
+							, icon: 1
+							, bits: 4
+						})
+					);
+				}
+			};
+
+			db.addEventListener('write', onWrite);
+
+			this.onRemove(() => db.removeEventListener('write', onWrite));
+
+			const query = {
+				store: 'files'
+				, index: 'directory'
+				, range: '~/desktop/'
+				, type:  FileModel
+			};
+
+			db.select(query).each(file => {
+
+				const bytes = new Uint8Array(file.buffer);
+
+				const blobUrl = URL.createObjectURL(new Blob([file.buffer], {type:file.type}));
+
+				this.args.endIcons.push(
+					new Icon({
+						action: () => {
+							this.args.bg = blobUrl;
+						}
+						, name: file.name
+						, type: file.type
+						, icon: 1
+						, bits: 4
+					})
+				);
+			});
+		});
 	}
 
 	focus(event)
@@ -242,7 +308,7 @@ export class Desktop extends View
 				new Icon({
 					action: () => {
 						this.args.bg = blobUrl;
-						// console.log(file);
+						console.log(file);
 					}
 					, name: file.name
 					, icon: 1
@@ -251,5 +317,62 @@ export class Desktop extends View
 			);
 
 		});
+	}
+
+	drop(event)
+	{
+		event.preventDefault();
+
+		for(const file of event.dataTransfer.files)
+		{
+
+			const buffer = file.arrayBuffer();
+			const fileDb = this.fileDb;
+
+			Promise.all([buffer, fileDb]).then(([buffer, fileDb])=>{
+
+				const directory = '~/desktop/';
+
+				const query = {
+					store: 'files'
+					, index: 'path'
+					, range: directory + file.name
+					, type:  FileModel
+				};
+
+
+				const values = {
+					name: file.name
+					, lastModified: file.lastModified
+					, size: file.size
+					, type: file.type
+					, path: directory + file.name
+					, name: file.name
+					, buffer: buffer
+					, directory
+				};
+
+				fileDb.select(query).one().then(result => {
+
+					let record = result.record;
+
+					if(!record)
+					{
+						record = FileModel.from(values);
+						fileDb.insert('files', record);
+					}
+					else
+					{
+						record.consume(values);
+						fileDb.update('files', record);
+					}
+				});
+			});
+		}
+	}
+
+	dragover(event)
+	{
+		event.preventDefault();
 	}
 }

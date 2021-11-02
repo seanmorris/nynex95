@@ -1,6 +1,16 @@
-<div class = "menu-bar" cv-on = "blur:menuBlur(event):c;focus:menuFocus(event):c">
+<div cv-on = "blur:menuBlur(event):c;focus:menuFocus(event):c">
 
-	<div tabindex = "0">
+	<div class = "menu-bar" cv-each = "menus:menu:m" class = "row">
+		<div tabindex = "0">
+			[[m]]
+			<ul class = "menu pane" cv-each = "menu:menuItem:mI">
+				<li cv-on = "click:run(event, menuItem, mI);" tabindex = "0">[[mI]]</li>
+			</ul>
+		</div>
+		<hr />
+	</div>
+
+	<!-- <div tabindex = "0">
 
 		<u>F</u>ile
 
@@ -77,9 +87,9 @@
 
 		</ul>
 
-	</div>
+	</div> -->
 
-	<div tabindex = "0">
+	<!-- <div tabindex = "0">
 
 		<u>E</u>dit
 
@@ -96,9 +106,9 @@
 			<li tabindex = "0">Replace</li>
 		</ul>
 
-	</div>
+	</div> -->
 
-	<div tabindex = "0">
+	<!-- <div tabindex = "0">
 		<u>V</u>iew
 	</div>
 
@@ -112,5 +122,5 @@
 
 	<div tabindex = "0">
 		<u>H</u>elp
-	</div>
+	</div> -->
 </div>

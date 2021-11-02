@@ -37,6 +37,12 @@
 	bottom: 100%;
 	left: -3px;
 	flex-direction: row;
+	z-index: 100;
+}
+
+.task-bar .start .pane li .pane {
+	left: 100%;
+	bottom: 0px;
 }
 
 .task-bar .brand-stripe {
@@ -74,12 +80,21 @@
 	margin-right: 0.5em;
 }
 
-.task-bar ul [tabindex]:hover {
+.task-bar li[tabindex]:focus-within,
+.task-bar li[tabindex]:focus,
+.task-bar li[tabindex]:hover {
 	outline-color: white;
 	background-color: #000082;
 	color: white;
 }
 
+.task-bar ul [tabindex] > .expand {
+	margin-right: 0;
+	margin-left: auto;
+}
+
+.task-bar ul [tabindex]:focus-within > .expand,
+.task-bar ul [tabindex]:focus > .expand,
 .task-bar ul [tabindex]:hover > .expand {
 	filter: invert(100%);
 }
@@ -97,17 +112,17 @@
 	position: relative;
 }
 
-.task-bar .start li ul.pane {
+.task-bar .start:focus li ul.pane {
 	display: none;
 	position: absolute;
 	left: 100%;
-	bottom: 0px;
+	/*bottom: 0px;*/
 	flex-direction: column;
 	color: black;
 }
 
 .task-bar .start li:focus-within > ul.pane {
-	display: flex;
+	display: block;
 }
 
 .task-bar .task-list {
@@ -133,6 +148,7 @@
 	width: 25%;
 	min-width: 12em;
 	max-width: 16em;
+	white-space: nowrap;
 }
 
 .task-bar .tray:not(:empty) {
@@ -142,6 +158,7 @@
 	padding-left: 0.25em;
 	padding-right: 0.5em;
 }
+
 .tray [data-role=icon-list] div:focus img {
 	filter: brightness(110%);
 }

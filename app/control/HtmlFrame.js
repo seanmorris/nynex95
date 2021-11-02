@@ -9,6 +9,8 @@ export class HtmlFrame extends BaseView
 		this.template = require('./html-frame.tmp');
 
 		this.args.frameSource = '';
+
+		this.args.location = location;
 	}
 
 	escapeQuotes(input)

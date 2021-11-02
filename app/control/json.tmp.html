@@ -7,7 +7,15 @@
 				</span>
 				:
 				<span class ="json-value">
-					[[value]]
+					<span cv-if = "!editing">
+						[[value]]
+					</span>
+					<span cv-if = "editing">
+						<input cv-bind = "value" />
+					</span>
+				</span>
+				<span class = "edit-toggler">
+					edit
 				</span>
 			</div>
 		</div>

@@ -1,41 +1,41 @@
-import { Task } from 'task/Task';
-import { Icon } from '../../icon/Icon';
-import { Home } from '../../home/Home';
+// import { Task } from 'task/Task';
+// import { Icon } from '../../icon/Icon';
+// import { Home } from '../../home/Home';
 
-import { MenuBar  } from '../../window/MenuBar';
-import { Bindable } from 'curvature/base/Bindable';
+// import { MenuBar  } from '../../window/MenuBar';
+// import { Bindable } from 'curvature/base/Bindable';
 
-require("js-dos");
+// require("js-dos");
 
-export class Dosbox extends Task
-{
-	title    = 'SM-DOS';
-	icon     = '/apps/dos-16-24bit.png';
-	template = require('./main.tmp');
+// export class Dosbox extends Task
+// {
+// 	title    = 'SM-DOS';
+// 	icon     = '/apps/dos-16-24bit.png';
+// 	template = require('./main.tmp');
 
-	constructor(taskList)
-	{
-		super(taskList);
+// 	constructor(taskList)
+// 	{
+// 		super(taskList);
 
-		this.window.classes.clones = true;
-	}
+// 		this.window.classes.clones = true;
+// 	}
 
-	attached()
-	{
-		const canvas = this.window.findTag('canvas');
+// 	attached()
+// 	{
+// 		const canvas = this.window.findTag('canvas');
 
-		if(!canvas)
-		{
-			console.error('Could not find <canvas>.');
-		}
+// 		if(!canvas)
+// 		{
+// 			console.error('Could not find <canvas>.');
+// 		}
 
-		console.log('Nice!');
+// 		console.log('Nice!');
 
-		Dos(canvas).ready((fs, main) => {
-			console.log('Nice!');
-		});
-		// Dos(canvas).ready((fs, main) => {
-		// 	main(["arg1", "arg2", ...])
-		// });
-	}
-}
+// 		Dos(canvas).ready((fs, main) => {
+// 			console.log('Nice!');
+// 		});
+// 		// Dos(canvas).ready((fs, main) => {
+// 		// 	main(["arg1", "arg2", ...])
+// 		// });
+// 	}
+// }

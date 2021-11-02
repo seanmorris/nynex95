@@ -6,7 +6,7 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	background-color: black;
-	background-image: url(/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg);
+	background-image: var(--bg, url(/dawid-zawila-9d33wIMMzoE-unsplash-crop.jpg));
 	/*background-size: 40%;*/
 	position: absolute;
 	top: 0px;

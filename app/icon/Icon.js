@@ -35,6 +35,19 @@ export class Icon extends View
 		this.args.blinking = '';
 	}
 
+	onAttach()
+	{
+		const focusable = this.findTag('[tabindex]');
+
+		this.listen(focusable, 'focus', event =>
+			this.dispatchEvent(new CustomEvent('select', {detail:this.args}))
+		);
+
+		this.listen(focusable, 'blur', event =>
+			this.dispatchEvent(new CustomEvent('deselect', {detail:this.args}))
+		);
+	}
+
 	dblclick(event)
 	{
 		const home = Home.instance();
@@ -50,7 +63,6 @@ export class Icon extends View
 				break;
 
 		}
-
 	}
 
 	blink()

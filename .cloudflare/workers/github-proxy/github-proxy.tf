@@ -11,16 +11,16 @@ provider "cloudflare" {
 	api_token  = var.CLOUDFLARE_API_TOKEN
 }
 
-resource "cloudflare_workers_kv_namespace" "github-proxy-kv" {
-	title = "github-proxy-kv"
+resource "cloudflare_workers_kv_namespace" "nynex-github-proxy-kv" {
+	title = "nynex-github-proxy-kv"
 }
 
 resource "cloudflare_worker_script" "proxy_script" {
-	name    = "github-proxy"
+	name    = "nynex-github-proxy"
 	content = file("index.js")
 
 	kv_namespace_binding {
-		namespace_id = cloudflare_workers_kv_namespace.github-proxy-kv.id
+		namespace_id = cloudflare_workers_kv_namespace.nynex-github-proxy-kv.id
 		name         = "PROXY_KV"
 	}
 }

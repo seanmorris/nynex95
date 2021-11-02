@@ -2,9 +2,16 @@
 	class    = "menu pane [[classes|join]]"
 	tabindex = "0"
 	cv-ref   = "menu::"
-	cv-each  = "items:callback:item"
+	cv-each  = "items:item"
 >
-	<li tabindex = "0" cv-on = "click:call(event,item)">[[item]]</li>
+	<li tabindex = "0" cv-on = "click:call(event,item)" cv-with = "item">
+		<span cv-if = "icon"><img cv-attr = "src:icon" /></span>
+		[[name]]
+		[[menu]]
+		<span class = "expand" cv-if = "menu">
+			<img src = "/arrow-expand.png" />
+		</span>
+	</li>
 </ul>
 
 <!-- <li tabindex = "0">

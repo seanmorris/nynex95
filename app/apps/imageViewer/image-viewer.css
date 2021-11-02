@@ -1,0 +1,13 @@
+.image-viewer {
+	display: flex;
+
+}
+
+.image-viewer > span {
+	display: contents;
+}
+
+.image-viewer > span > img {
+	margin: auto;
+	box-shadow: 0 0.75em 1em rgba(0,0,0,0.5);
+}

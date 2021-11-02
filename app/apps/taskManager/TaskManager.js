@@ -8,7 +8,7 @@ import { Bindable } from 'curvature/base/Bindable';
 export class TaskManager extends Task
 {
 	title     = 'Task Manager';
-	icon      = '/w95/61-16-4bit.png';
+	icon      = '/w98/computer_taskmgr-16-4bit.png';
 	template  = require('./main.tmp');
 	willFocus = null;
 
@@ -20,9 +20,13 @@ export class TaskManager extends Task
 
 		args.cycler = {};
 
+		args.tasks = args.tasks || [];
+
 		args.focusAttrs = {};
 
 		args['data-thing'] = '!!!';
+
+		args.cores = navigator.hardwareConcurrency;
 
 		args.bindTo('poppedOut', v => {
 
@@ -42,6 +46,8 @@ export class TaskManager extends Task
 
 			// args.focusAttrs = focus;
 		});
+
+		this.samples = [];
 
 		this.window.toJSON = (i) => {
 			return JSON.stringify(i);
@@ -65,15 +71,113 @@ export class TaskManager extends Task
 
 			// console.log(this.x, l[this.x], args.cycler);
 		}
+
+		this.pause = false;
+
+		this.window.onFrame(() => {
+
+			if(this.window.classes.minimized)
+			{
+				this.pause = true;
+
+				return;
+			}
+
+			if(this.pause)
+			{
+				if(!this.pauseTimeout)
+				{
+					this.pauseTimeout = this.window.onTimeout(500, () => {
+						this.pauseTimeout = this.pause = false;
+					});
+				}
+
+				return;
+			}
+
+			this.window.args.tasksCount = this.window.args.tasks.filter(x=>x).length;
+
+			const memory = window.performance.memory;
+
+			this.window.args.jsHeapSizeLimit = memory.jsHeapSizeLimit;
+			this.window.args.totalJSHeapSize = memory.totalJSHeapSize;
+			this.window.args.usedJSHeapSize  = memory.usedJSHeapSize;
+
+			const used  = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
+			const total = memory.totalJSHeapSize / memory.jsHeapSizeLimit;
+
+			this.window.args.heapUsedPercent = 100 * used;
+			this.window.args.heapTotalPercent = 100 * total;
+
+			this.window.args.usedMb = (memory.usedJSHeapSize / (1024**2)).toFixed(2);
+			this.window.args.totalMb = (memory.totalJSHeapSize / (1024**2)).toFixed(2);
+
+			if(this.window.tags.graph && this.window.tags.graph.width)
+			{
+				const graph = this.window.tags.graph;
+
+				this.samples.push({used, total});
+
+				while(this.samples.length > graph.width)
+				{
+					this.samples.shift();
+				}
+
+				if(graph.width !== graph.clientWidth)
+				{
+					graph.width  = graph.clientWidth;
+				}
+
+				if(graph.height !== graph.clientHeight)
+				{
+					graph.height  = graph.clientHeight;
+				}
+
+				const context = graph.getContext('2d');
+
+				context.clearRect(0, 0, graph.width, graph.height);
+
+				const image = context.getImageData(0, 0, graph.width, graph.height);
+
+				const w = image.width;
+				const h = image.height;
+
+				for(let i = 0; i < image.width; i++)
+				{
+					if(!this.samples[i])
+					{
+						break;
+					}
+
+					const sample = this.samples[i];
+
+					const u = 1 - sample.used;
+					const t = 1 - sample.total;
+
+					const usedOffset = (4 * w * (Math.floor(h * u) - 1)) + (4 * i);
+					const totalOffset = (4 * w * (Math.floor(h * t) - 1)) + (4 * i);
+
+					image.data[totalOffset + 0] = 0;
+					image.data[totalOffset + 1] = 128;
+					image.data[totalOffset + 2] = 0;
+					image.data[totalOffset + 3] = 255;
+
+					image.data[usedOffset + 0] = 0;
+					image.data[usedOffset + 1] = 255;
+					image.data[usedOffset + 2] = 0;
+					image.data[usedOffset + 3] = 255;
+				}
+
+				context.putImageData(image, 0, 0);
+			}
+		});
 	}
 
 	attached(event)
 	{
-		console.log(navigator.userActivation.isActive, navigator.userActivation.hasBeenActive);
-
 		this.window.endTask = (event, task) => {
 
-			const bindableThis = Bindable.make(task);
+			const bindableThis = Bindable.make(this);
 
 			if(task === bindableThis && this.window.outWindow)
 			{

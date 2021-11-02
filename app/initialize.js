@@ -5,7 +5,6 @@ import { Router }  from 'curvature/base/Router';
 
 const homeView = Home.instance();
 
-
 document.addEventListener('DOMContentLoaded', function() {
 
 	Router.listen(homeView);

@@ -1,0 +1,41 @@
+<hr />
+
+<div class = "row">
+	<input class = "white inset wide" list = "dirmenu_[[_id]]" value = "[[directory]]">
+	<datalist id = "dirmenu_[[_id]]">
+		<option value = "[[directory]]">
+		<option value = ".">
+		<option value = "..">
+	</datalist>
+</div>
+
+<span cv-if = "promptAction">
+	<div class = "row padded">
+		<span class = "square">
+			<img src = "/w98/msg_question-16-4bit.png" />
+		</span>
+		<span class = "prompt h-margin small">What action should run for ${XYZ} files?</span>
+		<div class = "row tight wide">
+			<input class = "inset white wide" cv-bind = "defaultAction">
+			<button>save and run</button>
+		</div>
+	</div>
+</span>
+
+<div data-control-sector class = "white inset scroll" cv-on = "dragover(event);drop(event)">
+	<div class = "liquid abs-holder [[viewRaw]]">
+		<div class = "abs-fill control">
+			[[iconList]]
+		</div>
+	</div>
+</div>
+
+<div class = "status row">
+	<div class = "label liquid inset">[[selectedFilename]]&nbsp;</div>
+	<div class = "label liquid inset">
+		<span cv-if = "selectedFileType">type: [[selectedFileType]]</span>&nbsp;
+	</div>
+	<div class = "label liquid inset">
+		<span cv-if = "selectedFileSize">size: [[selectedFileSize]]</span>&nbsp;
+	</div>
+</div>

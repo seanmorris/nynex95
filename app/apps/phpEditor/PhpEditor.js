@@ -7,7 +7,7 @@ import { HtmlFrame } from '../../control/HtmlFrame'
 import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
-import { PhpTask } from './PhpTask';
+// import { PhpTask } from './PhpTask';
 
 import * as ace from 'brace';
 
@@ -42,29 +42,28 @@ export class PhpEditor extends Task
 		this.mode  = 'script';
 
 		this.returnConsole = new Terminal;
-		this.inputConsole  = new Terminal({path:{php: PhpTask}});
+		// this.inputConsole  = new Terminal({path:{php: PhpTask}});
 		this.outputConsole = new Terminal;
 		this.errorConsole  = new Terminal;
 
 		this.window.args.exitCode = 'NUL';
 
-		this.inputConsole.runCommand('php');
-		this.inputConsole.runCommand('/clear');
+		// this.inputConsole.runCommand('php');
+		// this.inputConsole.runCommand('/clear');
 
-		this.window.args.layout = 'vertical';
+		this.window.args.layout = 'horizontal';
 		this.window.args.htmlFrame = new HtmlFrame;
 
 		// this.inputConsole.runCommand(
 		// 	`'Extensions available: ' . implode(', ', get_loaded_extensions())`
 		// );
 
-		this.inputConsole.runCommand('var_dump( (object)[ "php" => "working!" ] )');
-
+		// this.inputConsole.runCommand('var_dump( (object)[ "php" => "working!" ] )');
 
 		this.window.args.status = 'initializing...';
 
 		this.window.args.returnConsole = this.returnConsole;
-		this.window.args.inputConsole  = this.inputConsole;
+		// this.window.args.inputConsole  = this.inputConsole;
 		this.window.args.outputConsole = this.outputConsole;
 		this.window.args.errorConsole  = this.errorConsole;
 
@@ -91,11 +90,11 @@ export class PhpEditor extends Task
 	return 'Ran @' . (new DateTime)->format('Y-m-d h:i:s.v') . ' UTC';
 
 })();`;
-
 		const Php = require('php-wasm/PhpWeb').PhpWeb;
-		const php = new Php({locateFile: (x) => `/${x}`});
 
-		php.addEventListener('ready', () => {
+		const php = new Php();
+
+		this.window.listen(php, 'ready', () => {
 			this.window.classes.loading = false;
 			this.window.args.status = 'PHP Ready!';
 
@@ -122,7 +121,7 @@ export class PhpEditor extends Task
 			this.window.args.layout = layout;
 		}
 
-		this.window.click = (event) => {
+		this.window.runCode = (event) => {
 
 			// this.returnConsole.args.output.splice(0);
 			// this.outputConsole.args.output.splice(0);
@@ -153,129 +152,30 @@ export class PhpEditor extends Task
 			// this.window.args.exitCode = exitCode;
 		};
 
-		this.window.ruleSet.add('textarea[data-php]', ({element}) => {
+		this.window.listen(php, 'output', event => {
 
-			const resizer = element.parentNode;
+			this.window.classes.loading = false;
+			this.window.args.status = 'PHP Ready!';
 
-			let editor = ace.edit(element);
+			const detail   = event.detail.join("\n").trim();
 
-			// if(ResizeObserver)
-			// {
-			// 	const resizeObserver = new ResizeObserver(entries => {
-			// 		editor && editor.resize();
-			// 	});
+			this.outputConsole.args.output.push(detail);
+			this.window.args.htmlFrame.args.frameSource += detail;
+		});
 
-			// 	resizeObserver.observe(resizer);
-			// }
+		this.window.listen(php, 'error', event => {
 
-			editor.setTheme('ace/theme/monokai');
-			editor.session.setMode('ace/mode/php');
+			const detail = event.detail.join("\n ").trim();
 
-			// editor.session.setMode('ace/mode/markdown', () => {
+			if(!detail)
+			{
+				return;
+			}
 
-			// 	const rules = editor.session.$mode.$highlightRules.getRules();
+			this.window.args.status = 'PHP Ready!';
+			this.window.classes.loading = false;
 
-			// 	for (const stateName in rules)
-			// 	{
-			// 		if (Object.prototype.hasOwnProperty.call(rules, stateName))
-			// 		{
-			// 			rules[stateName].unshift({
-			// 				token:   'markdown-generic-code-tag'
-			// 				, regex: /```/
-			// 				, next:  'start'
-			// 			});
-
-			// 			rules[stateName].unshift({
-			// 				token:   'markdown-open-code-tag'
-			// 				, regex: /```(\S+)?/
-			// 				, next:  'start'
-			// 			});
-
-			// 			rules[stateName].unshift({
-			// 				token:   'php-open-tag'
-			// 				, regex: /<\?=/i
-			// 				, next:  'start'
-			// 				, onMatch: (value, state, stack, line) => {
-
-			// 					console.log(value, state, stack, line)
-
-			// 					return this.token;
-			// 				},
-			// 			});
-
-			// 		}
-			// 	}
-
-			// 	// force recreation of tokenizer
-			// 	editor.session.$mode.$tokenizer = null;
-			// 	editor.session.bgTokenizer.setTokenizer(editor.session.$mode.getTokenizer());
-			// 	// force re-highlight whole document
-			// 	editor.session.bgTokenizer.start(0);
-			// });
-
-			// editor.setOptions({
-			// 	autoScrollEditorIntoView: true
-			// 	, maxLines:               0
-			// 	, printMargin:            false
-			// 	, readOnly:               false
-			// });
-
-			const aceChanged = (event) => {
-
-				if(!editor.curOp || !editor.curOp.command.name)
-				{
-					const added = new Range(
-						event.start.row
-						, 0
-						, event.end.row -1
-						, Infinity
-					);
-
-					this.window.onTimeout(0, ()=>{
-						editor.session.addMarker(added, 'output-line', 'fullLine');
-					});
-
-					return;
-				}
-
-				this.window.args.input = editor.session.getValue();
-			};
-
-			editor.session.on('change', aceChanged);
-
-			this.window.onRemove(()=>{
-				editor.session.off('change', aceChanged);
-				editor.destroy();
-				editor = undefined;
-			});
-
-			editor.resize();
-
-			php.addEventListener('output', event => {
-
-				this.window.classes.loading = false;
-				this.window.args.status = 'PHP Ready!';
-
-				const detail   = event.detail.join("\n").trim();
-
-				this.outputConsole.args.output.push(detail);
-				this.window.args.htmlFrame.args.frameSource += detail;
-			});
-
-			php.addEventListener('error', event => {
-
-				const detail = event.detail.join("\n ").trim();
-
-				if(!detail)
-				{
-					return;
-				}
-
-				this.window.args.status = 'PHP Ready - ERRORS!';
-				this.window.classes.loading = false;
-
-				this.errorConsole.args.output.push(detail);
-			});
+			this.errorConsole.args.output.push(detail);
 		});
 
 		this.window.refresh = () => {
@@ -307,9 +207,64 @@ export class PhpEditor extends Task
 
 	attached()
 	{
-		this.returnConsole.scroller = this.returnConsole.findTag('.terminal');
-		this.inputConsole.scroller  = this.inputConsole.findTag('.terminal');
-		this.outputConsole.scroller = this.outputConsole.findTag('.terminal');
-		this.errorConsole.scroller  = this.errorConsole.findTag('.terminal');
+		this.returnConsole.scroller = this.returnConsole && this.returnConsole.findTag('.terminal');
+		// this.inputConsole.scroller  = this.inputConsole  && this.inputConsole.findTag('.terminal');
+		this.outputConsole.scroller = this.outputConsole && this.outputConsole.findTag('.terminal');
+		this.errorConsole.scroller  = this.errorConsole  && this.errorConsole.findTag('.terminal');
+
+		this.window.findTags('textarea[data-php]').forEach(element => {
+			const resizer = element.parentNode;
+
+			let editor = ace.edit(element.node);
+
+			editor.session.setUseWorker(false);
+
+			editor && editor.resize();
+
+			editor.setTheme('ace/theme/monokai');
+			editor.session.setMode('ace/mode/php');
+
+			if(ResizeObserver)
+			{
+				const resizeObserver = new ResizeObserver(entries => {
+					editor && editor.resize();
+				});
+
+				resizeObserver.observe(resizer);
+
+				this.window.onRemove(() => resizeObserver.unobserve(resizer));
+			}
+
+			const aceChanged = (event) => {
+
+				if(!editor.curOp || !editor.curOp.command.name)
+				{
+					const added = new Range(
+						event.start.row
+						, 0
+						, event.end.row -1
+						, Infinity
+					);
+
+					this.window.onTimeout(0, ()=>{
+						editor.session.addMarker(added, 'output-line', 'fullLine');
+					});
+
+					return;
+				}
+
+				this.window.args.input = editor.session.getValue();
+			};
+
+			editor.session.on('change', aceChanged);
+
+			this.window.onRemove(()=>{
+				editor.session.off('change', aceChanged);
+				editor.destroy();
+				editor = undefined;
+			});
+
+			editor.resize();
+		});
 	}
 }

@@ -22,6 +22,10 @@ textarea, input, [contenteditable] {
 	user-select: initial;
 }
 
+textarea[data-wrapping=false] {
+	white-space: nowrap;
+}
+
 body {
 	display: flex;
 	flex-direction: column;
@@ -61,6 +65,30 @@ html, body, input, button, select {
 
 .padded {
 	padding: 0.5em;
+}
+
+.h-padded {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.v-padded {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+.margin {
+	padding: 0.5em;
+}
+
+.h-margin {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.v-margin {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
 }
 
 .frame.margin {
@@ -115,7 +143,7 @@ html, body, input, button, select {
 	flex-shrink: 0;
 	display: flex;
 	flex-direction: row;
-	align-content: center;
+	align-items: center;
 }
 
 .right {
@@ -242,9 +270,10 @@ button:active {
 }
 
 *:focus {
-	outline-width: 1px;
+	/*outline-width: 1px;
 	outline-color: black;
-	outline-style: dotted;
+	outline-style: dotted;*/
+	outline: none;
 }
 
 label {
@@ -448,6 +477,11 @@ label.icon-frame label {
 	flex-grow: 1;
 }
 
+.tall {
+	justify-self: stretch;
+	min-height: 100%;
+}
+
 .row.tight > * {
 	margin: 0px;
 	justify-content: center;
@@ -502,6 +536,11 @@ button.dropdown {
 
 .tight button {
 	align-self: center;
+}
+
+button {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .tight .tight {
@@ -708,4 +747,8 @@ button.dropdown {
 	padding: 0px;
 	padding-left: 4px;
 	padding-right: 4px;
+}
+
+.noshrink {
+	flex-shrink: 0;
 }
