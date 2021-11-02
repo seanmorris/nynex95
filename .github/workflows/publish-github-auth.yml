@@ -33,7 +33,7 @@ jobs:
           SCRIPT_NAME: nynex-github-auth
 
       - name: Delete Existing KV Store
-        run: set -eux; sudo npm install -g npm@latest; npm init; npm install @cloudflare/wrangler --save; sudo npm i -g @cloudflare/wrangler; NAMESPACE_ID=`wrangler kv:namespace list | jq -r ".[] | select(.title == \"$SCRIPT_NAME-kv\").id"`; echo $SCRIPT_NAME; echo $NAMESPACE_ID; yes 2>/dev/null | wrangler kv:namespace delete --namespace-id=$NAMESPACE_ID
+        run: set -eux; sudo npm install -g npm@latest; npm install @cloudflare/wrangler --save; sudo npm i -g @cloudflare/wrangler; NAMESPACE_ID=`wrangler kv:namespace list | jq -r ".[] | select(.title == \"$SCRIPT_NAME-kv\").id"`; echo $SCRIPT_NAME; echo $NAMESPACE_ID; yes 2>/dev/null | wrangler kv:namespace delete --namespace-id=$NAMESPACE_ID
         working-directory: '.cloudflare/workers/q-auth'
         env:
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
