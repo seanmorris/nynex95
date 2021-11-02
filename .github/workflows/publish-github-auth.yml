@@ -41,7 +41,7 @@ jobs:
           SCRIPT_NAME: nynex-github-auth
 
       - name: Init, Plan, Deploy
-        run: set -eux; curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && sudo apt-get update && sudo apt-get install terraform && terraform init && terraform plan && terraform apply --auto-approve -chdir=.
+        run: set -eux; curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && sudo apt-get update && sudo apt-get install terraform && terraform init && terraform plan && terraform apply --auto-approve --chdir=.
         working-directory: '.cloudflare/workers/github-auth'
         env:
           TF_VAR_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
