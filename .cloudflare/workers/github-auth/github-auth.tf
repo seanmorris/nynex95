@@ -19,16 +19,16 @@ provider "cloudflare" {
 	api_token  = var.CLOUDFLARE_API_TOKEN
 }
 
-resource "cloudflare_workers_kv_namespace" "github-auth-kv" {
-	title = "github-auth-kv"
+resource "cloudflare_workers_kv_namespace" "nynex-github-auth-kv" {
+	title = "nynex-github-auth-kv"
 }
 
-resource "cloudflare_worker_script" "auth_route" {
-	name    = "github-auth"
+resource "cloudflare_worker_script" "nynex-github-auth-route" {
+	name    = "nynex-github-auth"
 	content = file("index.js")
 
 	kv_namespace_binding {
-		namespace_id = cloudflare_workers_kv_namespace.github-auth-kv.id
+		namespace_id = cloudflare_workers_kv_namespace.nynex-github-auth-kv.id
 		name         = "AUTH_KV"
 	}
 
@@ -43,8 +43,8 @@ resource "cloudflare_worker_script" "auth_route" {
 	}
 }
 
-resource "cloudflare_worker_route" "auth_route" {
+resource "cloudflare_worker_route" "nynex-github-auth-route" {
   zone_id     = "10cff77358ca096762803358c52f5502"
   pattern     = "nynex.seanmorr.is/github-auth/*"
-  script_name = cloudflare_worker_script.auth_route.name
+  script_name = cloudflare_worker_script.nynex-github-auth-route.name
 }
