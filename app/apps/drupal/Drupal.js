@@ -7,13 +7,15 @@ import { Bindable } from 'curvature/base/Bindable';
 
 export class Drupal extends Task
 {
+	static helpText = 'Run Drupal 7';
+
 	title    = 'Drupal 7';
 	icon     = '/apps/drupal-16-24bit.png';
 	template = require('./main.tmp');
 
-	constructor(taskList)
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
 		this.init = Date.now();
 

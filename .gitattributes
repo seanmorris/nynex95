@@ -1,0 +1,8 @@
+docs/app.js binary
+docs/app.js.map binary
+docs/app.css binary
+docs/app.css.map binary
+docs/*.data binary
+docs/php* binary
+app/assets/*.data binary
+app/assets/php* binary

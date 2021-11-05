@@ -36,6 +36,11 @@ html, body, input, button, select {
 	font-size: 12pt;
 }
 
+p, h1 {
+	margin-block-start: 0.45em;
+	margin-block-end: 0.45em;
+}
+
 .viewport {
 	position: relative;
 	align-self: stretch;
@@ -177,6 +182,7 @@ html, body, input, button, select {
 	border-image: url(/border-inset.png) 2 2 2 2;
 	border-color: #c3c3c3;
 	margin: 2px !important;
+	box-sizing: border-box;
 }
 
 img.inset {
@@ -456,6 +462,16 @@ label.icon-frame label {
 	border-image: url(/border-depressed.png) 2 3 3 2;
 }
 
+[data-type] > .edit-toggler {
+	border: 1px solid #bbb;
+	padding: 0.125rem;
+	font-size: smaller;
+}
+
+[data-type=object] > .edit-toggler {
+	display: none;
+}
+
 .json-value {
 	color: black;
 }
@@ -484,6 +500,10 @@ label.icon-frame label {
 
 .row.tight > * {
 	margin: 0px;
+	justify-content: center;
+}
+
+.row.centered {
 	justify-content: center;
 }
 
@@ -751,4 +771,8 @@ button.dropdown {
 
 .noshrink {
 	flex-shrink: 0;
+}
+
+.subWindow .title-bar .minimize {
+	display: none;
 }

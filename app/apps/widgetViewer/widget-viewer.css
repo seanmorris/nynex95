@@ -7,12 +7,15 @@
 }
 
 .widget-viewer-win.focused .title-bar {
-	display: flex;
-	flex: 1;
+	pointer-events: initial;
+	opacity: 1;
 }
 
 .widget-viewer-win .title-bar {
-	display: none;
+	display: flex;
+	flex: 1;
+	pointer-events: none;
+	opacity: 0;
 }
 
 .widget-viewer-win .maximize {

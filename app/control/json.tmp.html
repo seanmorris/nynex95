@@ -6,16 +6,21 @@
 					<span>[[key]]</span>
 				</span>
 				:
-				<span class ="json-value">
-					<span cv-if = "!editing">
+				<span class ="json-value" >
+					<span>
 						[[value]]
 					</span>
+				</span>
+				<span class = "edit-toggler" cv-on = "click:toggleEdit(event,$subview,key)">
 					<span cv-if = "editing">
-						<input cv-bind = "value" />
+						close
+					</span>
+					<span cv-if = "!editing">
+						edit
 					</span>
 				</span>
-				<span class = "edit-toggler">
-					edit
+				<span cv-if = "editing" class = "row">
+					<input class = "wide" cv-bind = "value" />
 				</span>
 			</div>
 		</div>

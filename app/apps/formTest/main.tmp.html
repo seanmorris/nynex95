@@ -1,0 +1,71 @@
+<div class = "form-test frame liquid" cv-on = "mousemove">
+	<label class = "margin">
+		<span>/watch?v=</span>
+		<input class = "wide inset white" cv-bind = "videoId" placeholder = "video id">
+	</label>
+
+	<label class = "margin">
+		<span>start:&nbsp;</span>
+		<input type = "number" min = "0" class = "wide inset white" cv-bind = "startTime" placeholder = "start time in seconds">
+	</label>
+
+	<label class = "margin">
+		<span>volume:&nbsp;([[volume]])&nbsp;</span>
+		<input type = "range" min = "0" max = "100" class = "wide" cv-bind = "volume">
+	</label>
+
+	<label class = "margin row">
+		<label class = "margin">
+			<input type = "checkbox" value="1" cv-bind = "autoplay" placeholder = "start time in seconds">
+			<span>autoplay&nbsp;</span>
+		</label>
+		<label class = "margin">
+			<input type = "checkbox" value="1" cv-bind = "controls" placeholder = "start time in seconds">
+			<span>controls&nbsp;</span>
+		</label>
+	</label>
+
+	<div class = "inset liquid">
+		<div class = "scroll wide rows" cv-ref = "scroller">
+
+			<span class = "contents" cv-each = "cards:props:p">
+
+				<div class = "property-list">
+
+					<div class = "header">
+						<span class = "property">Card #[[p]]</span>
+						<span class = "property right"><button cv-on = "click:removeCard($event, p)" class = "tight remove"></button></span>
+					</div>
+
+					<div class = "contents" cv-each = "props:value:key">
+						<label cv-on = "click:selectProperty($event, key)">
+							<span class = "property">[[key]]</span><span class = "value"><input placeholder = "Property Value" cv-bind = "value" /><button class = "remove tight" cv-on = "click:removeProperty($event, key, p)">x</button></span>
+						</label>
+					</div>
+
+					<label cv-if = "adding">
+						<span class = "property"><input placeholder = "New Property Name" cv-ref = "newName" /></span>
+						<span>
+							<button class = "" cv-on = "click:confirmAddProperty($event, $parent, p)">confirm</button>
+							<button class = "" cv-on = "click:cancelAddProperty($event, $parent, p)">cancel</button>
+						</span>
+					</label>
+					<label cv-if = "!adding">
+						<span class = "property"><input disabled class = "dud" /></span>
+						<span><button class = "" cv-on = "click:addProperty($event, $parent)">add key</button></span>
+					</label>
+				</div>
+			</span>
+		</div>
+	</div>
+
+	<div class = "row margin right">
+		<button class = "margin" cv-on = "click:newCard">ADD CARD</button>
+	</div>
+
+</div>
+
+<div class = "status row">
+	<div class = "label inset">[[filename]]&nbsp;</div>
+	<div class = "label inset">[[cardCount]]&nbsp;cards</div>
+</div>

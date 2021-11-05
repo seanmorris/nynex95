@@ -55,13 +55,12 @@ export class TaskBar extends View
 				return;
 			}
 
-			task.window.focus();
-
 			if(task.window.classes.minimized)
 			{
 				task.window.restore();
 			}
 
+			task.focus();
 		}
 	}
 

@@ -6,13 +6,15 @@ import { Bindable } from 'curvature/base/Bindable';
 
 export class IconExplorer extends Task
 {
+	static helpText = 'Browse a list of icons.';
+
 	title    = 'Icon Explorer';
 	icon     = '/w95/3-16-4bit.png';
 	template = require('./main.tmp');
 
-	constructor(taskList)
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 		return Bindable.make(this);
 	}
 

@@ -22,13 +22,15 @@ const Range = ace.acequire('ace/range').Range;
 
 export class PhpEditor extends Task
 {
+	static helpText = 'Run PHP in your browser.';
+
 	title    = 'SM PHP Shell';
 	icon     = '/apps/php-16-24bit.png';
 	template = require('./php-editor.tmp');
 
-	constructor(taskList)
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
 		this.window.classes.loading   = true;
 		this.window.classes.phpEditor = true;

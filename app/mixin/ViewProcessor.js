@@ -1,9 +1,5 @@
-import { Mixin } from 'curvature/base/Mixin';
-
-export class ViewProcessor extends Mixin
-{
-	join(list)
-	{
+export const ViewProcessor = {
+	join: function(list) {
 		if(!Array.isArray(list) && typeof list !== 'object')
 		{
 			list = [list];
@@ -16,10 +12,8 @@ export class ViewProcessor extends Mixin
 		}
 
 		return list.join(' ');
-	}
-
-	_count(list)
-	{
+	},
+	_count: function(list) {
 		console.log(list);
 
 		if(!Array.isArray(list) && typeof list !== 'object')

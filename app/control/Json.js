@@ -49,24 +49,66 @@ let Base = class extends View
 				this.args.closeBracket = ']';
 			}
 
-			this.args.json = {};
-
 			let ii = 0;
 
 			for(const i in v)
 			{
-				this.onTimeout(35 * ii, ()=>{
-					if(typeof v[i] === 'object')
+				if(typeof v[i] === 'object')
+				{
+					this.onTimeout(ii++, () => {
+						if(!this.args.json[i])
+						{
+							this.args.json[i] = new Json({expanded: '', parentKey: i}, this);
+						}
+
+						if(v[i] instanceof Array)
+						{
+							this.args.json[i].args.openBracket  = '[';
+							this.args.json[i].args.closeBracket = ']';
+						}
+					});
+				}
+				else
+				{
+					this.args.json[i] = v[i];
+				}
+			}
+		});
+
+		this.args.json.bindTo((v,k)=>{
+
+			if(!(v instanceof Json))
+			{
+				this.args.tree[k] = v;
+
+				const content = JSON.stringify(this.args.tree, null, 4);
+
+				this.args.content = content;
+
+				let current = this;
+
+				while(current)
+				{
+					if(current && current.args.parentKey && current.parent instanceof Json)
 					{
-						this.args.json[i] = new Json({expanded: ''}, this);
+						current.parent.args.tree[ current.args.parentKey ][k] = current.args.tree[k];
+
+						current.parent.args.content = JSON.stringify(current.parent.args.tree, null, 4);
+
+						k = current.args.parentKey;
 					}
 					else
 					{
-						this.args.json[i] = v[i];
+						break;
 					}
-				});
+
+					current = current.parent;
+				}
+
 			}
-		});
+
+
+		},{wait:0});
 	}
 
 	attached()
@@ -109,6 +151,11 @@ let Base = class extends View
 		this.args.expandIcon = this.args.expanded
 			? 'x'
 			: '+';
+	}
+
+	toggleEdit(event, $subview, key = null)
+	{
+		$subview.args.editing = !$subview.args.editing;
 	}
 
 	type(value)

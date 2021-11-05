@@ -1,3 +1,12 @@
+/*!
+  Theme: Default
+  Description: Original highlight.js style
+  Author: (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
+  Maintainer: @highlightjs/core-team
+  Website: https://highlightjs.org/
+  License: see project LICENSE
+  Touched: 2021
+*/pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{background:#f0f0f0;color:#444}.hljs-comment{color:#888}.hljs-punctuation,.hljs-tag{color:#444a}.hljs-tag .hljs-attr,.hljs-tag .hljs-name{color:#444}.hljs-attribute,.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-name,.hljs-selector-tag{font-weight:700}.hljs-deletion,.hljs-number,.hljs-quote,.hljs-selector-class,.hljs-selector-id,.hljs-string,.hljs-template-tag,.hljs-type{color:#800}.hljs-section,.hljs-title{color:#800;font-weight:700}.hljs-link,.hljs-operator,.hljs-regexp,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-symbol,.hljs-template-variable,.hljs-variable{color:#bc6060}.hljs-literal{color:#78a960}.hljs-addition,.hljs-built_in,.hljs-bullet,.hljs-code{color:#397300}.hljs-meta{color:#1f7199}.hljs-meta .hljs-string{color:#4d99bf}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}
 body {
 	flex-direction: column;
 }
@@ -114,12 +123,15 @@ span.text {
 }
 
 .clippy-win.focused .title-bar {
-	display: flex;
-	flex: 1;
+	pointer-events: initial;
+	opacity: 1;
 }
 
 .clippy-win .title-bar {
-	display: none;
+	display: flex;
+	flex: 1;
+	pointer-events: none;
+	opacity: 0;
 }
 
 .clippy-win .maximize {
@@ -167,6 +179,16 @@ iframe{
 	flex-grow: 1;
 }
 
+.console.abs-holder {
+	box-sizing: border-box;
+	width: auto;
+}
+
+.console .abs-fill {
+	box-sizing: border-box;
+	overflow: auto;
+}
+
 @font-face {
 	font-family: 'Unispace';
 	font-weight:  normal;
@@ -197,6 +219,156 @@ iframe{
 	src:          url('/DejaVuSansMono-webfont.ttf');
 }
 
+div.property-list {
+	display: inline-grid;
+	grid-template-columns: fit-content(0rem) auto;
+	/*grid-template-columns: auto auto;*/
+	grid-auto-rows: 0fr;
+	padding: 0;
+	margin: 0rem;
+	width: 100%;
+	position: relative;
+	align-self: start;
+	border-right: 1px solid black;
+	box-sizing: border-box;
+}
+
+div.property-list + div.property-list {
+	border-top: 1px solid black;
+}
+
+div.property-list label {
+	display: contents;
+}
+
+div.property-list label:focus-within span {
+	box-shadow: inset 1px 1px 0 black,  inset -1px -1px 0 black;
+}
+
+div.property-list button.remove {
+	display: none;
+}
+
+div.property-list label:focus-within button.remove {
+	display: initial;
+}
+
+div.property-list .header {
+	display: contents;
+}
+
+div.property-list span {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	background-color: white;
+	border: 1px solid black;
+	border-spacing: 0px 0px;
+	margin-bottom: -1px;
+	margin-left: -1px;
+}
+
+div.property-list span > * {
+	/*height: 100%;*/
+}
+
+div.property-list input {
+	background-color: transparent;
+	min-width: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+}
+
+div.property-list span.value input {
+	flex-grow: 1;
+	border-bottom: 0;
+	border-right: 0;
+}
+
+div.property-list .contents span.property {
+	padding: 4px;
+	white-space: pre;
+}
+
+div.property-list span.property,
+div.property-list span.start,
+div.property-list span.end,
+div.property-list input {
+	box-sizing: border-box;
+}
+
+div.property-list input {
+	min-width: 0;
+	border: 0;
+	padding: 4px;
+	flex-shrink: 0;
+	flex-grow: 1;
+}
+
+div.property-list span button:not(.tight) {
+	flex-shrink: 0;
+	flex-grow: 1;
+}
+
+div.property-list span {
+	position: relative;
+}
+
+div.property-list span.value button {
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	bottom: 1px;
+	border: 0;
+}
+
+div.property-list span button {
+	height: auto;
+	margin: 0;
+	box-sizing: border-box;
+	background-color: #bbb;
+	color: black;
+	min-width: 0 !important;
+	padding: 4px;
+}
+
+div.property-list .header span {
+	position: sticky;
+	z-index: 1;
+	border: 2px solid;
+	border-image: url(/border.png) 2 2 2 2;
+	background-color: #c3c3c3;
+	padding: 4px 2px 4px 2px;
+	font-size: 1.1em;
+	top: 0;
+}
+
+div.property-list .header button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-image: url(/ui/delete.png);
+	background-color: transparent;
+	width: 16px;
+	height: 16px;
+	border: 0;
+	cursor: pointer;
+}
+
+div.property-list .header button.remove {
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+div.property-list .header span:not(:first-child) {
+	margin-left: 0px;
+}
+
+input.dud {
+	opacity: 0;
+}
+
 .image-viewer {
 	display: flex;
 
@@ -213,6 +385,7 @@ iframe{
 
 div.container {
 	position: relative;
+	box-sizing: border-box;
 	width: 100%;
 	height: 100%;
 }
@@ -220,6 +393,7 @@ div.container {
 div.container iframe {
 	width: 100%;
 	height: 100%;
+	margin: 0 !important;
 }
 
 div.sheild {
@@ -228,6 +402,179 @@ div.sheild {
 	left: 0px;
 	width: 100%;
 	height: 100%;
+}
+
+div.cards {
+	position: absolute;
+	z-index: 1;
+	top: 2px;
+	left: 2px;
+	right: 2px;
+	bottom: 2px;
+	display: flex;
+	flex-direction: column;
+	pointer-events: none;
+	transform: translate3d(0px, 0px, 0px);
+}
+
+div.video-card:empty {display: none;}
+
+div.video-card {
+	margin-bottom: -10em;
+	transition: opacity calc(1ms * var(--timing)) ease-out;
+	opacity: 1;
+}
+
+div.video-card[data-starting=true],
+div.video-card[data-removing=true] {
+	opacity: 0;
+}
+
+div.video-card {
+	--progress: 0;
+	position: relative;
+	font-weight: bold;
+	box-shadow: 0rem 0.5rem 1rem rgba(0,0,0,0.75);
+	font-size: 1.25rem;
+	display: inline-block;
+	padding: 1rem;
+	margin: 1rem 1rem 0rem auto;
+	max-width: calc(100% - 2rem);
+	color: black;
+	pointer-events: initial;
+	background-color: rgba(255,255,255,0.666);
+	backdrop-filter: blur(2px) brightness(0.85);
+	border-radius: 2px;
+	box-sizing: border-box;
+	flex-shrink: 1;
+}
+
+div.video-card div.progress-track {
+	position: absolute;
+	height: 3px;
+	bottom: 0px;
+	left: 0;
+	right: 0;
+
+	background-color: rgba(0,0,0,0.25);
+}
+
+div.video-card div.progress-indicator {
+	width: 100%;
+	height: 100%;
+
+	background-color: rgba(0,0,0,0.5);
+
+	transform-origin: center left;
+	transition: transform calc(1ms * var(--timing)) ease-out;
+	transform: scaleX(var(--progress));
+}
+
+div.video-card.overlay-card {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	/*z-index: 1;*/
+	margin: 4rem;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	pointer-events: none;
+
+	background-color: rgba(255,255,255,0.333);
+
+	max-width: unset;
+}
+
+div.video-card.tenth .progress-track,
+div.video-card.overlay-card .progress-track {
+	height: 6px;
+}
+
+div.video-card.fat-indicator .progress-track {
+	height: 100%;
+	opacity: 1;
+	z-index: 1;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+div.video-card.fat-indicator .progress-indicator {
+	backdrop-filter: invert(1);
+}
+
+div.video-card.special-position {
+	position: absolute;
+	left: 3rem;
+	bottom: 3rem;
+
+	/*z-index: 1;*/
+	margin: 0;
+}
+
+div.video-card.negative-effect {
+	position: absolute;
+	left: 8rem;
+	bottom: 14rem;
+
+	/*z-index: 1;*/
+	margin: 0;
+
+	background-color: rgba(0,0,0,0.35);
+
+	backdrop-filter: invert(1) hue-rotate(calc(180deg * var(--progress)));
+
+	text-shadow: 0 0 0.25rem white;
+	color: #222;
+
+	font-size: 2rem;
+}
+
+div.video-card.tenth {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+
+	margin: 0;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background-color: rgba(0,0,0,0.666);
+
+	backdrop-filter: invert(1) hue-rotate(calc(180deg * var(--progress)));
+
+	pointer-events: none;
+
+	max-width: unset;
+}
+
+div.video-card.tenth .content {
+	display: flex;
+}
+
+div.video-card.tenth span {
+	color: white;
+	font-size: 2rem;
+	text-shadow: 0 0 0.25rem black;
+}
+
+div.video-card.tenth span.countdown {
+	font-size: 4rem;
+	width: 8em;
+	text-align: center;
+}
+
+div.video-card.tenth .progress-track,
+div.video-card.negative-effect .progress-track {
+	filter: invert(1);
 }
 
 .phpEditor .cols.tight > *,
@@ -407,12 +754,15 @@ iframe{
 }
 
 .widget-viewer-win.focused .title-bar {
-	display: flex;
-	flex: 1;
+	pointer-events: initial;
+	opacity: 1;
 }
 
 .widget-viewer-win .title-bar {
-	display: none;
+	display: flex;
+	flex: 1;
+	pointer-events: none;
+	opacity: 0;
 }
 
 .widget-viewer-win .maximize {
@@ -761,6 +1111,11 @@ html, body, input, button, select {
 	font-size: 12pt;
 }
 
+p, h1 {
+	margin-block-start: 0.45em;
+	margin-block-end: 0.45em;
+}
+
 .viewport {
 	position: relative;
 	align-self: stretch;
@@ -902,6 +1257,7 @@ html, body, input, button, select {
 	border-image: url(/border-inset.png) 2 2 2 2;
 	border-color: #c3c3c3;
 	margin: 2px !important;
+	box-sizing: border-box;
 }
 
 img.inset {
@@ -1181,6 +1537,16 @@ label.icon-frame label {
 	border-image: url(/border-depressed.png) 2 3 3 2;
 }
 
+[data-type] > .edit-toggler {
+	border: 1px solid #bbb;
+	padding: 0.125rem;
+	font-size: smaller;
+}
+
+[data-type=object] > .edit-toggler {
+	display: none;
+}
+
 .json-value {
 	color: black;
 }
@@ -1209,6 +1575,10 @@ label.icon-frame label {
 
 .row.tight > * {
 	margin: 0px;
+	justify-content: center;
+}
+
+.row.centered {
 	justify-content: center;
 }
 
@@ -1476,6 +1846,10 @@ button.dropdown {
 
 .noshrink {
 	flex-shrink: 0;
+}
+
+.subWindow .title-bar .minimize {
+	display: none;
 }
 
 .tabs .tab {

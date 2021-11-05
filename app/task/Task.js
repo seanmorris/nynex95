@@ -8,10 +8,14 @@ let taskId = 0;
 const Accept = Symbol('accept');
 const Reject = Symbol('reject');
 
-export class Task
+import { Task as BaseTask } from 'subspace-console/Task';
+
+export class Task extends BaseTask
 {
 	title   = 'Generic Task';
 	icon    = '/w95/3-16-4bit.png';
+	outPrompt  = '> ';
+	prompt  = '>>';
 	silent  = false;
 	failure = false;
 
@@ -20,28 +24,37 @@ export class Task
 		this[Reject] = reject;
 	});
 
-	constructor(taskList, taskCmd = '', taskPath = [])
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		// super();
+		super(args, prev, term);
 
 		this.id = taskId++;
 
 		this.cmd  = taskCmd;
 		this.path = taskPath;
+		this.list = taskList;
+
+		this.list.add(Bindable.make(this));
 
 		this.window = new Window(this);
 
+		this.subWindows = new Set;
+
 		if(this.window)
 		{
+			// console.trace(taskList);
 			this.window.addEventListener('closed', event => {
-				taskList.remove(Bindable.make(this));
-				taskList.remove(this);
 				this.signal(event);
 			});
 
 			this.window.addEventListener('attached', event => {
 				this.signal(event);
 				this.attached();
+			});
+
+			this.window.addEventListener('detached', event => {
+				this.signal(event);
+				this.detached();
 			});
 
 			Home.instance().windows.add(this.window);
@@ -56,32 +69,74 @@ export class Task
 			retVal = Promise.resolve(retVal);
 		}
 
+		this.thread.finally(() => {
+			taskList.remove(Bindable.make(this));
+			// taskList.remove(this);
+			this.window.close()
+		});
+
 		retVal.then(r => this[Accept](r)).catch(e => this[Reject](e));
 
-		return this;
+		return Bindable.make(this);
 	}
 
-	print(input)
+	write(line)
 	{
-		console.log(error);
+		if(line[0] === ':')
+		{
+			line = line.substr(1);
+
+			if(line[0] !== ':')
+			{
+				if(line[0] === '?')
+				{
+					this.print(Object.keys(this.commands).map(k => `:${k}`).join(', '));
+				}
+				else if(this.commands[ line[0] ])
+				{
+					this.commands[ line[0] ]();
+				}
+				else
+				{
+					this.printErr(`:${line[0]} is not a command.`);
+				}
+
+				return;
+			}
+		}
+
+		console.log(line);
+
+		this.document += this.document
+			? ("\n" + line)
+			: line;
+
+		return super.write(line);
 	}
 
 	error(input)
 	{
-		console.error(error);
+		console.error(input);
 	}
 
 	signal(event)
 	{
-		switch(event.type)
+		const type = typeof event === 'object'
+			? event.type
+			: event;
+
+		switch(type)
 		{
 			case 'closed':
-				this.failure ? this[Reject]() : this[Accept]();
+				this.failure
+					? this[Reject](this.failure)
+					: this[Accept]();
 
 				break;
 
 			case 'kill':
-				this[Reject]();
+				// this.quit();
+				this[Reject]('Received signal: KILL');
 
 				break;
 		}
@@ -94,6 +149,102 @@ export class Task
 			// console.log('Thread continued.');
 
 		});
+	}
+
+	openSubWindow(args)
+	{
+		const subWindow = this.window.subWindow(args);
+
+		subWindow.addEventListener(
+			'closed'
+			, event => this.subWindows.delete(subWindow)
+			, {once:true}
+		);
+
+		this.subWindows.add(subWindow);
+
+		Home.instance().windows.add(subWindow);
+
+		return subWindow;
+	}
+
+	focus(...argList)
+	{
+		[...this.subWindows].map(subWindow => {
+			subWindow.classes.minimized = false;
+		});
+
+		this.window.focus(...argList);
+	}
+
+	grabTitleBar(...argList)
+	{
+		this.window.grabTitleBar(...argList);
+	}
+
+	menuFocus(...argList)
+	{
+		this.window.menuFocus(...argList);
+	}
+
+	menuBlur(...argList)
+	{
+		this.window.menuBlur(...argList);
+	}
+
+	minimize(...argList)
+	{
+		[...this.subWindows].map(subWindow => {
+			if(!subWindow.outWindow)
+			{
+				subWindow.minimize();
+			}
+		});
+
+		this.window.minimize(...argList);
+	}
+
+	maximize(...argList)
+	{
+		this.window.maximize(...argList);
+	}
+
+	restore(...argList)
+	{
+		[...this.subWindows].map(subWindow => {
+			subWindow.classes.minimized = false;
+		});
+
+		this.window.restore(...argList);
+	}
+
+	close(...argList)
+	{
+		[...this.subWindows].map(subWindow => {
+			subWindow.close();
+		});
+
+		this.window.close(...argList);
+	}
+
+	doubleClickTitle(...argList)
+	{
+		this.window.doubleClickTitle(...argList);
+	}
+
+	horizontalResizeGrabbed(...argList)
+	{
+		this.window.horizontalResizeGrabbed(...argList);
+	}
+
+	verticalResizeGrabbed(...argList)
+	{
+		this.window.verticalResizeGrabbed(...argList);
+	}
+
+	doubleClickTitle(...argList)
+	{
+		this.window.doubleClickTitle(...argList);
 	}
 
 	attached(){}

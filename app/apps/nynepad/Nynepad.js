@@ -9,127 +9,144 @@ import { Tag } from 'curvature/base/Tag';
 
 export class Nynepad extends Task
 {
-	title    = 'Nynepad 95';
-	icon     = '/w95/60-16-4bit.png';
-	template = require('./main.tmp');
+	static helpText = 'Text editor.';
 
-	constructor(taskList)
-	{
-		super(taskList);
+	title      = 'Nynepad 95';
+	icon       = '/w95/60-16-4bit.png';
+	template   = require('./main.tmp');
 
-		this.init = Date.now();
+	prompt     = '[Nynepad] <';
+	outPrompt  = '[Nynepad] >';
 
-		this.window.args.charCount  = 'initializing...';
-		this.window.args.document   = '';
-		this.window.args.filename   = 'untitled';
-		this.window.args.wrapping   = true;
-		this.window.args.spellCheck = false;
+	charCount  = 'initializing...';
+	document   = '';
 
-		this.window.args.menus = {
-			File: {
-				New: { callback: () => this.newDocument() }
-				, Open: { callback: () => this.openFile() }
-				, Save: { callback: () => this.saveDocument() }
-				, 'Save As': { callback: () => this.saveDocumentAs() }
-				, Quit: { callback: () => this.quit() }
-			}
-			, Edit: {
-				Undo: { callback: () => document.execCommand("undo") }
-				, Redo: { callback: () => document.execCommand("redo") }
-				, 'Select All': { callback: () => {
-					this.window.onNextFrame(()=>{
-						this.window.tags.field.focus();
-						this.window.tags.field.select();
-					});
-				} }
-				, Cut: { callback: () => document.execCommand("cut") }
-				, Copy: { callback: () => document.execCommand("copy") }
-				, Paste: { callback: () => {
-					navigator.clipboard.readText().then(
-						text => this.window.args.document = text
-					)
-				} }
-				, Delete: { callback: () => document.execCommand("forwardDelete") }
-				, 'Word Wrap': { callback: () => {
+	filename   = 'untitled';
+	wrapping   = true;
+	spellCheck = false;
 
-					let text = this.window.args.document;
+	menus = {
+		File: {
+			New: { callback: () => this.newDocument() }
+			, Open: { callback: () => this.openFile() }
+			, Save: { callback: () => this.saveDocument() }
+			, 'Save As': { callback: () => this.saveDocumentAs() }
+			, Quit: { callback: () => this.quit() }
+		}
+		, Edit: {
+			Undo: { callback: () => document.execCommand("undo") }
+			, Redo: { callback: () => document.execCommand("redo") }
+			, 'Select All': { callback: () => {
+				this.window.onNextFrame(()=>{
+					this.window.tags.field.focus();
+					this.window.tags.field.select();
+				});
+			} }
+			, Cut: { callback: () => document.execCommand("cut") }
+			, Copy: { callback: () => document.execCommand("copy") }
+			, Paste: { callback: () => {
+				navigator.clipboard.readText().then(
+					text => this.document = text
+				)
+			} }
+			, Delete: { callback: () => document.execCommand("forwardDelete") }
+			, 'Word Wrap': { callback: () => {
 
-					console.log(text);
+				let text = this.document;
 
-					text = text.replace(/\r/, '').replace(/\n/, ' ');
+				console.log(text);
 
-					let lineLength = 0;
-					let lastSpace  = false;
+				text = text.replace(/\r/, '').replace(/\n/, ' ');
 
-					for(let i = 0; i < text.length; i++)
+				let lineLength = 0;
+				let lastSpace  = false;
+
+				for(let i = 0; i < text.length; i++)
+				{
+					if(lastSpace && lineLength > 80)
 					{
-						if(lastSpace && lineLength > 80)
-						{
-							text = text.substring(0,lastSpace) + '\n' + text.substring(lastSpace+1);
-							lineLength = i - lastSpace;
-							lastSpace  = false;
+						text = text.substring(0,lastSpace) + '\n' + text.substring(lastSpace+1);
+						lineLength = i - lastSpace;
+						lastSpace  = false;
 
-							continue;
-						}
-
-						if(text[i] === ' ')
-						{
-							lastSpace = i;
-						}
-
-						lineLength++;
+						continue;
 					}
+
+					if(text[i] === ' ')
+					{
+						lastSpace = i;
+					}
+
+					lineLength++;
+				}
+
+				this.window.tags.field.focus();
+				this.window.tags.field.select();
+
+				document.execCommand('insertText', false, text);
+
+				this.document = text;
+			} }
+		}
+		, View: {
+			'Spell Check': {
+				callback:() => {
+
+					this.spellCheck = !this.spellCheck;
 
 					this.window.tags.field.focus();
 					this.window.tags.field.select();
 
-					document.execCommand('insertText', false, text);
 
-					this.window.args.document = text;
-				} }
-			}
-			, View: {
-				'Spell Check': {
-					callback:() => {
-
-						this.window.args.spellCheck = !this.window.args.spellCheck;
-
-						this.window.tags.field.focus();
-						this.window.tags.field.select();
-
-
-						this.window.onNextFrame( () => {
-							document.execCommand('insertText', false, this.window.args.document);
-							this.window.tags.field.focus()
-						});
-					}
+					this.window.onNextFrame( () => {
+						document.execCommand('insertText', false, this.document);
+						this.window.tags.field.focus()
+					});
 				}
-				, Wrapping: { callback: () => this.window.args.wrapping = !this.window.args.wrapping }
 			}
-			// , Search: {
-			// 	Find: { callback: () => document.execCommand("find") }
-			// 	, 'Find Next': { callback: () => document.execCommand("find-next") }
-			// }
-		};
+			, Wrapping: { callback: () => this.wrapping = !this.wrapping }
+		}
+		// , Search: {
+		// 	Find: { callback: () => document.execCommand("find") }
+		// 	, 'Find Next': { callback: () => document.execCommand("find-next") }
+		// }
+	};
 
-		return Bindable.make(this);
-	}
+	menuBar = new MenuBar(this, this.window);
 
-	attached()
+	commands = {
+		w: () => this.saveDocument()
+		, s: () => this.saveDocument()
+		, o: () => this.openFile()
+		, q: () => this.quit()
+	};
+
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		this.window.args.menuBar  = new MenuBar(this.window.args, this.window);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
-		this.window.args.bindTo('document', (v,k,t,d) => {
+		this.init = Date.now();
 
-			this.window.args.charCount = v ? v.length : 0;
+
+
+		this.window.controller = this;
+
+		this.bindTo('document', (v,k,t,d) => {
+
+			this.charCount = v ? v.length : 0;
 
 		});
 	}
 
+	attached()
+	{
+		this.window.tags.field.focus();
+	}
+
 	newDocument()
 	{
-		this.window.args.document = ''
-		this.window.args.filename = 'untitled';
+		this.document = ''
+		this.filename = 'untitled';
 	}
 
 	saveDocument()
@@ -137,8 +154,9 @@ export class Nynepad extends Task
 		if(this.fileHandle)
 		{
 			this.fileHandle.createWritable().then(writable => {
-				writable.write(this.window.args.document);
+				writable.write(this.document);
 				writable.close();
+				this.print(`Rewrote ${this.filename}`);
 			});
 
 			return;
@@ -153,8 +171,9 @@ export class Nynepad extends Task
 			this.fileHandle = handle;
 
 			this.fileHandle.createWritable().then(writable => {
-				writable.write(this.window.args.document);
+				writable.write(this.document);
 				writable.close();
+				this.print(`Wrote ${this.filename}`);
 			});
 		});
 	}
@@ -165,11 +184,11 @@ export class Nynepad extends Task
 
 		this.window.listen(tag, 'input', event => {
 
-			this.window.args.filename = tag.files[0].name;
+			this.filename = tag.files[0].name;
 
 			const fileReader = new FileReader();
 
-			fileReader.onload = () => this.window.args.document = fileReader.result;
+			fileReader.onload = () => this.document = fileReader.result;
 
 			fileReader.readAsText(tag.files[0]);
 
@@ -180,11 +199,11 @@ export class Nynepad extends Task
 
 	saveFile()
 	{
-		const blob = new Blob([this.window.args.document], {type:'text/plain'});
+		const blob = new Blob([this.document], {type:'text/plain'});
 
 		const url = URL.createObjectURL(blob);
 
-		const tag = new Tag(`<a href = "${url}" download = "${this.window.args.filename}">`);
+		const tag = new Tag(`<a href = "${url}" download = "${this.filename}">`);
 
 		tag.click();
 	}

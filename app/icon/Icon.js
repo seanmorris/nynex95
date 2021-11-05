@@ -52,16 +52,38 @@ export class Icon extends View
 	{
 		const home = Home.instance();
 
-		switch(typeof this.action)
+		let result = '';
+
+		if(typeof this.action === 'function')
 		{
-			case 'string':
-				home.run(this.action);
-				break;
+			result = this.action(event);
+		}
+		else
+		{
+			result = this.action;
+		}
 
-			case 'function':
-				this.action(event);
-				break;
+		if(typeof result === 'string')
+		{
+			home.run(result);
+		}
+		else if(Array.isArray(result))
+		{
+			home.run(...result);
+		}
+		else if(result instanceof Promise)
+		{
+			result.then(result => {
 
+				if(typeof result === 'string')
+				{
+					home.run(result);
+				}
+				else if(Array.isArray(result))
+				{
+					home.run(...result);
+				}
+			});
 		}
 	}
 

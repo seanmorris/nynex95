@@ -6,8 +6,6 @@ export class Diskette extends View
 	{
 		super(args, parent);
 
-		console.log(this);
-
 		this.template = require('./diskette.tmp.html');
 	}
 }

@@ -3,24 +3,18 @@ import { Window }  from 'window/Window';
 
 import { Router }  from 'curvature/base/Router';
 
+import { punycode }  from 'punycode';
+
 const homeView = Home.instance();
 
 document.addEventListener('DOMContentLoaded', function() {
 
-	Router.listen(homeView);
-
-	const tag  = document.querySelector('body');
-
-	if(!tag)
+	if(location.pathname === '/satellite-window')
 	{
 		return;
 	}
 
-	homeView.render(tag);
+	Router.listen(homeView);
 
-	// const win = new Window({content: 'Window #0.'});
-
-
-	// setTimeout(()=> homeView.windows.add(win), 1000);
-
+	homeView.render(document.body);
 });

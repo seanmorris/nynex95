@@ -7,6 +7,9 @@ import { Menu } from '../menu/Menu';
 import { FileModel } from '../files/FileModel';
 import { FileDatabase } from '../files/FileDatabase';
 
+import { MimeModel } from '../files/MimeModel';
+import { MimeDatabase } from '../files/MimeDatabase';
+
 import { Diskette } from '../widgets/diskette/Diskette';
 
 export class Desktop extends View
@@ -164,13 +167,13 @@ export class Desktop extends View
 			// 	, path: 'apps'
 			// 	, bits: 16
 			// })
-			// , new Icon({
-			// 	action: 'clones'
-			// 	, name: 'Clones n Barrels'
-			// 	, icon: 'barrel'
-			// 	, path: 'sm'
-			// 	, bits: 24
-			// })
+			, new Icon({
+				action: 'clones'
+				, name: 'Clones n Barrels'
+				, icon: 'barrel'
+				, path: 'sm'
+				, bits: 24
+			})
 			, new Icon({
 				action: 'numb'
 				, name: 'numb - linkin park.mp3.exe'
@@ -198,38 +201,30 @@ export class Desktop extends View
 			// 	, path: 'ui'
 			// 	, bits: 24
 			// })
+			, new Icon({
+				action: 'card-editor'
+				, name: 'Card Editor'
+				, icon: 3
+			})
 		];
 
 		this.fileDb = FileDatabase.open('files', 1);
+		this.mimeDb = MimeDatabase.open('mime-types', 1);
 
-		this.fileDb.then(db => {
+		Promise.all([this.fileDb, this.mimeDb]).then(([fileDb,mimeDb]) => {
 
 			const onWrite = event => {
 				const file = event.detail.record;
 
 				if(file.directory === '~/desktop/')
 				{
-					const bytes = new Uint8Array(file.buffer);
-
-					const blobUrl = URL.createObjectURL(new Blob([file.buffer], {type:file.type}));
-
-					this.args.endIcons.push(
-						new Icon({
-							action: () => {
-								this.args.bg = blobUrl;
-							}
-							, name: file.name
-							, type: file.type
-							, icon: 1
-							, bits: 4
-						})
-					);
+					this.listFile(file);
 				}
 			};
 
-			db.addEventListener('write', onWrite);
+			fileDb.addEventListener('write', onWrite);
 
-			this.onRemove(() => db.removeEventListener('write', onWrite));
+			this.onRemove(() => fileDb.removeEventListener('write', onWrite));
 
 			const query = {
 				store: 'files'
@@ -238,25 +233,40 @@ export class Desktop extends View
 				, type:  FileModel
 			};
 
-			db.select(query).each(file => {
-
-				const bytes = new Uint8Array(file.buffer);
-
-				const blobUrl = URL.createObjectURL(new Blob([file.buffer], {type:file.type}));
-
-				this.args.endIcons.push(
-					new Icon({
-						action: () => {
-							this.args.bg = blobUrl;
-						}
-						, name: file.name
-						, type: file.type
-						, icon: 1
-						, bits: 4
-					})
-				);
-			});
+			fileDb.select(query).each(file => this.listFile(file));
 		});
+	}
+
+	listFile(file)
+	{
+		const query = {
+			store:   'mime-types'
+			, index: 'type'
+			, range: file.type
+			, type:  MimeModel
+		};
+
+		return MimeDatabase.open('mime-types', 1)
+		.then(mimeDb => mimeDb.select(query).one().then(result => {
+
+			let icon = 1;
+			let path = 'w95'
+
+			if(result.result && result.result.icon)
+			{
+				icon = result.result.icon.icon;
+				path = result.result.icon.path;
+			}
+
+			this.args.endIcons.push(new Icon({
+				action: () => FileModel.runFile(file)
+				, name: file.name
+				, type: file.type
+				, bits: 4
+				, icon
+				, path
+			}));
+		}));
 	}
 
 	focus(event)
@@ -271,16 +281,10 @@ export class Desktop extends View
 
 	contextmenu(event)
 	{
-		console.log(event.clientX, event.clientY);
-
 		const menuTag = this.args.contextMenu.tags.menu.element;
-
-		console.log(menuTag);
 
 		menuTag.style.top = `${event.clientY}px`;
 		menuTag.style.left = `${event.clientX}px`;
-
-		console.log(menuTag.focus());
 
 		event.preventDefault();
 
@@ -307,7 +311,7 @@ export class Desktop extends View
 			this.args.endIcons.push(
 				new Icon({
 					action: () => {
-						this.args.bg = blobUrl;
+						// this.args.bg = blobUrl;
 						console.log(file);
 					}
 					, name: file.name

@@ -19,14 +19,16 @@ import { Console as Terminal } from 'subspace-console/Console';
 
 export class RepoBrowser extends Task
 {
+	static helpText = 'Browse projects on github.';
+
 	title    = 'Repo Browser';
 	icon     = '/w95/73-16-4bit.png';
 	template = require('./main.tmp');
 	useProxy = false;
 
-	constructor(taskList, taskCmd = '', taskPath = [])
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList, taskCmd, taskPath);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
 		this.username = taskPath.shift()   || 'seanmorris';
 		this.reponame = taskPath.shift()   || 'nynex95';
@@ -45,6 +47,7 @@ export class RepoBrowser extends Task
 
 		this.window.viewControl = (type) => {
 			this.window.args.viewRaw = `view-control-${type}`;
+			this.window.args.plain.resize();
 		}
 
 		this.window.selectParent = (event) => {
@@ -122,8 +125,6 @@ export class RepoBrowser extends Task
 					this.window.args.repoUrl
 						+ '/contents/'
 						+ this.window.args.filepath
-						+ (this.window.args.filepath ? '/' : '')
-						+ this.window.args.filename
 					, {method, headers, body, mode}
 				).then(response => response.json()
 				).then(json => {
@@ -173,7 +174,7 @@ export class RepoBrowser extends Task
 			});
 		};
 
-		this.window.onRendered = () => {
+		this.window.addEventListener('rendered', () => {
 			this.console = new Terminal({scroller: this.window.tags.termscroll.element });
 
 			this.console.addEventListener('listRendered', event => {
@@ -263,7 +264,7 @@ export class RepoBrowser extends Task
 
 				this.window.args.hasSource = false;
 
-				this.window.args.plain   = new PlaintextControl(
+				this.window.args.plain  = new PlaintextControl(
 					this.window.args, this
 				);
 
@@ -310,21 +311,33 @@ export class RepoBrowser extends Task
 
 					case 'json':
 						this.window.args.hasSource = true;
+						this.window.args.viewRaw = 'view-control-plain';
 
 						this.window.args.expanded = true;
-						this.window.args.control = new JsonControl(
+
+						const jsonControl = new JsonControl(
 							{
 								expanded:  true
 								, content: ''
 							}, this
 						);
 
+						jsonControl.args.bindTo(
+							'content'
+							, v => this.window.args.content = v
+							, {now: false}
+						);
+
+						this.window.args.control = jsonControl;
+
 						break;
 
 					default:
-						this.window.args.viewRaw = 'view-control-plain';
+						// this.window.args.hasSource = true;
+
+						this.window.args.viewRaw = 'view-control-rendered';
 						this.window.args.control = new PlaintextControl(
-							{content:''}, this
+							this.window.args, this
 						);
 						break;
 				}
@@ -358,9 +371,9 @@ export class RepoBrowser extends Task
 
 			if(this.filepath)
 			{
-				// this.loadFile(this.filepath);
+				this.loadFile(this.filepath);
 			}
-		};
+		});
 
 		this.endpoint = this.useProxy
 			? 'https://nynex.seanmorr.is/github-proxy/'
@@ -408,6 +421,8 @@ export class RepoBrowser extends Task
 				this.window.args.sha      = '';
 				this.window.args.content  = '';
 				this.window.args.filename = '';
+				this.window.args.filepath = '';
+
 				return;
 			}
 
@@ -422,6 +437,8 @@ export class RepoBrowser extends Task
 			this.window.args.url      = file.url;
 			this.window.args.download = url;
 			this.window.args.sha      = file.sha;
+
+			this.window.args.filepath = filepath;
 
 			if(file.content)
 			{

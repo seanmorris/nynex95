@@ -79,12 +79,13 @@ export class Home extends View
 
 		this.routes = {
 
-			'': () => {}
-			// '': () => Router.go('/repo-browser/seanmorris/nynex95/content/hello-world.md')
+			// '': () => {}
+			'': () => Router.go('/repo-browser/seanmorris/nynex95/package.json')
 
 			, '*': (args) => {
+
 				const taskName = args.pathparts.shift() || 'repo-browser';
-				const taskPath = args.pathparts.slice() || 'seanmorris/nynex95/content/hello-world.md'.split('/');
+				const taskPath = args.pathparts.slice() || '/seanmorris/nynex95/package.json'.split('/');
 
 				if(taskName)
 				{
@@ -125,11 +126,11 @@ export class Home extends View
 			return false;
 		}
 
-		const task = new taskType(this.tasks, taskName, taskPath);
+		const task = new taskType([], null, null, this.tasks, taskName, taskPath);
 
 		task.cmd = taskName;
 
-		this.tasks.add(task);
+		task.catch(error => console.warn(error));
 
 		this.onTimeout(250, () => {
 			task.signal(new CustomEvent('start'))

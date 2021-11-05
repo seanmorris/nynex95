@@ -1,15 +1,18 @@
 import { Mixin }    from 'curvature/base/Mixin';
-import { Bindable } from 'curvature/base//Bindable';
+import { Bindable } from 'curvature/base/Bindable';
 
-export class CssSwitch extends Mixin
-{
-	after__constructor()
-	{
+export const CssSwitch = {
+	[Mixin.Constructor]: function()	{
+
 		this.classes = Bindable.makeBindable({});
 
+		this.args.classes = this.args.classes || Bindable.makeBindable([]);
+
 		this.classes.bindTo(
-			(v,k) => this.args.classes = Object.assign({}, this.classes)
-			, {frame: 1}
+			(v,k) => {
+				this.args.classes = Object.keys(this.classes).filter(k => this.classes[k] && k);
+			}
+			, {wait: 0}
 		);
 	}
 }

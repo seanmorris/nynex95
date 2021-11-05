@@ -6,14 +6,16 @@ import { Task } from 'task/Task';
 
 export class Clippy extends Task
 {
+	static helpText = 'Summon the devil.';
+
 	title    = 'Clippy';
 	icon     = '/w95/3-16-4bit.png';
 	template = require('./main.tmp');
 	// silent   = true
 
-	constructor(taskList)
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
 		this.xFrame = 0;
 		this.yFrame = 0;
@@ -61,10 +63,7 @@ export class Clippy extends Task
 				}
 			});
 		});
-	}
 
-	attached()
-	{
 		this.window.classes.transparent   = true;
 		this.window.classes.pane          = false;
 		this.window.classes['clippy-win'] = true;

@@ -12,14 +12,16 @@ import { MimeDatabase } from '../../files/MimeDatabase';
 
 export class FileBrowser extends Task
 {
+	static helpText = 'Browse the file system.';
+
 	title    = 'File Browser';
 	icon     = '/w95/5-16-4bit.png';
 	template = require('./main.tmp');
 	useProxy = false;
 
-	constructor(taskList, taskCmd = '', taskPath = [])
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList, taskCmd, taskPath);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
 		this.window.args.iconList = new IconControl({}, this);
 
@@ -120,10 +122,10 @@ export class FileBrowser extends Task
 	importMimes()
 	{
 		const openDb = MimeDatabase.open('mime-types', 1);
-		const fetchMimes = fetch('/static/mime.json').then(r => r.json());
+		const fetchExtensions = fetch('/static/mime-extensions.json').then(r => r.json());
+		const fetchTypes = fetch('/static/mime-types.json').then(r => r.json());
 
-		Promise.all([openDb, fetchMimes]).then(([db, mimes]) => {
-
+		Promise.all([openDb, fetchExtensions]).then(([db, mimes]) => {
 			for(const [extension, mimeInfo] of Object.entries(mimes))
 			{
 				let type = mimeInfo;
@@ -146,6 +148,42 @@ export class FileBrowser extends Task
 					if(!result.index)
 					{
 						const mime = MimeModel.from(mimeInfo)
+						db.insert('mime-types', mime);
+					}
+					else
+					{
+						result.result.consume(mimeInfo);
+						db.update('mime-types', result.result);
+					}
+				});
+			}
+		});
+
+		Promise.all([openDb, fetchTypes]).then(([db, mimes]) => {
+			for(let type of mimes)
+			{
+				let mimeInfo = {};
+
+				if(typeof type === 'object')
+				{
+					mimeInfo = type;
+					type = mimeInfo.type;
+				}
+				else
+				{
+					const extension = '';
+
+					mimeInfo = { type, extension };
+				}
+
+				const store = 'mime-types'
+				const index = 'type';
+				const range = type;
+
+				db.select({store,index,range,type:MimeModel}).one().then(result => {
+					if(!result.index)
+					{
+						const mime = MimeModel.from(mimeInfo);
 						db.insert('mime-types', mime);
 					}
 					else
@@ -200,9 +238,7 @@ export class FileBrowser extends Task
 					return;
 				}
 
-				// this.window.listen(icon, 'select', event => console.log(event));
-
-				this.getIcon(file).then(icon => iconList.args.icons.push(icon));
+				file.getIcon().then(icon => iconList.args.icons.push(icon));
 			});
 
 			const query = {
@@ -216,7 +252,7 @@ export class FileBrowser extends Task
 				const bytes = new Uint8Array(file.buffer);
 				const blobUrl = URL.createObjectURL(new Blob([file.buffer], {type:file.type}));
 
-				this.getIcon(file).then(icon => {
+				file.getIcon().then(icon => {
 					iconList.args.icons.push(icon);
 				});
 			});

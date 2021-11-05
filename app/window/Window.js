@@ -1,36 +1,38 @@
 import { Router   } from 'curvature/base/Router';
 import { View     } from 'curvature/base/View';
+import { Mixin    } from 'curvature/base/Mixin';
 import { Bindable } from 'curvature/base/Bindable';
 import { MenuBar  } from './MenuBar';
 import { TitleBar } from './TitleBar';
 
 import { Home } from '../home/Home';
 
-import { Target        } from '../mixin/Target';
+// import { Target        } from '../mixin/Target';
 import { CssSwitch     } from '../mixin/CssSwitch';
 import { ViewProcessor } from '../mixin/ViewProcessor';
 
 import { Icon } from '../icon/Icon';
 
-let Base = class extends View
+export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 {
 	static idInc = 0;
 
 	outlineSpeed = 350;
 	outlineDelay = 50;
 
-	constructor(args = {})
+	constructor(args = {}, parent = null)
 	{
-		super(args);
+		super(args, parent);
+
+		this.subWindows = new Map;
 
 		this.name = window.name;
 		this.popBackIn = null;
 
-		this.args.classes = ['pane', 'resize'];
 		this.args.preview = '/w95/1-16-4bit.png';
 
-		this.args.width   = '690px';
-		this.args.height  = '520px';
+		this.args.width   = this.args.width  || '690px';
+		this.args.height  = this.args.height || '520px';
 
 		this.pos = Bindable.make({x: 160, y: 100, z: 0});
 
@@ -39,6 +41,8 @@ let Base = class extends View
 		this.args.progr = 0;
 
 		this.template = require('./window.tmp');
+
+		this.args.template = this.args.template || '';
 
 		this.args.wid = this.constructor.idInc++;
 
@@ -57,9 +61,12 @@ let Base = class extends View
 				this.outWindow.document.title = v;
 			}
 		});
+
+		this.classes.resize = true;
+		this.classes.pane   = true;
 	}
 
-	postRender()
+	onRendered(event)
 	{
 		const element = this.tags.window.element;
 
@@ -89,38 +96,40 @@ let Base = class extends View
 		});
 	}
 
-	onAttach(parent)
-	{
-		this.classes.resize = true;
-		this.classes.pane   = true;
-
-		this.dispatchEvent(new CustomEvent(
-			'attached', {detail:{ target:this }}
-		));
-	}
-
 	popout()
 	{
+		const popoutEvent = new CustomEvent('popout', {cancellable: true});
+
+		if(!this.dispatchEvent(popoutEvent))
+		{
+			return;
+		}
+
 		const main = this.tags.window.element;
 		const rect = main.getBoundingClientRect();
 		const orig = main.parentNode;
 
 		const trimSize = {
-			x: window.outerWidth - window.innerWidth
+			x: window.outerWidth - window.innerWidth + 32
 			, y: window.outerHeight - window.innerHeight
 		};
 
-		const features = `screenX=${Math.floor(rect.x) + trimSize.x + window.screenX}`
-			+ `,screenY=${Math.floor(rect.y) + trimSize.y + window.screenY}`
-			+ `,width=${Math.floor(rect.width)}`
+		const features = `screenX=${Math.floor(rect.x) + -trimSize.x + window.screenX}`
+			+ `,screenY=${Math.floor(rect.y) + (trimSize.y * 0.6) + window.screenY}`
+			+ `,width=${Math.floor(rect.width + trimSize.x * 2)}`
 			+ `,height=${Math.floor(rect.height)}`;
 
 		// const popupSource = '<html><head></head><body>Hello, world!</body></html>';
 		// const popupBlob   = new Blob([popupSource], {type: 'text/html'});
 		// const popupUrl    = URL.createObjectURL(popupBlob);
 
-		if(!(this.outWindow = window.open('', this._id, features)))
-		{
+		console.log(location.origin);
+
+		if(!(this.outWindow = window.open(
+			location.origin + '/satellite-window'
+			, this._id
+			, features
+		))){
 			return;
 		}
 
@@ -146,17 +155,9 @@ let Base = class extends View
 			return old;
 		};
 
-
 		this.name = window.name;
 
 		window.addEventListener('beforeunload', mainUnload);
-
-		this.outWindow.addEventListener('beforeunload', () => {
-
-			window.removeEventListener('beforeunload', mainUnload);
-
-			this.popBackIn && this.popBackIn();
-		});
 
 		this.outWindow.addEventListener('resize', event => {
 			this.dispatchEvent(new CustomEvent(
@@ -164,86 +165,99 @@ let Base = class extends View
 			));
 		});
 
-		const base = this.outWindow.document.createElement('base');
+		this.outWindow.addEventListener('load', () => {
+			this.outWindow.addEventListener('beforeunload', () => {
 
-		base.setAttribute('href', origin);
+				this.popBackIn && this.popBackIn();
 
-		const newDoc = this.outWindow.document;
-
-		newDoc[ Symbol.for('SeanMorris::Nynex95::ViewRef') ] = this;
-
-		newDoc.head.append(base);
-
-		for(const sheet of document.styleSheets)
-		{
-			const newSheet = sheet.ownerNode.cloneNode(true);
-
-			if(sheet.href)
-			{
-				newSheet.setAttribute('href', sheet.href);
-			}
-
-			newDoc.head.append(newSheet);
-		}
-
-		this.wasMaximized = this.classes.maximized;
-
-		this.args.hideTitleBar = true;
-		this.render(this.outWindow.document.body);
-		this.classes.maximized = true;
-
-		this.name = this.outWindow.name;
-
-		const subScript = document.createElement('script');
-
-		subScript.innerHTML = `(${ () => {
-
-			const interactionEvents = [
-				'click',
-				// 'contextmenu',
-				// 'dblclick',
-				// 'mousedown',
-				// 'mousemove',
-				// 'mouseup',
-				// 'pointerdown',
-				// 'pointermove',
-				// 'pointerup',
-				// 'touchend',
-				// 'touchmove',
-				// 'touchstart',
-				// 'keydown',
-				// 'keypress',
-				// 'keyup',
-				// 'change',
-				// 'compositionend',
-				// 'compositionstart',
-				// 'compositionupdate',
-				// 'input',
-				// 'reset',
-				// 'submit',
-			];
-
-			interactionEvents.map(eventName => {
-				document.addEventListener(
-					eventName
-					, event => {
-						const view = document[ Symbol.for('SeanMorris::Nynex95::ViewRef') ];
-
-						if(view && view.willFocus)
-						{
-							window.open('', view.willFocus);
-
-							view.willFocus = null;
-						}
-					}
-				);
+				window.removeEventListener('beforeunload', mainUnload);
 			});
 
-		} })()`;
+			const base = this.outWindow.document.createElement('base');
 
-		this.outWindow.document.body.append(subScript);
+			base.setAttribute('href', origin);
 
-		this.outWindow.document.body.classList.add('sub-window');
+			const newDoc = this.outWindow.document;
+
+			newDoc[ Symbol.for('SeanMorris::Nynex95::ViewRef') ] = this;
+
+			newDoc.head.append(base);
+
+			for(const sheet of document.styleSheets)
+			{
+				const newSheet = sheet.ownerNode.cloneNode(true);
+
+				if(sheet.href)
+				{
+					newSheet.setAttribute('href', sheet.href);
+				}
+
+				newDoc.head.append(newSheet);
+			}
+
+			this.wasMaximized = this.classes.maximized;
+
+			this.args.hideTitleBar = true;
+			this.render(this.outWindow.document.body);
+			this.classes.maximized = true;
+
+			this.name = this.outWindow.name;
+
+			const subScript = document.createElement('script');
+
+			subScript.innerHTML = `(${ () => {
+
+				const interactionEvents = [
+					'click',
+					// 'contextmenu',
+					// 'dblclick',
+					// 'mousedown',
+					// 'mousemove',
+					// 'mouseup',
+					// 'pointerdown',
+					// 'pointermove',
+					// 'pointerup',
+					// 'touchend',
+					// 'touchmove',
+					// 'touchstart',
+					// 'keydown',
+					// 'keypress',
+					// 'keyup',
+					// 'change',
+					// 'compositionend',
+					// 'compositionstart',
+					// 'compositionupdate',
+					// 'input',
+					// 'reset',
+					// 'submit',
+				];
+
+				interactionEvents.map(eventName => {
+					document.addEventListener(
+						eventName
+						, event => {
+							const view = document[ Symbol.for('SeanMorris::Nynex95::ViewRef') ];
+
+							if(view && view.willFocus)
+							{
+								window.open('', view.willFocus);
+
+								view.willFocus = null;
+							}
+						}
+					);
+				});
+
+			} })()`;
+
+			this.outWindow.document.body.append(subScript);
+
+			this.outWindow.document.body.classList.add('sub-window');
+
+			const poppedoutEvent = new CustomEvent('poppedout');
+
+			this.dispatchEvent(poppedoutEvent);
+		});
 	}
 
 	menuFocus()
@@ -283,14 +297,17 @@ let Base = class extends View
 
 		this.onTimeout(this.outlineDelay, ()=>{
 
-			const taskRect = this.args.taskButton.getBoundingClientRect();
+			if(this.args.taskButton)
+			{
+				const taskRect = this.args.taskButton.getBoundingClientRect();
 
-			home.moveOutline(
-				taskRect.x + 'px'
-				, taskRect.y + 'px'
-				, taskRect.width + 'px'
-				, taskRect.height + 'px'
-			);
+				home.moveOutline(
+					taskRect.x + 'px'
+					, taskRect.y + 'px'
+					, taskRect.width + 'px'
+					, taskRect.height + 'px'
+				);
+			}
 
 			const minimizing = new CustomEvent('minimizing', {detail:{ target:this, original:event }});
 
@@ -331,7 +348,7 @@ let Base = class extends View
 		{
 			home.moveOutline(0, 0, '100%', '100%', true);
 		}
-		else if(this.classes.minimized)
+		else if(this.classes.minimized && this.args.taskButton)
 		{
 			const taskRect = this.args.taskButton.getBoundingClientRect();
 
@@ -341,6 +358,12 @@ let Base = class extends View
 				, taskRect.width + 'px'
 				, taskRect.height + 'px'
 			);
+		}
+		else if(this.classes.minimized && !this.args.taskButton)
+		{
+			this.onTimeout(1.5 * this.outlineSpeed, ()=>{
+				this.classes.minimized = false;
+			});
 		}
 
 		home.showOutline();
@@ -379,19 +402,23 @@ let Base = class extends View
 	{
 		const home = Home.instance();
 
-		home.moveOutline(
-			`${this.pos.x}px`
-			, `${this.pos.y}px`
-			, this.tags.window
-				? (this.tags.window.element.style.width  || `${this.args.width}`)
-				: `${this.args.width}`
-			, this.tags.window
-				? (this.tags.window.element.style.height || `${this.args.height}`)
-				: `${this.args.height}`
-			, true
-		);
+		if(this.tags.window.node)
+		{
+			home.moveOutline(
+				`${this.pos.x}px`
+				, `${this.pos.y}px`
+				, this.tags.window
+					? (this.tags.window.node.style.width  || `${this.args.width}`)
+					: `${this.args.width}`
+				, this.tags.window
+					? (this.tags.window.node.style.height || `${this.args.height}`)
+					: `${this.args.height}`
+				, true
+			);
 
-		home.showOutline();
+			home.showOutline();
+		}
+
 
 		this.onTimeout(this.outlineDelay, () => {
 
@@ -458,7 +485,7 @@ let Base = class extends View
 		{
 			window.open('', this.outWindow.name);
 		}
-		else if(!this.classes.focused && this.args.cmd)
+		else if(!this.classes.focused && this.args.cmd && this.args.taskButton)
 		{
 			const path = this.args.path
 				? `/${this.args.path.join('/')}`
@@ -468,17 +495,20 @@ let Base = class extends View
 
 			const home = Home.instance();
 
-			home.moveOutline(
-				`${this.pos.x}px`
-				, `${this.pos.y}px`
-				, this.tags.window
-					? (this.tags.window.element.style.width  || `${this.args.width}`)
-					: `${this.args.width}`
-				, this.tags.window
-					? (this.tags.window.element.style.height || `${this.args.height}`)
-					: `${this.args.height}`
-				, true
-			);
+			if(this.tags.window.node)
+			{
+				home.moveOutline(
+					`${this.pos.x}px`
+					, `${this.pos.y}px`
+					, this.tags.window
+						? (this.tags.window.node.style.width  || `${this.args.width}`)
+						: `${this.args.width}`
+					, this.tags.window
+						? (this.tags.window.node.style.height || `${this.args.height}`)
+						: `${this.args.height}`
+					, true
+				);
+			}
 		}
 
 		const prevZ = this.pos.z;
@@ -690,11 +720,19 @@ let Base = class extends View
 
 		localDoc.addEventListener('mouseup', onDrop);
 	}
+
+	subWindow(args)
+	{
+		const subWindow = new this.constructor(args, this);
+
+		subWindow.classes.subWindow = true;
+
+		subWindow.addEventListener('closed', event => {
+			this.subWindows.delete(subWindow);
+		});
+
+		this.subWindows.set(subWindow, undefined);
+
+		return subWindow;
+	}
 }
-
-Base = Target.mix(Base);
-Base = CssSwitch.mix(Base);
-Base = ViewProcessor.mix(Base);
-
-export class Window extends Base{};
-

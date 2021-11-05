@@ -7,44 +7,46 @@ import { Bindable } from 'curvature/base/Bindable';
 
 export class TaskManager extends Task
 {
+	static helpText = 'View or kill running tasks.';
+
 	title     = 'Task Manager';
 	icon      = '/w98/computer_taskmgr-16-4bit.png';
 	template  = require('./main.tmp');
 	willFocus = null;
 
-	constructor(taskList)
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
-		const args = this.window.args;
+		const wArgs = this.window.args;
 
-		args.cycler = {};
+		wArgs.cycler = {};
 
-		args.tasks = args.tasks || [];
+		wArgs.tasks = args.tasks || [];
 
-		args.focusAttrs = {};
+		wArgs.focusAttrs = {};
 
-		args['data-thing'] = '!!!';
+		wArgs['data-thing'] = '!!!';
 
-		args.cores = navigator.hardwareConcurrency;
+		wArgs.cores = navigator.hardwareConcurrency;
 
-		args.bindTo('poppedOut', v => {
+		wArgs.bindTo('poppedOut', v => {
 
-			const focus = args.focusAttrs;
+			const focus = wArgs.focusAttrs;
 
 			// if(v)
 			// {
 			// 	focus.disabled = 'disabled';
-			// 	args['data-thing'] = '';
+			// 	wArgs['data-thing'] = '';
 
 			// }
 			// else if(focus)
 			// {
-			// 	args['data-thing'] = '!!';
+			// 	wArgs['data-thing'] = '!!';
 			// 	delete focus.disabled;
 			// }
 
-			// args.focusAttrs = focus;
+			// wArgs.focusAttrs = focus;
 		});
 
 		this.samples = [];
@@ -67,9 +69,9 @@ export class TaskManager extends Task
 				this.x = 0;
 			}
 
-			args.cycler.at = l[this.x];
+			wArgs.cycler.at = l[this.x];
 
-			// console.log(this.x, l[this.x], args.cycler);
+			// console.log(this.x, l[this.x], wArgs.cycler);
 		}
 
 		this.pause = false;

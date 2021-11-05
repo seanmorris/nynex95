@@ -1,0 +1,19 @@
+[
+    {
+        "type": "file-folder/directory",
+        "actions": { "open": "file-browser" },
+        "icon": {
+            "path": "w95",
+            "icon": 4
+        }
+    },
+    {
+    	"extension": ".png",
+    	"type": "image/png",
+    	"actions": { "open": "image-viewer" },
+        "icon": {
+            "path": "w98",
+            "icon": "imagPNG"
+        }
+    }
+]

@@ -4,6 +4,8 @@ import { Task } from '../../task/Task';
 
 export class GitHub extends Task
 {
+	static helpText = 'Log into GitHub.';
+
 	title    = 'GitHub Login';
 	template = require('./main.tmp');
 
@@ -69,12 +71,12 @@ export class GitHub extends Task
 			this.window.onTimeout(1500, () => {
 				this.loginWindow = window.open(
 					'https://github.com/login/oauth/authorize'
-						+ `?redirect_uri=${location.origin}/github-auth/accept`
+						+ `?redirect_uri=https://nynex.seanmorr.is/github-auth/accept`
 						+ '&client_id=7150d20fb5a11fe1d332'
 						+ '&scope=public_repo'
 						+ '&state=' + state
 					, `github-login-${this.tid}`
-					, `left=100,top=100,width=750,height=500,resizable=0,scrollbars=0,location=0,menubar=0,toolbar=0,status=0`
+					, `left=100,top=100,width=350,height=700,resizable=0,scrollbars=0,location=0,menubar=0,toolbar=0,status=0`
 				);
 
 				window.addEventListener('message', messageListener, false);

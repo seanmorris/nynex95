@@ -25,6 +25,16 @@
 	flex-grow: 1;
 }
 
+.console.abs-holder {
+	box-sizing: border-box;
+	width: auto;
+}
+
+.console .abs-fill {
+	box-sizing: border-box;
+	overflow: auto;
+}
+
 @font-face {
 	font-family: 'Unispace';
 	font-weight:  normal;

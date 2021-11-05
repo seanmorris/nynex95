@@ -1,0 +1,149 @@
+div.property-list {
+	display: inline-grid;
+	grid-template-columns: fit-content(0rem) auto;
+	/*grid-template-columns: auto auto;*/
+	grid-auto-rows: 0fr;
+	padding: 0;
+	margin: 0rem;
+	width: 100%;
+	position: relative;
+	align-self: start;
+	border-right: 1px solid black;
+	box-sizing: border-box;
+}
+
+div.property-list + div.property-list {
+	border-top: 1px solid black;
+}
+
+div.property-list label {
+	display: contents;
+}
+
+div.property-list label:focus-within span {
+	box-shadow: inset 1px 1px 0 black,  inset -1px -1px 0 black;
+}
+
+div.property-list button.remove {
+	display: none;
+}
+
+div.property-list label:focus-within button.remove {
+	display: initial;
+}
+
+div.property-list .header {
+	display: contents;
+}
+
+div.property-list span {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	background-color: white;
+	border: 1px solid black;
+	border-spacing: 0px 0px;
+	margin-bottom: -1px;
+	margin-left: -1px;
+}
+
+div.property-list span > * {
+	/*height: 100%;*/
+}
+
+div.property-list input {
+	background-color: transparent;
+	min-width: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+}
+
+div.property-list span.value input {
+	flex-grow: 1;
+	border-bottom: 0;
+	border-right: 0;
+}
+
+div.property-list .contents span.property {
+	padding: 4px;
+	white-space: pre;
+}
+
+div.property-list span.property,
+div.property-list span.start,
+div.property-list span.end,
+div.property-list input {
+	box-sizing: border-box;
+}
+
+div.property-list input {
+	min-width: 0;
+	border: 0;
+	padding: 4px;
+	flex-shrink: 0;
+	flex-grow: 1;
+}
+
+div.property-list span button:not(.tight) {
+	flex-shrink: 0;
+	flex-grow: 1;
+}
+
+div.property-list span {
+	position: relative;
+}
+
+div.property-list span.value button {
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	bottom: 1px;
+	border: 0;
+}
+
+div.property-list span button {
+	height: auto;
+	margin: 0;
+	box-sizing: border-box;
+	background-color: #bbb;
+	color: black;
+	min-width: 0 !important;
+	padding: 4px;
+}
+
+div.property-list .header span {
+	position: sticky;
+	z-index: 1;
+	border: 2px solid;
+	border-image: url(/border.png) 2 2 2 2;
+	background-color: #c3c3c3;
+	padding: 4px 2px 4px 2px;
+	font-size: 1.1em;
+	top: 0;
+}
+
+div.property-list .header button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-image: url(/ui/delete.png);
+	background-color: transparent;
+	width: 16px;
+	height: 16px;
+	border: 0;
+	cursor: pointer;
+}
+
+div.property-list .header button.remove {
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+div.property-list .header span:not(:first-child) {
+	margin-left: 0px;
+}
+
+input.dud {
+	opacity: 0;
+}

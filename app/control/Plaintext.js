@@ -15,12 +15,14 @@ export class Plaintext extends View
 {
 	constructor(args, parent)
 	{
-		super(args, parent);
+		super(args, parent.window);
+
+		this.owner = parent;
 
 		this.template  = require('./plaintext.tmp');
 	}
 
-	rendered()
+	onRendered()
 	{
 		let mode = false;
 
@@ -32,10 +34,11 @@ export class Plaintext extends View
 			case 'css':  mode = 'ace/mode/css'; break;
 			case 'php':  mode = 'ace/mode/php'; break;
 			case 'js':   mode = 'ace/mode/javascript'; break;
+			case 'json': mode = 'ace/mode/javascript'; break;
 			case 'md':   mode = 'ace/mode/markdown'; break;
 		}
 
-		let editor = ace.edit(this.findTag('textarea'));
+		let editor = ace.edit(this.tags.code.node);
 
 		editor.setTheme('ace/theme/monokai');
 

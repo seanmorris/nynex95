@@ -13,9 +13,9 @@ export class Grid extends Task
 	icon     = '/w95/3-16-4bit.png';
 	// template = require('./main.tmp');
 
-	constructor(taskList)
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
 		return Bindable.make(this);
 	}

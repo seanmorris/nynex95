@@ -7,13 +7,15 @@ import { Bindable } from 'curvature/base/Bindable';
 
 export class Game extends Task
 {
+	static helpText = 'Play Sonic 3000!';
+
 	title    = 'Sonic 3000';
 	icon     = '/';
 	template = require('./main.tmp');
 
-	constructor(taskList)
+	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
-		super(taskList);
+		super(args, prev, term, taskList, taskCmd, taskPath);
 
 		this.window.classes.clones = true;
 
