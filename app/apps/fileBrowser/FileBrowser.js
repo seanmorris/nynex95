@@ -23,6 +23,8 @@ export class FileBrowser extends Task
 	{
 		super(args, prev, term, taskList, taskCmd, taskPath);
 
+		console.log({args, prev, term, taskList, taskCmd, taskPath});
+
 		this.window.args.iconList = new IconControl({}, this);
 
 		this.window.args.directory = taskPath[0] || '~/desktop/';
@@ -206,15 +208,14 @@ export class FileBrowser extends Task
 			const path = String(this.window.args.directory)
 				.split('/')
 				.filter(p => p)
-				.join('/')
-				+ '/'
-				+ name;
+				.join('/');
 
 			newDirectory.consume({
 				directory: this.window.args.directory
 				, type: "file-folder/directory"
 				, name
 				, path
+				, name
 			});
 
 			fileDb.insert('files', newDirectory);
@@ -272,8 +273,7 @@ export class FileBrowser extends Task
 		if(file.type === 'file-folder/directory')
 		{
 			const icon = new Icon({
-				// action: () => Home.instance().run(`file-browser`, [file.path+file.name])
-				action: () => Home.instance().run(`file-browser`, [file.path])
+				action: () => Home.instance().run(`file-browser`, [file.path+file.name])
 				, name: file.name
 				, path: 'w95'
 				, icon: 4

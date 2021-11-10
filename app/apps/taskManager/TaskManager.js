@@ -197,9 +197,13 @@ export class TaskManager extends Task
 
 		this.window.focusTask = (event, task) => {
 
-			if(event.view !== window)
+			if(task.window.outWindow && event.view !== window)
 			{
 				this.window.willFocus = task.window.name;
+			}
+			else
+			{
+				this.window.willFocus = window.name;
 			}
 
 			task.window.focus();

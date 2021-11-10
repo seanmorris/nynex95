@@ -15,4 +15,7 @@ export class MenuBar extends View
 
 		document.activeElement.blur();
 	}
+
+	menuFocus(){}
+	menuBlur(){}
 }

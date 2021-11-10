@@ -1,20 +1,39 @@
-import { Home }    from 'home/Home';
-import { Window }  from 'window/Window';
+import { Home    } from 'home/Home';
+import { Window  } from 'window/Window';
+import { Router  } from 'curvature/base/Router';
+import { Matrix  } from 'matrix-api/Matrix';
+import { Loading } from './ui/Loading';
 
-import { Router }  from 'curvature/base/Router';
-
-import { punycode }  from 'punycode';
+const matrix = new Matrix;
 
 const homeView = Home.instance();
 
-document.addEventListener('DOMContentLoaded', function() {
+const loginToken = (new URLSearchParams(location.search)).get('loginToken');
 
-	if(location.pathname === '/satellite-window')
-	{
-		return;
-	}
+if(loginToken)
+{
+	const load = new Loading;
 
-	Router.listen(homeView);
+	load.listen(
+		document
+		, 'DOMContentLoaded'
+		, event => load.render(document.body)
+		, {once: true}
+	);
 
-	homeView.render(document.body);
-});
+	matrix.completeSso(loginToken);
+}
+else
+{
+	document.addEventListener('DOMContentLoaded', function() {
+
+		if(location.pathname === '/satellite-window')
+		{
+			return;
+		}
+
+		Router.listen(homeView);
+
+		homeView.render(document.body);
+	});
+}

@@ -56,11 +56,19 @@ export class FileModel extends Model
 			, type:  MimeModel
 		};
 
+		if(this.name.match(/\.\w+$/))
+		{
+			const extension = this.name.split('.').pop();
+
+			query.index = 'extension';
+			query.range = '.' + extension;
+		}
+
 		return MimeDatabase.open('mime-types', 1)
 		.then(mimeDb => mimeDb.select(query).one().then(result => {
 
-			let icon = 1;
 			let path = 'w95'
+			let icon = 1;
 
 			if(result.result && result.result.icon)
 			{
@@ -88,8 +96,20 @@ export class FileModel extends Model
 			, type:  MimeModel
 		};
 
+		if(file.name.match(/\.\w+$/))
+		{
+			const extension = file.name.split('.').pop();
+
+			query.index = 'extension';
+
+			query.index = 'extension';
+			query.range = '.' + extension;
+		}
+
 		return MimeDatabase.open('mime-types', 1)
 		.then(mimeDb => mimeDb.select(query).one().then(result => {
+
+			console.log(result);
 
 			if(!result.index)
 			{
@@ -105,7 +125,7 @@ export class FileModel extends Model
 				const cmdArgs = [
 					file.buffer
 						? file.getUrl()
-						: file.path
+						: ( file.path + '/' + file.name )
 				];
 
 				return [openString, cmdArgs];

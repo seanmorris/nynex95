@@ -85,11 +85,11 @@ export class Home extends View
 			, '*': (args) => {
 
 				const taskName = args.pathparts.shift() || 'repo-browser';
-				const taskPath = args.pathparts.slice() || '/seanmorris/nynex95/package.json'.split('/');
+				const taskPath = args.pathparts.slice() || '/seanmorris/nynex95/package.json';
 
 				if(taskName)
 				{
-					this.startTask = this.run(taskName, taskPath);
+					this.startTask = this.run(taskName, [taskPath.map(decodeURI).join('/')]);
 				}
 
 			}

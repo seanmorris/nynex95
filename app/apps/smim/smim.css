@@ -1,0 +1,45 @@
+.smim-friends-list .grid-list {
+	font-size: 0.8rem;
+}
+
+.smim-friends-list .grid-list .grid-cell-1 {
+	justify-content: center;
+}
+
+.smim-message .avatar button,
+.smim-message .avatar img {
+	width: 48px;
+	height: 48px;
+	min-width: initial !important;
+	object-fit: contain;
+	object-position: center;
+}
+
+.smim-message .avatar img {
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	box-sizing: border-box;
+	background-color: #CCC;
+}
+
+.smim-message .avatar {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	background-color: rgba(0,0,0,0.25);
+	box-sizing: border-box;
+	margin: 0.25rem;
+	padding: 0.25rem;
+}
+
+.smim-message .own-message .name {
+	color: red;
+}
+
+.smim-message .name {
+	color: blue;
+}
+
+.smim-message + .status.row {
+	font-size: 0.9rem;
+}

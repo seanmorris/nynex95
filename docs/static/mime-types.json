@@ -15,5 +15,32 @@
             "path": "w98",
             "icon": "imagPNG"
         }
+    },
+    {
+    	"extension": ".jpeg",
+    	"type": "image/jpeg",
+    	"actions": { "open": "image-viewer" },
+        "icon": {
+            "path": "w98",
+            "icon": "imagJPEG"
+        }
+    },
+    {
+    	"extension": ".jpg",
+    	"type": "image/jpeg",
+    	"actions": { "open": "image-viewer" },
+        "icon": {
+            "path": "w98",
+            "icon": "imagJPEG"
+        }
+    },
+    {
+    	"extension": ".gif",
+    	"type": "image/gif",
+    	"actions": { "open": "image-viewer" },
+        "icon": {
+            "path": "w98",
+            "icon": "imagGIF"
+        }
     }
 ]

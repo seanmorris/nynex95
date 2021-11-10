@@ -3,7 +3,7 @@ import { Task } from 'task/Task';
 
 import { MenuBar } from '../../window/MenuBar';
 
-export class FormTest extends Task
+export class CardEditor extends Task
 {
 	static helpText = 'Card Editor';
 

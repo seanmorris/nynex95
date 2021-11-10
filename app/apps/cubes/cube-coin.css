@@ -1,0 +1,38 @@
+.cube.coin .texture.flat::before {
+	opacity: 1;
+	background-color: transparent;
+	background-image: url(/coin.png);
+	background-size: 800%;
+	image-rendering: pixelated;
+
+	width: 48px;
+	height: 48px;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+
+	transform: translate(-50%, -50%);
+
+	box-sizing: border-box;
+
+	animation: coin-spin steps(8) 0.5s infinite;
+
+	transition: opacity 0.15s 3s ease-in, transform 0.15s 3s ease-in;
+}
+
+.cube.coin[data-state=collected] .texture.flat::before {
+	transition: opacity 0.25s 0.15s ease-in, transform 0.25s ease-in;
+	transform: translate(-50%, -350%);
+	opacity: 0;
+}
+
+@keyframes coin-spin {
+	0% {
+		background-position-x: 0%;
+	}
+	100% {
+		background-position-x: -800%;
+	}
+}
+

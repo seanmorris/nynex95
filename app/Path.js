@@ -17,7 +17,9 @@ import { Dosbox       } from 'apps/dosbox/Dosbox';
 import { Letsvue      } from 'apps/letsvue/Letsvue';
 import { Harp         } from 'apps/harp/Harp';
 import { Game         } from 'apps/sonic-3000/Game';
-import { FormTest     } from 'apps/formTest/FormTest';
+import { CardEditor   } from 'apps/cardEditor/CardEditor';
+import { Smim         } from 'apps/smim/Smim';
+import { Cubes        } from 'apps/cubes/Cubes';
 
 import { FileBrowser  } from 'apps/fileBrowser/FileBrowser';
 
@@ -42,7 +44,9 @@ export const Path = {
 	, 'sonic3000':    Game
 	, 'file-browser': FileBrowser
 	, 'image-viewer': ImageViewer
-	, 'card-editor':  FormTest
+	, 'card-editor':  CardEditor
+	, 'smim':         Smim
+	, 'cubes':        Cubes
 	// , 'clones':       ClonesNBarrels
 	// , 'dos':          Dosbox
 	// , 'letsvue':      Letsvue

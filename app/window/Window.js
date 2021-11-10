@@ -123,8 +123,6 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 		// const popupBlob   = new Blob([popupSource], {type: 'text/html'});
 		// const popupUrl    = URL.createObjectURL(popupBlob);
 
-		console.log(location.origin);
-
 		if(!(this.outWindow = window.open(
 			location.origin + '/satellite-window'
 			, this._id
@@ -145,6 +143,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 			const old = this.outWindow;
 
 			this.outWindow = false;
+
 			this.args.hideTitleBar = false;
 			this.classes.maximized = this.wasMaximized;
 			this.restore();
@@ -167,10 +166,8 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 		this.outWindow.addEventListener('load', () => {
 			this.outWindow.addEventListener('beforeunload', () => {
-
-				this.popBackIn && this.popBackIn();
-
 				window.removeEventListener('beforeunload', mainUnload);
+				this.popBackIn && this.popBackIn();
 			});
 
 			const base = this.outWindow.document.createElement('base');
@@ -278,7 +275,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 		{
 			home.moveOutline(0, 0, '100%', '100%', true);
 		}
-		else
+		else if(this.tags.window.element)
 		{
 			home.moveOutline(
 				`${this.pos.x}px`
@@ -369,16 +366,19 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 		home.showOutline();
 
 		this.onTimeout(this.outlineDelay, ()=>{
-			home.moveOutline(
-				`${this.pos.x}px`
-				, `${this.pos.y}px`
-				, this.tags.window
-					? (this.tags.window.element.style.width  || `${this.args.width}`)
-					: `${this.args.width}`
-				, this.tags.window
-					? (this.tags.window.element.style.height || `${this.args.height}`)
-					: `${this.args.height}`
-			);
+			if(this.tags.window.element)
+			{
+				home.moveOutline(
+					`${this.pos.x}px`
+					, `${this.pos.y}px`
+					, this.tags.window
+						? (this.tags.window.element.style.width  || `${this.args.width}`)
+						: `${this.args.width}`
+					, this.tags.window
+						? (this.tags.window.element.style.height || `${this.args.height}`)
+						: `${this.args.height}`
+				);
+			}
 
 			this.onTimeout(this.outlineSpeed, ()=>{
 				home.hideOutline();
@@ -723,7 +723,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 	subWindow(args)
 	{
-		const subWindow = new this.constructor(args, this);
+		const subWindow = new this.constructor(args);
 
 		subWindow.classes.subWindow = true;
 

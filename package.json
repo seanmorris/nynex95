@@ -17,6 +17,7 @@
 		"cv-markdown": "^1.0.4",
 		"highlight.js": "^11.3.1",
 		"markdown-it": "^12.2.0",
+		"matrix-api": "^0.0.0",
 		"php-wasm": "^0.0.4-b",
 		"punycode": "^2.1.1",
 		"subspace-console": "^0.0.1-f"

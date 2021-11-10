@@ -113,6 +113,13 @@ export class Desktop extends View
 				, name: 'File Browser'
 				, icon: 5
 			})
+			, new Icon({
+				action: 'cubes'
+				, name: 'Cubes 3d'
+				, icon: 'cube'
+				, path: 'apps'
+				, bits: 1
+			})
 		];
 
 		this.args.endIcons = [
@@ -175,6 +182,13 @@ export class Desktop extends View
 				, bits: 24
 			})
 			, new Icon({
+				action: 'sonic3000'
+				, name: 'Play Sonic 3000'
+				, icon: 'sonic-3000'
+				, path: 'ui'
+				, bits: 24
+			})
+			, new Icon({
 				action: 'numb'
 				, name: 'numb - linkin park.mp3.exe'
 				, icon: 'numb'
@@ -209,9 +223,8 @@ export class Desktop extends View
 		];
 
 		this.fileDb = FileDatabase.open('files', 1);
-		this.mimeDb = MimeDatabase.open('mime-types', 1);
 
-		Promise.all([this.fileDb, this.mimeDb]).then(([fileDb,mimeDb]) => {
+		this.fileDb.then(fileDb => {
 
 			const onWrite = event => {
 				const file = event.detail.record;
@@ -239,34 +252,9 @@ export class Desktop extends View
 
 	listFile(file)
 	{
-		const query = {
-			store:   'mime-types'
-			, index: 'type'
-			, range: file.type
-			, type:  MimeModel
-		};
-
-		return MimeDatabase.open('mime-types', 1)
-		.then(mimeDb => mimeDb.select(query).one().then(result => {
-
-			let icon = 1;
-			let path = 'w95'
-
-			if(result.result && result.result.icon)
-			{
-				icon = result.result.icon.icon;
-				path = result.result.icon.path;
-			}
-
-			this.args.endIcons.push(new Icon({
-				action: () => FileModel.runFile(file)
-				, name: file.name
-				, type: file.type
-				, bits: 4
-				, icon
-				, path
-			}));
-		}));
+		return file.getIcon().then(icon => {
+			this.args.endIcons.push(icon);
+		});
 	}
 
 	focus(event)

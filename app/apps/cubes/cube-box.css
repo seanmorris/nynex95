@@ -1,0 +1,29 @@
+.cubes .cube.box {
+	--height: 1.5;
+}
+
+.cube.box .texture {
+	backface-visibility: visible !important;
+}
+
+.cube.box[data-colliding=true] .texture {
+	backface-visibility: hidden !important;
+}
+
+.cube.box .texture:not(.flat,.indicator,.direction)::before {
+	opacity: 1;
+	background-image: url(/sci-fi/metal-box.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.cube.box .texture.flat {
+	display: none;
+}
+
+.cube.box .texture.front:before {
+	background-image: url(/chaosean.png), url(/sci-fi/metal-box.png);
+	background-position: center, 0 0;
+	background-size: 75%, 100%;
+	transform: scaleX(-1);
+}

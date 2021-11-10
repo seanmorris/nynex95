@@ -1,0 +1,278 @@
+.controls {
+	background-color: white;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	transform: translate3d(0px, 0px, 0px);
+	opacity: 0.25;
+	opacity: 0.0;
+}
+
+.controls:hover {
+	opacity: 0.85;
+}
+
+.cubes {
+
+	--floorHeight: -256;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	perspective: 2048px;
+	/*background-color: #333 !important;*/
+	/*background-color: red !important;*/
+	background-image: url(/calm_sea_ft.jpg);
+	background-size: 200% 200%;
+	background-position-x: calc(1% * var(--yCamTilt3d));
+	background-position-y: calc(50% + calc(-2% * var(--xCamTilt3d)));
+}
+
+.cubes .cube {
+	position: absolute;
+
+	--size: 128;
+	--height: 1;
+	--width:  1;
+	--length: 1;
+
+	width: calc(1px * var(--size));
+	height: calc(1px * var(--size));
+	position: absolute;
+
+	transform-style: preserve-3d;
+
+}
+
+.cubes .cube.main {
+	transform:
+		translate3d(
+			0px
+			, calc(-1px + calc(-1px * calc(var(--floorHeight) + calc(0.5 * var(--size)))))
+			, 0px
+		)
+		translate3d(
+			calc(0px * var(--x3d))
+			, calc(-1px * calc(100 + var(--y)))
+			, calc(-0px * var(--z3d))
+		);
+}
+
+.cubes .cube:not(.main) {
+	transform:
+		/*translate3d(0px, 0px, 0px)*/
+		translate3d(
+			0px
+			, calc(-1px + calc(-1px * calc(var(--floorHeight) + calc(0.5 * var(--size)))))
+			, 0px
+		)
+		translate3d(
+			calc(calc(-32px * calc(var(--x) - var(--x3d))))
+			, calc(-1px * calc(100 + var(--y)))
+			, calc(calc(-32px * calc(var(--z) - var(--z3d))))
+		);
+}
+
+.world {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+
+	/*transition: 750ms ease-out transform;*/
+	transform-style: preserve-3d;
+
+	transform:
+		translate3d(
+			calc(-3.2px * var(--xCam3d))
+			, calc(-3.2px * var(--yCam3d))
+			, calc(-10.24px * var(--zCam3d))
+		)
+		rotate3d(1, 0, 0, calc(0.9deg * var(--xCamTilt3d)))
+		rotate3d(0, 1, 0, calc(1.8deg * var(--yCamTilt3d)))
+		rotate3d(0, 0, 1, calc(0.9deg * var(--zCamTilt3d)));
+}
+
+.texture {
+	position: absolute;
+	/*transition: 750ms ease-out transform, 750ms ease-out background-position;*/
+	box-sizing: border-box;
+	width: calc(1px * var(--size));
+	height: calc(1px * var(--size));
+	color: white;
+	backface-visibility: hidden;
+	box-sizing: border-box;
+}
+
+[data-outlines=true] .texture {
+	border: 1px solid rgba(0,255,0,0.1);
+}
+
+.texture::before {
+	content:  ' ';
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	opacity: 0.125;
+	background-image: url(/ui/grid.png);
+	transition: opacity 150ms ease-out;
+}
+
+[data-outlines=false] .texture::before {
+	opacity: 0;
+}
+
+.texture.ground {
+	--size: calc(1024 * 4);
+
+	background-image: url(/sm/floor-tile-64.png);
+	background-size: 256px;
+	border: 4px solid black;
+
+	width: calc(1px * var(--size));
+	height: calc(1px * var(--size));
+
+	transform:
+		rotate3d(1, 0, 0, 90deg)
+		translate3d(
+			calc(32px * var(--x3d))
+			, calc(32.4px * var(--z3d))
+			, calc(1px * var(--floorHeight))
+		);
+}
+
+.texture.top {
+	transform:
+		rotate3d(1, 0, 0, 90deg)
+		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+}
+
+.texture.front {
+	transform:
+		rotate3d(0, 0, 0, 0deg)
+		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+}
+
+.texture.back {
+	transform:
+		rotate3d(0, 1, 0, 180deg)
+		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+}
+
+.texture.left {
+	transform:
+		rotate3d(0, 1, 0, 90deg)
+		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+}
+
+.texture.right {
+	transform:
+		rotate3d(0, -1, 0, 90deg)
+		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+}
+
+.texture.bottom {
+	transform:
+		rotate3d(-1, 0, 0, 90deg)
+		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+}
+
+.main .texture.direction::before {
+	top: 0;
+	left: 50%;
+	background-image: none;
+	/*transform: translateX(-50%) rotateZ(90deg);*/
+	transform:
+		translateX(-50%)
+		rotateZ(calc(calc(var(--rad)*1rad) - 180deg));
+	transform-origin: 50% calc(0.5px * var(--size));
+	transition-duration: 0;
+	width: 5px;
+	height: 192px;
+	background-color: red;
+	opacity: 1;
+}
+
+.texture.direction {
+	opacity: 0;
+}
+
+.texture.indicator {
+	background-color: rgba(255,255,255,0.125);
+}
+
+[data-colliding=true] .texture.indicator {
+	background-color: rgba(255,0,0,0.125);
+}
+
+.texture.indicator,
+.texture.direction {
+	transform:
+		rotate3d(1, 0, 0, 90deg)
+		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+}
+
+.texture.flat {
+	border: 0;
+	opacity: 1;
+	position: absolute;
+	z-index: 1000;
+	perspective: 0;
+	transform:
+		rotate3d( 0,   0,   0, calc(0.9deg * var(--zCamTilt3d)))
+		rotate3d( 0,  -1,   0, calc(1.8deg * var(--yCamTilt3d)))
+		rotate3d(-1,   0,   0, calc(0.75deg * var(--xCamTilt3d)))
+		/*translate3d(0px, 0px,  calc(0.20px * var(--size)))*/;
+}
+
+.texture.flat::before {
+	opacity: 1;
+	background-color: transparent;
+	background-image: url(/sm/barrel-no-shadow-48-24bit.png);
+	image-rendering: pixelated;
+
+	box-sizing: border-box;
+}
+
+.texture.ground::before,
+.texture.flat::after { opacity: 0; }
+
+input[type=range] {
+    height:0px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    -webkit-appearance: none;
+	border: 1px solid blue;
+}
+
+.camera-position input[type="range"] {
+	border-color: green;
+}
+
+.camera-tilt input[type="range"] {
+	border-color: red;
+}
+
+/*.cubes .hud {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 82px;
+	background-image: url(/doom/ian-hud.png);
+	background-size: 100% auto;
+	transform: translate3d(0px, 0px, 0px);
+}
+*/
+
+.cubes .frame {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}

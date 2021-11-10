@@ -1,0 +1,54 @@
+<div
+	cv-on = "click:lockMouse"
+	class = "liquid inset frame cubes"
+	data-outlines = "[[outlines]]"
+	style = "--x3d:[[x3d]];--y3d:[[y3d]];--z3d:[[z3d]];--xCam3d:[[xCam3d]];--yCam3d:[[yCam3d]];--zCam3d:[[zCam3d]];--xCamTilt3d:[[xCamTilt3d]];--yCamTilt3d:[[yCamTilt3d]];--zCamTilt3d:[[zCamTilt3d]];"
+>
+	<div class = "world">
+
+		<span class = "contents" cv-each = "cubes:cube">
+			[[cube]]
+		</span>
+
+		<div class = "ground texture"></div>
+
+	</div>
+	<div class = "controls">
+		<div>
+			<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "x3dInput" />
+		</div>
+		<div>
+			<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "y3dInput" />
+		</div>
+		<div>
+			<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "z3dInput" />
+		</div>
+
+		<span class = "contents camera-position">
+			<div>
+				<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "xCam3dInput" />
+			</div>
+			<div>
+				<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "yCam3dInput" />
+			</div>
+			<div>
+				<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "zCam3dInput" />
+			</div>
+		</span>
+
+		<span class = "contents camera-tilt">
+			<div>
+				<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "xCamTilt3dInput" />
+			</div>
+			<div>
+				<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "yCamTilt3dInput" />
+			</div>
+			<div>
+				<input type = "range" min = "-100" max = "100" value = "0" cv-bind = "zCamTilt3dInput" />
+			</div>
+		</span>
+</div>
+
+<div class = "hud"></div>
+
+<div class = "frame">[[frame]]</div>

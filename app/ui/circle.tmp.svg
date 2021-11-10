@@ -1,0 +1,32 @@
+<svg viewBox="0 0 100 100" cv-ref = "svg">
+	<ellipse
+		style="
+			stroke-width: 5; 
+			fill:         none;
+			stroke:       #[[color]];
+		"
+		stroke-dasharray = "314px"
+		cx               = "50"
+		cy               = "50"
+		rx               = "47.5"
+		ry               = "47.5"
+	>
+		<animateTransform
+			attributeName = "transform"
+			attributeType = "XML"
+			type          = "rotate"
+			from          = "0   50 50"
+			to            = "360 50 50"
+			dur           = "[[speed]]s"
+			repeatCount   = "[[repeatCount]]"
+		/>
+		<animate
+			attributeName = "stroke-dashoffset"
+			attributeType = "XML"
+			from          = "0px"
+			to            = "628px"
+			dur           = "[[halfSpeed]]s"
+			repeatCount   = "[[repeatCount]]"
+		/>
+	</ellipse>
+</svg>

@@ -40,7 +40,7 @@ module.exports.hooks = {
 	preCompile: () => {
 		console.log('About to compile...');
 		exec(
-			`npm link curvature subspace-console cv-markdown php-wasm`
+			`npm link curvature subspace-console cv-markdown php-wasm matrix-api`
 			, (err, stdout, stderr)=>{
 				console.log(err);
 				console.log(stdout);

@@ -1,0 +1,16 @@
+.cubes .cube.mushroom {
+	--size: 256;
+}
+
+.cube.mushroom .texture.flat {
+	/*top: 0px;
+	right: 16px;
+	width: 96px;
+	height: 128px;*/
+}
+
+.cube.mushroom .texture.flat::before {
+	background-image: url(/Mushroom.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+}

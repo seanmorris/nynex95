@@ -1,0 +1,41 @@
+.cube.ian .texture.flat {
+	top: 0px;
+	right: 16px;
+	width: 96px;
+	height: 128px;
+}
+
+.cube.ian .texture.flat::before {
+	background-image: url(/ian.png);
+	/*background-size: 100% 100%;*/
+	background-size: 400% calc(288px * 3);
+	background-repeat: no-repeat;
+	/*animation: ian-walk 1s steps(4) infinite;*/
+}
+
+.cube.ian .texture.flat.face-front::before {
+	background-position-y: -304px;
+}
+
+.cube.ian .texture.flat.face-left::before {
+	background-position-y: -16px;
+	transform: scaleX(-1.0);
+}
+
+.cube.ian .texture.flat.face-back::before {
+	background-position-y: -592px;
+}
+
+.cube.ian .texture.flat.face-right::before {
+	background-position-y: -16px;
+}
+
+@keyframes ian-walk {
+	0% {
+		background-position-x: 0;
+	}
+	100% {
+		background-position-x: calc(96px * -4);
+	}
+}
+

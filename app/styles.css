@@ -776,3 +776,21 @@ button.dropdown {
 .subWindow .title-bar .minimize {
 	display: none;
 }
+
+button.flexible {
+	min-width: initial !important;
+	flex: 1;
+}
+
+.selectable {
+	user-select: text !important;
+	cursor: text;
+}
+
+.loading {
+	margin: auto;
+}
+
+.loading svg {
+	width: 80px;
+}

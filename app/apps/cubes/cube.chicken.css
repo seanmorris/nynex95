@@ -1,0 +1,36 @@
+.cube.chicken .texture.flat {
+
+}
+
+.cube.chicken .texture.flat::before {
+	background-image: url(/chicken-sprite-sheet.png);
+	background-size: 400% 1200%;
+
+	animation: chicken-walk 0.35s steps(4) infinite forwards;
+}
+
+.cube.chicken .texture.flat.face-front::before {
+	background-position-y: -256px;
+}
+
+.cube.chicken .texture.flat.face-left::before {
+	background-position-y: -0px;
+	transform: scaleX(-1.0);
+}
+
+.cube.chicken .texture.flat.face-back::before {
+	background-position-y: -512px;
+}
+
+.cube.chicken .texture.flat.face-right::before {
+	background-position-y: -0px;
+}
+
+@keyframes chicken-walk {
+	0% {
+		background-position-x: 400%;
+	}
+	100% {
+		background-position-x: -0px;
+	}
+}
