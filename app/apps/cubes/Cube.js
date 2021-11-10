@@ -18,10 +18,10 @@ export class Cube extends View
 		this.args.yAngle = 0;
 		this.args.zAngle = 0;
 
+		this.args.rot   = this.args.rot || 0;
+		this.args.rad   = this.args.rad || 0;
 		this.args.state = 'idle';
 		this.args.face  = 'X';
-		this.args.rad   = 0;
-		this.args.rot   = 0;
 	}
 
 	update(frame)

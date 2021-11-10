@@ -20,16 +20,16 @@ export class Cubes extends Task
 	width  = "840px";
 	height = "700px";
 
-	mainCube = new Cube({css:'sean main', main: true});
+	mainCube = new Cube({css:'sean main', main: true, x:0, z: 14});
 
 	boxCube = new Cube({css:'box', size: 256, x:-4, y: -100, z: 4});
 	otherCube = new Cube({css:'barrel', x:2, y: -100, z: -6});
 
 	mushroom = new Cube({css:'mushroom', size: 256, x:4, y: -100, z: -16});
-	chicken  = new Chicken({x: 6, y: -100, z: 6});
-	coinA     = new Coin({x: 10, y: -100, z: 10});
-	coinB     = new Coin({x: 14, y: -100, z: 10});
-	coinC     = new Coin({x: 18, y: -100, z: 10});
+	chicken  = new Chicken({x: 6, y: -100, z: 2, rot: 50});
+	coinA     = new Coin({x: 2, y: -100, z: 10});
+	coinB     = new Coin({x: 6, y: -100, z: 10});
+	coinC     = new Coin({x: 10, y: -100, z: 10});
 	// ian = new Cube({css:'ian', x: 10, y: -100, z: 2});
 
 	cubes = [
@@ -43,28 +43,28 @@ export class Cubes extends Task
 		, this.coinC
 	];
 
-	x3d = 0;
+	x3d = -2;
 	y3d = -100;
-	z3d = 0;
+	z3d = 18;
 
-	x3dInput = 0;
-	y3dInput = -800;
-	z3dInput = 0;
+	x3dInput = -2;
+	y3dInput = -100;
+	z3dInput = 14;
 
 	xCam3d = 0;
 	yCam3d = 0;
 	zCam3d = 0;
 
 	xCam3dInput = 0;
-	yCam3dInput = 50;
+	yCam3dInput = 0;
 	zCam3dInput = 0;
 
 	xCamTilt3d = 0;
-	yCamTilt3d = 50;
+	yCamTilt3d = 0;
 	zCamTilt3d = 0;
 
-	xCamTilt3dInput = -100;
-	yCamTilt3dInput = 0;
+	xCamTilt3dInput = -35;
+	yCamTilt3dInput = -85;
 	zCamTilt3dInput = 0;
 
 	ySpeed = 0;
@@ -82,8 +82,6 @@ export class Cubes extends Task
 		super(...a);
 
 		this.window.controller = this;
-
-		this.y3dInput = -100;
 
 		this.window.listen(document, 'pointerlockchange', event => {
 
@@ -215,16 +213,20 @@ export class Cubes extends Task
 			cubeA.args.colliding = colliding;
 		}
 
-		const toAngle = Math.atan2(
-			this.chicken.args.z - this.mainCube.args.z
-			, this.chicken.args.x - this.mainCube.args.x
-		);
+		if(this.chicken.following)
+		{
+			const toAngle = Math.atan2(
+				this.chicken.args.z - this.chicken.following.args.z
+				, this.chicken.args.x - this.chicken.following.args.x
+			);
 
-		this.chicken.rotateSprite(
-			0
-			, Math.cos(toAngle - this.yCamTilt3d/100)
-			, Math.sin(toAngle - this.yCamTilt3d/100)
-		);
+			this.chicken.rotateSprite(
+				0
+				, Math.cos(toAngle - this.yCamTilt3d/100)
+				, Math.sin(toAngle - this.yCamTilt3d/100)
+			);
+		}
+
 
 		this.cubes.forEach(cube => cube.setFace(this.yCamTilt3d));
 
