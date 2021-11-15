@@ -71,10 +71,6 @@ export class CardEditor extends Task
 	{
 		$subview.args.adding = true;
 
-		// this.window.tags.scroller.scrollTo({
-		// 	top: $subview.tags.scroller.scrollHeight
-		// });
-
 		this.window.onTimeout(100, () => $subview.tags.newName.focus());
 	}
 
@@ -85,13 +81,13 @@ export class CardEditor extends Task
 
 	confirmAddProperty($event, $subview, cardIndex)
 	{
-		const newName = this.window.tags.newName.value;
+		const newName = $subview.tags.newName.value;
 
 		document.activeElement && document.activeElement.blur();
 
 		if(!newName)
 		{
-			this.window.onTimeout(100, () => this.window.tags.newName.focus());
+			this.window.onTimeout(100, () => $subview.tags.newName.focus());
 			return;
 		}
 
@@ -99,11 +95,9 @@ export class CardEditor extends Task
 
 		this.cards[cardIndex][newName] = '';
 
-		this.window.tags.newName.value = '';
+		$subview.tags.newName.value = '';
 
-		this.window.onNextFrame(() => {
-			this.window.findTag('.contents label:last-child input').focus()
-		});
+		this.window.onNextFrame(() => $subview.tags.newName.focus());
 	}
 
 	removeCard(event, cardIndex)

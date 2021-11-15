@@ -6,8 +6,18 @@ import { Task } from 'task/Task';
 
 import { Cube } from './Cube';
 
-import { Coin } from './Coin';
+import { Box }     from './Box';
+import { Slope }   from './Slope';
+
+import { Barrel }  from './Barrel';
+import { BarrelHole }  from './BarrelHole';
+
+import { Coin }    from './Coin';
 import { Chicken } from './Chicken';
+
+import { Player } from './Player';
+
+import { OctCell } from './OctCell';
 
 export class Cubes extends Task
 {
@@ -18,56 +28,67 @@ export class Cubes extends Task
 	template = require('./main.tmp');
 
 	width  = "840px";
-	height = "700px";
+	height = "740px";
 
-	mainCube = new Cube({css:'sean main', main: true, x:0, z: 14});
-
-	boxCube = new Cube({css:'box', size: 256, x:-4, y: -100, z: 4});
-	otherCube = new Cube({css:'barrel', x:2, y: -100, z: -6});
-
-	mushroom = new Cube({css:'mushroom', size: 256, x:4, y: -100, z: -16});
-	chicken  = new Chicken({x: 6, y: -100, z: 2, rot: 50});
-	coinA     = new Coin({x: 2, y: -100, z: 10});
-	coinB     = new Coin({x: 6, y: -100, z: 10});
-	coinC     = new Coin({x: 10, y: -100, z: 10});
-	// ian = new Cube({css:'ian', x: 10, y: -100, z: 2});
+	mainCube = new Player({css:'sean main', main: true, x: -12, y: 512, z: 12});
 
 	cubes = [
 		this.mainCube
-		, this.otherCube
-		, this.chicken
-		, this.mushroom
-		, this.boxCube
-		, this.coinA
-		, this.coinB
-		, this.coinC
+		, new Barrel({css:'barrel', x:  8, y: 512, z:  12})
+		, new BarrelHole({css:'barrel-hole', x: -4, y: 0, z: 12})
+
+		, new Coin({css:'coin', x: -20, y: 4096, z: -16})
+		, new Coin({css:'coin', x: -20, y: 4096, z: -12})
+		, new Coin({css:'coin', x: -20, y: 4096, z: -8})
+
+		, new Coin({css:'coin', x: -16, y: 4096, z: -16})
+		, new Coin({css:'coin', x: -16, y: 4096, z: -12})
+		, new Coin({css:'coin', x: -16, y: 4096, z: -8})
+
+		, new Coin({css:'coin', x: -12, y: 4096, z: -16})
+		, new Coin({css:'coin', x: -12, y: 4096, z: -12})
+		, new Coin({css:'coin', x: -12, y: 4096, z: -8})
+
+		, new Coin({css:'coin', x: -36, y: 4096, z: 24})
+		, new Coin({css:'coin', x: -36, y: 4096, z: 28})
+		, new Coin({css:'coin', x: -36, y: 4096, z: 32})
+
+		, new Box({css:'box', solid: true, size: 512, x:  8, y: 0, z:  12})
+		, new Box({css:'box', solid: true, size: 256, x:-20, y: 0, z:  4})
+		, new Box({css:'box', solid: true, size: 512, x:  0, y: 0, z: -12})
+		, new Box({css:'box', solid: true, size: 512, x:-16, y: 0, z: -12})
+		, new Box({css:'box', solid: false, size: 512, x:30, y: 0, z: -30})
+		, new Box({css:'box landing', solid: true, size: 512, x:-36, y: 0, z: 4})
+		, new Slope({css:'box', solid: true, size: 512, x:-36, y: 0, z: 28})
+		, new Cube({css:'mushroom', size: 256, x:44, y: 4096*2, z: -28})
+		, new Chicken({x:-0, y: 4096*3, z: -12, rot: 50})
+		// , this.otherCube
+		// , this.mushroom
 	];
 
 	x3d = -2;
-	y3d = -100;
+	y3d = 0;
 	z3d = 18;
 
 	x3dInput = -2;
-	y3dInput = -100;
-	z3dInput = 14;
+	y3dInput = 0;
+	z3dInput = 18;
 
 	xCam3d = 0;
-	yCam3d = 0;
-	zCam3d = 0;
+	yCam3d = -64;
+	zCam3d = 240;
 
 	xCam3dInput = 0;
-	yCam3dInput = 0;
-	zCam3dInput = 0;
+	yCam3dInput = -64;
+	zCam3dInput = 320;
 
-	xCamTilt3d = 0;
-	yCamTilt3d = 0;
+	xCamTilt3d = -25;
+	yCamTilt3d = 75;
 	zCamTilt3d = 0;
 
 	xCamTilt3dInput = -35;
-	yCamTilt3dInput = -85;
+	yCamTilt3dInput = -75;
 	zCamTilt3dInput = 0;
-
-	ySpeed = 0;
 
 	cancelScroll = null;
 	cancelLock   = null;
@@ -77,9 +98,17 @@ export class Cubes extends Task
 	paused = 0;
 	frame  = 0;
 
+	lockThrottle = 0;
+
+	octCell = new OctCell({x:0, y: 0, z: 0}, {x:100, y:3200, z:100});
+
 	constructor(...a)
 	{
 		super(...a);
+
+		window.octCell = this.octCell;
+
+		// this.mainCube.args.bindTo('z', v => console.trace(v));
 
 		this.window.controller = this;
 
@@ -136,9 +165,26 @@ export class Cubes extends Task
 
 		this.window.onRemove(() => keyboard.listening = false);
 
-		Gamepad.getPad({keys, keyboard, index:0, deadZone: 0.25}).then(pad => {
+		Gamepad.getPad({keys, keyboard, index:0, deadZone: 0.175}).then(pad => {
 			this.gamepad = pad;
 		});
+
+		for(let i = 0; i < 6; i += 1)
+		{
+			for(let j = 0; j < 6; j += 1)
+			{
+				const position = {x: 30 + j * 4, y: 0, z: 10 + i * 4}
+				const coin = new Coin(position);
+				this.cubes.push(coin);
+			}
+		}
+
+		for(const cube of this.cubes)
+		{
+			const position = {x:cube.args.x, y:cube.args.y, z:cube.args.z};
+
+			this.octCell.insert(Bindable.make(cube), position);
+		}
 
 		return Bindable.make(this);
 	}
@@ -159,25 +205,19 @@ export class Cubes extends Task
 			this.pauseThrottle--;
 		}
 
-		this.syncToInput('x3d');
-		this.syncToInput('y3d');
-		this.syncToInput('z3d');
-
-		this.syncToInput('xCam3d');
-		this.syncToInput('yCam3d');
-		this.syncToInput('zCam3d');
-
-		this.syncToInput('xCamTilt3d');
-		this.syncToInput('yCamTilt3d');
-		this.syncToInput('zCamTilt3d');
-
-		if(this.paused)
+		if(this.paused > 1)
 		{
-			if(this.paused > 0)
-			{
-				this.paused--;
-			}
+			this.paused--;
+		}
+		else if(this.paused)
+		{
+			this.syncToInput('xCam3d');
+			this.syncToInput('yCam3d');
+			this.syncToInput('zCam3d');
 
+			this.syncToInput('xCamTilt3d');
+			this.syncToInput('yCamTilt3d');
+			this.syncToInput('zCamTilt3d');
 			return;
 		}
 
@@ -187,85 +227,97 @@ export class Cubes extends Task
 
 		bound.outlines = this.zCam3d > -150;
 
-		this.mainCube.args.x = this.x3d;
-		this.mainCube.args.y = this.y3d;
-		this.mainCube.args.z = this.z3d;
+		bound.coinCount = this.mainCube.args.coinCount;
 
 		for(const cube of this.cubes)
 		{
-			cube.update();
+			if(cube.sleeping)
+			{
+				continue;
+			}
+
+			cube.updateStart();
 		}
 
 		for(const cubeA of this.cubes)
 		{
+			if(cubeA.sleeping)
+			{
+				continue;
+			}
+
+			const position = {x:cubeA.args.x, y:cubeA.args.y, z:cubeA.args.z};
+			const size     = {
+				x:cubeA.args.size / 16
+				, y:cubeA.args.size * 2
+				, z:cubeA.args.size / 16
+			};
+
+			const others = this.octCell.select(position, size);
+
 			let colliding = false;
 
-			for(const cubeB of this.cubes)
+			for(const cubeB of others)
 			{
-				if(this.checkCollision(cubeA, cubeB))
+				if(cubeB.sleeping)
 				{
-					cubeA.collide(cubeB);
-					colliding = true;
-					break;
+					continue;
+				}
+
+				if(cubeA.checkCollision(cubeB))
+				{
+					cubeB.collide(cubeA);
+
+					if(cubeA.args.solid)
+					{
+						colliding = true;
+					}
 				}
 			}
 
-			cubeA.args.colliding = colliding;
+			if(!colliding)
+			{
+				cubeA.grounded = false;
+			}
 		}
 
-		if(this.chicken.following)
+		for(const cube of this.cubes)
 		{
-			const toAngle = Math.atan2(
-				this.chicken.args.z - this.chicken.following.args.z
-				, this.chicken.args.x - this.chicken.following.args.x
-			);
+			if(cube.sleeping)
+			{
+				continue;
+			}
 
-			this.chicken.rotateSprite(
-				0
-				, Math.cos(toAngle - this.yCamTilt3d/100)
-				, Math.sin(toAngle - this.yCamTilt3d/100)
-			);
+			cube.update();
+
+			cube.setFace(this.yCamTilt3d)
 		}
 
-
-		this.cubes.forEach(cube => cube.setFace(this.yCamTilt3d));
-
-	}
-
-	checkCollision(a, b)
-	{
-		if(a === b)
+		for(const cube of this.cubes)
 		{
-			return false;
+			if(cube.sleeping)
+			{
+				continue;
+			}
+
+			this.octCell.move(cube, {
+				x: cube.args.x
+				, y: cube.args.y
+				, z: cube.args.z
+			});
 		}
 
-		const xMin = ((0.5 * a.args.size) + (0.5 * b.args.size)) / 32;
-		const yMin = ((0.5 * a.args.size) + (0.5 * b.args.size)) / 32;
-		const zMin = ((0.5 * a.args.size) + (0.5 * b.args.size)) / 32;
+		bound.x3d = Number(this.mainCube.args.x).toFixed(3);
+		bound.y3d = Number(this.mainCube.args.y).toFixed(3);
+		bound.z3d = Number(this.mainCube.args.z).toFixed(3);
 
-		if(Math.abs(a.args.x - b.args.x) > xMin)
-		{
-			return false;
-		}
+		this.syncToInput('xCam3d');
+		this.syncToInput('yCam3d');
+		this.syncToInput('zCam3d');
 
-		if(Math.abs(a.args.z - b.args.z) > zMin)
-		{
-			return false;
-		}
-
-		if(a.args.y > b.args.y && Math.abs(a.args.y - b.args.y) > b.args.size)
-		{
-			return false;
-		}
-
-		if(b.args.y > a.args.y && Math.abs(a.args.y - b.args.y) > a.args.size)
-		{
-			return false;
-		}
-
-		return true;
-
-		// console.log({x: a.args.x, y: a.args.y, z: a.args.z});
+		this.syncToInput('xCamTilt3d');
+		this.syncToInput('yCamTilt3d');
+		this.syncToInput('zCamTilt3d');
 	}
 
 	takeInput()
@@ -274,7 +326,7 @@ export class Cubes extends Task
 
 		if(this.keyboard.keys.o === -2 && !this.pauseThrottle)
 		{
-			this.paused = this.paused ? 0 : 1;
+			this.paused = this.paused ? 2 : -1;
 		}
 
 		if(this.keyboard.keys.p === -2 && !this.pauseThrottle)
@@ -287,70 +339,64 @@ export class Cubes extends Task
 			}
 		}
 
-		if(this.paused)
-		{
-			return;
-		}
-
-		let xAxis = 0;
-		let yAxis = 0;
+		const input = {xAxis: 0, yAxis: 0, aAxis: 0, bAxis:0, b: []};
 
 		if(this.keyboard.keys.w > 0 || this.keyboard.keys.ArrowUp > 0)
 		{
-			yAxis = -1;
+			input.yAxis = -1;
 		}
 		else if(this.keyboard.keys.s > 0 || this.keyboard.keys.ArrowDown > 0)
 		{
-			yAxis = 1;
+			input.yAxis = 1;
 		}
 
 		if(this.keyboard.keys.a > 0 || this.keyboard.keys.ArrowLeft > 0)
 		{
-			xAxis = -1;
+			input.xAxis = -1;
 		}
 		else if(this.keyboard.keys.d > 0 || this.keyboard.keys.ArrowRight > 0)
 		{
-			xAxis = 1;
+			input.xAxis = 1;
 		}
 
-		if(this.keyboard.keys[' '] > 0 && this.y3d === -100)
+		if(this.keyboard.keys[' '] > 0)
 		{
-			this.ySpeed = 70;
+			input.b[0] = 1;
 		}
 
 		if(this.gamepad)
 		{
 			this.gamepad.readInput();
 
-			xAxis = xAxis || Number(this.gamepad.axes[0].magnitude);
-			yAxis = yAxis || Number(this.gamepad.axes[1].magnitude);
+			input.xAxis = input.xAxis || Number(this.gamepad.axes[0].magnitude);
+			input.yAxis = input.yAxis || Number(this.gamepad.axes[1].magnitude);
 
-			this.xCamTilt3dInput = Number(this.xCamTilt3dInput) + Number(this.gamepad.axes[3].magnitude);
-			this.yCamTilt3dInput = Number(this.yCamTilt3dInput) + Number(this.gamepad.axes[2].magnitude);
+			input.aAxis = input.aAxis || Number(this.gamepad.axes[2].magnitude);
+			input.bAxis = input.bAxis || Number(this.gamepad.axes[3].magnitude);
 
-			this.xCamTilt3dInput = Math.max(this.zCam3d < -150 ? -25 : -50, this.xCamTilt3dInput);
-			this.xCamTilt3dInput = Math.min(this.zCam3d < -150 ? 12.5 : 0, this.xCamTilt3dInput);
-
-			if(this.gamepad.buttons[0].delta === 1 && this.y3d === -100)
+			for(const i in this.gamepad.buttons)
 			{
-				this.ySpeed = 70;
+				input.b[i] = this.gamepad.buttons[i].delta;
 			}
 		}
 
-		this.y3d += this.ySpeed;
+		this.tiltCamera(input);
 
-		if(this.y3d > -100)
-		{
-			this.ySpeed -= 3;
-		}
+		this.mainCube.takeInput(this.yCamTilt3d, input);
 
-		if(this.y3d <= -100)
-		{
-			this.y3d = -100;
-		}
+		this.mainCube.rotateSprite(this.yCamTilt3d, input.xAxis, input.yAxis);
+	}
+
+	tiltCamera(input)
+	{
+		this.xCamTilt3dInput = Number(this.xCamTilt3dInput) + input.aAxis;
+		this.yCamTilt3dInput = Number(this.yCamTilt3dInput) + input.bAxis;
 
 		this.xCamTilt3dInput = Math.max(this.zCam3d < -150 ? -25 : -50, this.xCamTilt3dInput);
-		this.xCamTilt3dInput = Math.min(this.zCam3d < -150 ? 12.5 : 0, this.xCamTilt3dInput);
+		this.xCamTilt3dInput = Math.min(this.zCam3d < -150 ? 25 : 0, this.xCamTilt3dInput);
+
+		this.xCamTilt3dInput = Math.max(this.zCam3d < -150 ? -25 : -50, this.xCamTilt3dInput);
+		this.xCamTilt3dInput = Math.min(this.zCam3d < -150 ? 25 : 0, this.xCamTilt3dInput);
 
 		if(this.yCamTilt3dInput > 100)
 		{
@@ -373,40 +419,47 @@ export class Cubes extends Task
 		{
 			this.zCam3dInput = -220;
 		}
-
-		this.mainCube.rotateSprite(this.yCamTilt3d, xAxis, yAxis);
-
-		let rad = (this.yCamTilt3d / 100);
-
-		const cos = Math.cos(rad * Math.PI);
-		const sin = Math.sin(rad * Math.PI);
-
-		this.x3dInput = Number(this.x3dInput) - (cos * xAxis) * 0.5;
-		this.z3dInput = Number(this.z3dInput) - (sin * xAxis) * 0.5;
-
-		this.z3dInput = Number(this.z3dInput) - (cos * yAxis) * 0.5;
-		this.x3dInput = Number(this.x3dInput) + (sin * yAxis) * 0.5;
 	}
 
 	lockMouse(event)
 	{
-		if(this.cancelLock)
+		console.log(event);
+
+		event.preventDefault();
+		event.stopPropagation();
+		event.stopImmediatePropagation();
+
+		if(Date.now() - this.lockThrottle < 350)
 		{
 			return;
 		}
 
-		event.currentTarget.requestPointerLock();
+		this.lockThrottle = Date.now();
+
+		if(event.which !== 2)
+		{
+			return;
+		}
+
+		if(document.pointerLockElement)
+		{
+			document.exitPointerLock();
+		}
+		else
+		{
+			event.currentTarget.requestPointerLock();
+		}
 	}
 
 	mouseMoveLocked(event)
 	{
-		let xMaxSpeed = 3.0;
-		let yMaxSpeed = 1.5;
+		let xMaxSpeed = 4.0;
+		let yMaxSpeed = 2.5;
 
 		if(this.zCam3d < -150)
 		{
-			xMaxSpeed = 0.75;
-			yMaxSpeed = 0.6;
+			xMaxSpeed = 0.95;
+			yMaxSpeed = 1;
 		}
 
 		this.xCamTilt3dInput = Number(this.xCamTilt3dInput) - Math.min(xMaxSpeed, Math.abs(event.movementY)) * Math.sign(event.movementY);
@@ -442,7 +495,7 @@ export class Cubes extends Task
 
 		if(Math.abs(bound[inputName] - bound[property]) > 0.001)
 		{
-			bound[property] += 0.23 * (bound[inputName] - bound[property]);
+			bound[property] += 0.27 * (bound[inputName] - bound[property]);
 		}
 		else
 		{

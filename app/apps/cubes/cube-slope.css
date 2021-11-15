@@ -1,0 +1,20 @@
+.cube.slope .texture.front {
+	transform:
+		rotate3d(1, 0, 0, -45deg);
+}
+
+.cube.slope .texture.front::before {
+	background-image: url(/chaosean.png), url(/sm/floor-tile-64.png);
+	background-position: center, 0 0;
+	background-size: 75% 60%, 50% 33%;
+	background-repeat: no-repeat, repeat;
+	transform: scaleX(-1) scaleY(1.41421);
+}
+
+.cube.slope .texture.left {
+	clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
+}
+
+.cube.slope .texture.right {
+	clip-path: polygon(100% 0%, 100% 100%, 0% 100%);
+}

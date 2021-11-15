@@ -31,18 +31,18 @@ export class Chicken extends Cube
 			let xSpeedNew = 0;
 			let zSpeedNew = 0;
 
-			if(Math.abs(this.following.args.x - this.args.x) > 0.5)
+			if(Math.abs(this.following.args.x - this.args.x) > 4)
 			{
-				xSpeedNew = Math.sign(this.following.args.x - this.args.x) * 0.4;
+				xSpeedNew = Math.sign(this.following.args.x - this.args.x) * 0.3;
 			}
 			else
 			{
 				xSpeedNew = 0;
 			}
 
-			if(Math.abs(this.following.args.z - this.args.z) > 0.5)
+			if(Math.abs(this.following.args.z - this.args.z) > 4)
 			{
-				zSpeedNew = Math.sign(this.following.args.z - this.args.z) * 0.4;
+				zSpeedNew = Math.sign(this.following.args.z - this.args.z) * 0.3;
 			}
 			else
 			{
@@ -69,11 +69,9 @@ export class Chicken extends Cube
 				this.zSpeed = zSpeedNew;
 			}
 
-			this.args.x += this.xSpeed;
-			this.args.z += this.zSpeed;
 		}
 
-
+		super.update();
 	}
 
 	collide(other)
@@ -84,16 +82,14 @@ export class Chicken extends Cube
 		}
 
 		this.following = other;
+
+		super.collide(other);
 	}
 
-	// setFace(yCamTilt3d)
-	// {
-	// 	const chickenAngle = Math.atan2(this.zSpeed, this.xSpeed) / Math.PI;
+	setFace(yCamTilt3d)
+	{
+		const chickenAngle = Math.atan2(this.zSpeed, this.xSpeed) / Math.PI;
 
-	// 	this.rotateSprite(
-	// 		-yCamTilt3d + (chickenAngle * 100 + -100)
-	// 		, this.xSpeed
-	// 		, this.zSpeed
-	// 	);
-	// }
+		super.setFace(yCamTilt3d + -(chickenAngle * 100 + -100));
+	}
 }

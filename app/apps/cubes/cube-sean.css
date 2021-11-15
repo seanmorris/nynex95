@@ -13,7 +13,7 @@
 }
 
 .cube.sean[data-walking=true] .texture.flat::before {
-	animation: sean-walk 0.65s steps(4) infinite;
+	animation: sean-walk 0.5s steps(4) infinite;
 }
 
 .cube.sean .texture.flat.face-front::before {

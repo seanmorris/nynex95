@@ -16,15 +16,56 @@
 
 	box-sizing: border-box;
 
-	animation: coin-spin steps(8) 0.5s infinite;
+	animation: coin-spin 0.55s infinite steps(7);
 
-	transition: opacity 0.15s 3s ease-in, transform 0.15s 3s ease-in;
+	transition: opacity 0.10s ease-in, transform 0.15s ease-in;
 }
 
 .cube.coin[data-state=collected] .texture.flat::before {
-	transition: opacity 0.25s 0.15s ease-in, transform 0.25s ease-in;
+	filter: brightness(1.1) saturate(0.15) contrast(2);
+	animation: coin-spin 0.1s infinite steps(7);
+	transition: opacity 0.30s 0.20s ease-in, transform 0.25s ease-in, filter 0.125s 0.075s ease-in;
 	transform: translate(-50%, -350%);
 	opacity: 0;
+}
+
+.coin-count {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0.25em;
+	padding-right: 1.25em;
+	color: white;
+	text-shadow:
+		2px 2px 0 rgba(0,0,0,0.25)
+		, 2px 0px 0 rgba(0,0,0,0.25)
+		, 2px -2px 0 rgba(0,0,0,0.25)
+		, -2px 0px 0 rgba(0,0,0,0.25)
+		, -2px 2px 0 rgba(0,0,0,0.25)
+		, -2px -2px 0 rgba(0,0,0,0.25)
+	;
+}
+
+.coin-count:before {
+	position: absolute;
+	right: 0.125em;
+	text-shadow: none;
+	image-rendering: pixelated;
+	content: '.';
+	color: transparent;
+	height: 1em;
+	min-width: 1em;
+	background-size: 800%;
+
+
+	background-image: url(/coin.png);
+	background-repeat: no-repeat;
+
+	animation: coin-spin 600ms infinite steps(7);
 }
 
 @keyframes coin-spin {
@@ -32,7 +73,6 @@
 		background-position-x: 0%;
 	}
 	100% {
-		background-position-x: -800%;
+		background-position-x: 100%;
 	}
 }
-

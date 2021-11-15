@@ -4,9 +4,14 @@
 
 .cube.box .texture {
 	backface-visibility: visible !important;
+	image-rendering: pixelated;
 }
 
-.cube.box[data-colliding=true] .texture {
+.cube.box[data-solid=false]:not([data-colliding=true]) .texture::before {
+	opacity: 0.5;
+}
+
+.cube.box[data-solid=false][data-colliding=true] .texture {
 	backface-visibility: hidden !important;
 }
 
@@ -15,6 +20,10 @@
 	background-image: url(/sci-fi/metal-box.png);
 	background-size: contain;
 	background-repeat: no-repeat;
+}
+
+.cube.box .texture.top::before {
+	opacity: 0.75;
 }
 
 .cube.box .texture.flat {
@@ -26,4 +35,41 @@
 	background-position: center, 0 0;
 	background-size: 75%, 100%;
 	transform: scaleX(-1);
+}
+
+.cube.box .frame,
+.cube.box iframe {
+	position: absolute;
+	width: 100%;
+	height: 80%;
+	z-index: 100;
+	display: flex;
+	padding: 1rem;
+	box-sizing: border-box;
+	font-size: 1.35rem;
+}
+
+.cube.box:not([data-colliding=true]) .texture .frame,
+.cube.box:not([data-colliding=true]) .texture iframe {
+	transform: scaleX(-1);
+}
+
+.cube.box .frame input {
+	margin-bottom: 1rem;
+	font-size: 1.5rem;
+}
+
+.cube.box .frame input:focus {
+	outline: 1px dotted white;
+}
+
+.cube.box .frame input:active {
+	filter: invert(1);
+}
+
+.cube.box iframe.virtual-screen {
+	width: 200%;
+	height: 200%;
+	transform-origin: top center;
+	transform: scale(-0.5,0.5) translateX(50%) !important;
 }

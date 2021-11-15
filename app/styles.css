@@ -794,3 +794,10 @@ button.flexible {
 .loading svg {
 	width: 80px;
 }
+
+pre {
+	/*white-space: pre;*/
+	font-family: 'fixedsys';
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+}

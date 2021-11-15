@@ -1,4 +1,5 @@
 import { View } from 'curvature/base/View';
+import { Bindable } from 'curvature/base/Bindable';
 
 export class Cube extends View
 {
@@ -8,11 +9,19 @@ export class Cube extends View
 	{
 		super(args, parent);
 
+		this.sleeping = false;
+		this.noClip   = false;
+
 		this.args.size = this.args.size || 128;
 
 		this.args.x = this.args.x || 0;
 		this.args.y = this.args.y || 0;
 		this.args.z = this.args.z || 0;
+
+		this.grounded = false;
+		this.xSpeed   = 0;
+		this.ySpeed   = 0;
+		this.zSpeed   = 0;
 
 		this.args.xAngle = 0;
 		this.args.yAngle = 0;
@@ -22,13 +31,181 @@ export class Cube extends View
 		this.args.rad   = this.args.rad || 0;
 		this.args.state = 'idle';
 		this.args.face  = 'X';
+
+		this.args.coinCount = 0;
+
+		this.args.solid = this.args.solid || false;
+		this.args.mass  = 1;
+
+		this.args.id = this._id;
+	}
+
+	updateStart(frame)
+	{
+		this.args.collided = false;
+
+		if(this.args.y <= 0 && !this.noClip)
+		{
+			this.args.y = 0;
+		}
+	}
+
+	takeInput(cameraAngle, input)
+	{
+		const xAxis = input.xAxis || 0;
+		const yAxis = input.yAxis || 0;
+
+		let rad = (cameraAngle / 100);
+
+		const cos = Math.cos(rad * Math.PI);
+		const sin = Math.sin(rad * Math.PI);
+
+		this.xSpeed += -(cos * xAxis) * 0.125;
+		this.zSpeed += -(sin * xAxis) * 0.125;
+		this.zSpeed += -(cos * yAxis) * 0.125;
+		this.xSpeed += +(sin * yAxis) * 0.125;
+
+		if(input.b[0])
+		{
+			// console.log(this.ySpeed);
+		}
+
+		if(input.b[0] && this.grounded)
+		{
+			// this.ySpeed = 35;
+			this.ySpeed = 34;
+		}
 	}
 
 	update(frame)
-	{}
+	{
+		if(this.args.collided)
+		{
+			this.args.colliding = true;
+		}
+		else
+		{
+			this.args.colliding = false;
+		}
+
+		this.args.x += this.xSpeed;
+		this.args.y += this.ySpeed;
+		this.args.z += this.zSpeed;
+
+		this.args.x = Number(Number(this.args.x).toFixed(3));
+		this.args.y = Number(Number(this.args.y).toFixed(3));
+		this.args.z = Number(Number(this.args.z).toFixed(3));
+
+		this.xSpeed *= 0.75;
+		this.zSpeed *= 0.75;
+
+		if(this.args.y <= 0 && !this.noClip)
+		{
+			this.args.y = 0;
+			this.ySpeed = 0;
+
+			this.grounded = true;
+		}
+		else
+		{
+			this.ySpeed -= 2.25;
+		}
+	}
 
 	collide(other)
-	{}
+	{
+		this.args.collided = true;
+	}
+
+	checkCollision(b)
+	{
+		const a = this;
+
+		if(a === b)
+		{
+			return false;
+		}
+
+		if(a.args.solid && b.args.solid)
+		{
+			return false;
+		}
+
+		const wiggleRoom = Number.EPSILON * 4.001;
+
+		const xMin  = (0.5 * (a.args.size + b.args.size)) / 32;
+		const xDist = a.args.x - b.args.x;
+
+		if(Math.abs(xDist) + -wiggleRoom > xMin)
+		{
+			return false;
+		}
+
+		const zMin  = (0.5 * (a.args.size + b.args.size)) / 32;
+		const zDist = a.args.z - b.args.z;
+
+		if(Math.abs(zDist) + -wiggleRoom > zMin)
+		{
+			return false;
+		}
+
+		const zbSlope = b.getSlope(a.args.x, a.args.z);
+		const zaSlope = a.getSlope(b.args.x, b.args.z);
+
+		const yDist = a.args.y - b.args.y;
+
+		if(a.args.y > b.args.y && Math.abs(a.args.y - b.args.y) > b.args.size * zbSlope)
+		{
+			return false;
+		}
+
+		if(b.args.y > a.args.y && Math.abs(a.args.y - b.args.y) > a.args.size * zaSlope)
+		{
+			return false;
+		}
+
+		if(a.args.solid)
+		{
+			const top = a.args.size * zaSlope;
+
+			if(-(a.args.size/2) + yDist < -top
+				&& Math.abs(xDist) + wiggleRoom < xMin
+				&& Math.abs(zDist) + wiggleRoom < zMin
+			){
+				b.args.y = a.args.y + top;
+
+				b.ySpeed = b.ySpeed > 0
+					? b.ySpeed
+					: 0;
+
+				if(!b.ySpeed)
+				{
+					b.grounded = true;
+				}
+			}
+			else if(Math.abs(xDist) > Math.abs(zDist))
+			{
+				b.args.x = a.args.x - xMin * Math.sign(xDist);
+				b.xSpeed = Math.sign(b.xSpeed) !== Math.sign(xDist)
+					? b.xSpeed
+					: 0;
+			}
+			else
+			{
+				b.args.z = a.args.z - zMin * Math.sign(zDist);
+				b.zSpeed = Math.sign(b.zSpeed) !== Math.sign(zDist)
+					? b.zSpeed
+					: 0;
+			}
+		}
+
+		return true;
+	}
+
+	getSlope(x, z)
+	{
+		return 1;
+	}
 
 	rotateSprite(yCamTilt3d, xAxis, yAxis)
 	{
