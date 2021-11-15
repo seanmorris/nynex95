@@ -107,7 +107,7 @@
 	background-size: cover;
 	opacity: 0.25;
 	background-image: url(/ui/grid.png);
-	transition: opacity 150ms ease-out;
+	transition: opacity 250ms ease-out;
 	opacity: 0.1;
 }
 
@@ -162,37 +162,45 @@
 .texture.top {
 	transform:
 		rotate3d(1, 0, 0, 90deg)
-		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+		translate3d(0px, 0px, calc(-0.495px * var(--size)))
+		scale(var(--w), var(--d) );
 }
 
 .texture.front {
 	transform:
 		rotate3d(0, 0, 0, 0deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * calc(var(--size) * var(--d) )))
+		scaleX(var(--w));
 }
 
 .texture.back {
 	transform:
 		rotate3d(0, 1, 0, 180deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * calc(var(--size) * var(--d) )))
+		scaleX(var(--w));
 }
 
 .texture.left {
 	transform:
+		scaleX(var(--w))
 		rotate3d(0, 1, 0, 90deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * var(--size)))
+		scaleX(var(--d) );
 }
 
 .texture.right {
 	transform:
+		scaleX(var(--w))
 		rotate3d(0, -1, 0, 90deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * var(--size)))
+		scaleX( var(--d) );
 }
 
 .texture.bottom {
 	transform:
 		rotate3d(-1, 0, 0, 90deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * var(--size)))
+		scale(var(--w), var(--d) );
 }
 
 .main .texture.direction::before {
@@ -341,4 +349,21 @@ input[type=range] {
 	right: 0;
 	padding: 0.25rem;
 	font-size: 1em;
+}
+
+[data-exterior=true] {
+	background-image: none;
+	background-color: black !important;
+}
+
+[data-exterior=true] :not([data-interior=true]):not(.main) > .texture {
+	opacity: 0;
+	transition: opacity 1s 2s !important;
+}
+
+[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture .panel,
+[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture .collision-zone,
+[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture::before {
+	filter: brightness(0) !important;
+	transition: filter 1s 0.25s ease-out !important;
 }

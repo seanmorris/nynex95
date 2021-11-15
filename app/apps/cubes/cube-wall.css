@@ -1,0 +1,39 @@
+.cube.wall .texture.flat {
+	display:none;
+}
+
+.cube.wall .texture.right::before,
+.cube.wall .texture.left::before,
+.cube.wall .texture.back::before,
+.cube.wall .texture.front::before {
+	/*background-image: url(/chaosean.png) url(/sm/floor-tile-64.png);*/
+	background-image: url(/wall-box.png);
+	background-repeat: repeat;
+	background-position: 0 0;
+}
+
+.cube.wall .texture.right::before,
+.cube.wall .texture.left::before {
+	background-size: calc(100% / var(--d)) 100%;
+}
+
+.cube.wall .texture.back::before,
+.cube.wall .texture.front::before {
+	background-size: calc(100% / var(--w)) 100%;
+}
+
+.cube.wall .texture {
+	transform-style: preserve-3d;
+}
+
+.cube.wall .texture .billboard {;
+	transform: translate3d(0, 0, -1px) scaleX(calc(-2 / var(--w)));
+	font-size: 3rem;
+	text-align: right;
+	background-color: rgba(0,0,0,0.5);
+	position: absolute;
+	top: 4rem;
+	left: 0rem;
+	box-sizing: border-box;
+	max-width: 50%;
+}

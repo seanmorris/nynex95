@@ -33,7 +33,7 @@
 .cube.box .texture.front:before {
 	background-image: url(/chaosean.png), url(/sci-fi/metal-box.png);
 	background-position: center, 0 0;
-	background-size: 75%, 100%;
+	background-size: calc(75% / var(--w)) 75%, 100%;
 	transform: scaleX(-1);
 }
 

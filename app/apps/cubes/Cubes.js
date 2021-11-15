@@ -7,6 +7,7 @@ import { Task } from 'task/Task';
 import { Cube } from './Cube';
 
 import { Box }     from './Box';
+import { Wall }    from './Wall';
 import { Slope }   from './Slope';
 
 import { Barrel }  from './Barrel';
@@ -23,45 +24,65 @@ export class Cubes extends Task
 {
 	static helpText = 'CUBES.';
 
+	template = require('./main.tmp');
+
 	title    = 'Cubes 3d';
 	icon     = '/apps/cube-16-1bit.png';
-	template = require('./main.tmp');
+
+	exterior = false
 
 	width  = "840px";
 	height = "740px";
 
-	mainCube = new Player({css:'sean main', main: true, x: -12, y: 512, z: 12});
+	mainCube = new Player({css:'sean main', main: true, x: -12, y: 512, z: 12}, this);
 
 	cubes = [
 		this.mainCube
-		, new Barrel({css:'barrel', x:  8, y: 512, z:  12})
-		, new BarrelHole({css:'barrel-hole', x: -4, y: 0, z: 12})
+		, new Barrel({css:'barrel', x:  1, y: 512*4, z:  16}, this)
+		, new BarrelHole({css:'barrel-hole', x: -4, y: 0, z: 12}, this)
 
-		, new Coin({css:'coin', x: -20, y: 4096, z: -16})
-		, new Coin({css:'coin', x: -20, y: 4096, z: -12})
-		, new Coin({css:'coin', x: -20, y: 4096, z: -8})
+		, new Coin({css:'coin', x: -20, y: 4096, z: -16}, this)
+		, new Coin({css:'coin', x: -20, y: 4096, z: -12}, this)
+		, new Coin({css:'coin', x: -20, y: 4096, z: -8}, this)
 
-		, new Coin({css:'coin', x: -16, y: 4096, z: -16})
-		, new Coin({css:'coin', x: -16, y: 4096, z: -12})
-		, new Coin({css:'coin', x: -16, y: 4096, z: -8})
+		, new Coin({css:'coin', x: -16, y: 4096, z: -16}, this)
+		, new Coin({css:'coin', x: -16, y: 4096, z: -12}, this)
+		, new Coin({css:'coin', x: -16, y: 4096, z: -8}, this)
 
-		, new Coin({css:'coin', x: -12, y: 4096, z: -16})
-		, new Coin({css:'coin', x: -12, y: 4096, z: -12})
-		, new Coin({css:'coin', x: -12, y: 4096, z: -8})
+		, new Coin({css:'coin', x: -12, y: 4096, z: -16}, this)
+		, new Coin({css:'coin', x: -12, y: 4096, z: -12}, this)
+		, new Coin({css:'coin', x: -12, y: 4096, z: -8}, this)
 
-		, new Coin({css:'coin', x: -36, y: 4096, z: 24})
-		, new Coin({css:'coin', x: -36, y: 4096, z: 28})
-		, new Coin({css:'coin', x: -36, y: 4096, z: 32})
+		, new Coin({css:'coin', x: -36, y: 4096, z: 24}, this)
+		, new Coin({css:'coin', x: -36, y: 4096, z: 28}, this)
+		, new Coin({css:'coin', x: -36, y: 4096, z: 32}, this)
 
-		, new Box({css:'box', solid: true, size: 512, x:  8, y: 0, z:  12})
-		, new Box({css:'box', solid: true, size: 256, x:-20, y: 0, z:  4})
-		, new Box({css:'box', solid: true, size: 512, x:  0, y: 0, z: -12})
-		, new Box({css:'box', solid: true, size: 512, x:-16, y: 0, z: -12})
-		, new Box({css:'box', solid: false, size: 512, x:30, y: 0, z: -30})
-		, new Box({css:'box landing', solid: true, size: 512, x:-36, y: 0, z: 4})
-		, new Slope({css:'box', solid: true, size: 512, x:-36, y: 0, z: 28})
-		, new Cube({css:'mushroom', size: 256, x:44, y: 4096*2, z: -28})
-		, new Chicken({x:-0, y: 4096*3, z: -12, rot: 50})
+		, new Wall({css:'box', solid: true, size: 512, x: -24, y: 512, z: -20, w: 4, billboard: 'MIDDLE CLICK to\ntoggle mouselook'}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: -8, y: 0, z: -4, w: 2, billboard: 'Move with WASD'}, this)
+
+		, new Wall({css:'box', solid: true, size: 512, x: -40, y: 0, z: -20, billboard: 'Press SPACE to jump'}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: 26, y: 0, z: -40, w: 3}, this)
+
+		, new Wall({css:'box', solid: true, size: 512, x: 16, y: 0, z: -16, w: 0.001, d: 3}, this)
+
+		, new Wall({css:'box', solid: true, size: 512, x: 16, y: 0, z: 34, w: 0.001, d: 2}, this)
+
+		, new Wall({css:'box', solid: true, size: 512, x: 50, y: 0, z: -8, w: 0.001, d: 4}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: -50, y: 0, z: -8, w: 0.001, d: 4}, this)
+
+		, new Box({css:'box', solid: true, size: 512, x:  8, y: 0, z:  12}, this)
+		, new Box({css:'box', solid: true, size: 512, x:  0, y: 0, z: -12}, this)
+		, new Box({css:'box', solid: true, size: 512, x:-16, y: 0, z: -12}, this)
+
+		, new Box({css:'box', solid: true, size: 256, x:-20, y: 0, z:  4}, this)
+
+		, new Box({css:'box', solid: false, interior: true, size: 512, x:30, y: 0, z: -30}, this)
+
+		, new Slope({css:'box', solid: true, size: 512, x:-36, y: 0, z: 28}, this)
+		, new Box({css:'box landing', solid: true, size: 512, x:-36, y: 0, z: 4}, this)
+
+		, new Cube({css:'mushroom', size: 256, x:44, y: 4096*2, z: -28}, this)
+		, new Chicken({x:-0, y: 512*5, z: -12, rot: 50}, this)
 		// , this.otherCube
 		// , this.mushroom
 	];
@@ -106,7 +127,9 @@ export class Cubes extends Task
 	{
 		super(...a);
 
-		window.octCell = this.octCell;
+		this.window.classes.maximized = true;
+
+		// window.octCell = this.octCell;
 
 		// this.mainCube.args.bindTo('z', v => console.trace(v));
 
@@ -173,7 +196,7 @@ export class Cubes extends Task
 		{
 			for(let j = 0; j < 6; j += 1)
 			{
-				const position = {x: 30 + j * 4, y: 0, z: 10 + i * 4}
+				const position = {x: 26 + j * 4, y: 0, z: 10 + i * 4}
 				const coin = new Coin(position);
 				this.cubes.push(coin);
 			}
@@ -248,9 +271,9 @@ export class Cubes extends Task
 
 			const position = {x:cubeA.args.x, y:cubeA.args.y, z:cubeA.args.z};
 			const size     = {
-				x:cubeA.args.size / 16
-				, y:cubeA.args.size * 2
-				, z:cubeA.args.size / 16
+				x:cubeA.args.size / 8
+				, y:cubeA.args.size * 8
+				, z:cubeA.args.size / 8
 			};
 
 			const others = this.octCell.select(position, size);

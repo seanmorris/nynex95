@@ -5,18 +5,25 @@ export class Cube extends View
 {
 	template = require('./cube.tmp');
 
+	latestCollisions = new Set;
+	collisions = new Set;
+
+	sleeping   = false;
+	noClip     = false;
+
 	constructor(args, parent)
 	{
 		super(args, parent);
-
-		this.sleeping = false;
-		this.noClip   = false;
 
 		this.args.size = this.args.size || 128;
 
 		this.args.x = this.args.x || 0;
 		this.args.y = this.args.y || 0;
 		this.args.z = this.args.z || 0;
+
+		this.args.w = this.args.w || 1;
+		this.args.h = this.args.h || 1;
+		this.args.d = this.args.d || 1;
 
 		this.grounded = false;
 		this.xSpeed   = 0;
@@ -38,10 +45,14 @@ export class Cube extends View
 		this.args.mass  = 1;
 
 		this.args.id = this._id;
+
+		this.gravity = 2.25;
 	}
 
 	updateStart(frame)
 	{
+		this.latestCollisions.clear();
+
 		this.args.collided = false;
 
 		if(this.args.y <= 0 && !this.noClip)
@@ -108,14 +119,31 @@ export class Cube extends View
 		}
 		else
 		{
-			this.ySpeed -= 2.25;
+			this.ySpeed -= this.gravity;
+		}
+
+		for(const cube of this.collisions)
+		{
+			if(!this.latestCollisions.has(cube))
+			{
+				this.leave(cube);
+			}
+		}
+
+		for(const cube of this.latestCollisions)
+		{
+			this.collisions.add(cube);
 		}
 	}
 
 	collide(other)
 	{
+		this.latestCollisions.add(other);
 		this.args.collided = true;
 	}
+
+	leave(other)
+	{}
 
 	checkCollision(b)
 	{
@@ -133,7 +161,7 @@ export class Cube extends View
 
 		const wiggleRoom = Number.EPSILON * 4.001;
 
-		const xMin  = (0.5 * (a.args.size + b.args.size)) / 32;
+		const xMin  = (0.5 * (a.args.size * a.args.w + b.args.size * b.args.w)) / 32;
 		const xDist = a.args.x - b.args.x;
 
 		if(Math.abs(xDist) + -wiggleRoom > xMin)
@@ -141,7 +169,7 @@ export class Cube extends View
 			return false;
 		}
 
-		const zMin  = (0.5 * (a.args.size + b.args.size)) / 32;
+		const zMin  = (0.5 * (a.args.size  * a.args.d + b.args.size * b.args.d)) / 32;
 		const zDist = a.args.z - b.args.z;
 
 		if(Math.abs(zDist) + -wiggleRoom > zMin)
@@ -183,7 +211,7 @@ export class Cube extends View
 					b.grounded = true;
 				}
 			}
-			else if(Math.abs(xDist) > Math.abs(zDist))
+			else if(Math.abs(xDist / this.args.w) > Math.abs(zDist / this.args.d))
 			{
 				b.args.x = a.args.x - xMin * Math.sign(xDist);
 				b.xSpeed = Math.sign(b.xSpeed) !== Math.sign(xDist)

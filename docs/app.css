@@ -404,7 +404,7 @@ iframe{
 .cube.box .texture.front:before {
 	background-image: url(/chaosean.png), url(/sci-fi/metal-box.png);
 	background-position: center, 0 0;
-	background-size: 75%, 100%;
+	background-size: calc(75% / var(--w)) 75%, 100%;
 	transform: scaleX(-1);
 }
 
@@ -649,6 +649,46 @@ iframe{
 	clip-path: polygon(100% 0%, 100% 100%, 0% 100%);
 }
 
+.cube.wall .texture.flat {
+	display:none;
+}
+
+.cube.wall .texture.right::before,
+.cube.wall .texture.left::before,
+.cube.wall .texture.back::before,
+.cube.wall .texture.front::before {
+	/*background-image: url(/chaosean.png) url(/sm/floor-tile-64.png);*/
+	background-image: url(/wall-box.png);
+	background-repeat: repeat;
+	background-position: 0 0;
+}
+
+.cube.wall .texture.right::before,
+.cube.wall .texture.left::before {
+	background-size: calc(100% / var(--d)) 100%;
+}
+
+.cube.wall .texture.back::before,
+.cube.wall .texture.front::before {
+	background-size: calc(100% / var(--w)) 100%;
+}
+
+.cube.wall .texture {
+	transform-style: preserve-3d;
+}
+
+.cube.wall .texture .billboard {;
+	transform: translate3d(0, 0, -1px) scaleX(calc(-2 / var(--w)));
+	font-size: 3rem;
+	text-align: right;
+	background-color: rgba(0,0,0,0.5);
+	position: absolute;
+	top: 4rem;
+	left: 0rem;
+	box-sizing: border-box;
+	max-width: 50%;
+}
+
 .cube.chicken .texture.flat {
 
 }
@@ -795,7 +835,7 @@ iframe{
 	background-size: cover;
 	opacity: 0.25;
 	background-image: url(/ui/grid.png);
-	transition: opacity 150ms ease-out;
+	transition: opacity 250ms ease-out;
 	opacity: 0.1;
 }
 
@@ -850,37 +890,45 @@ iframe{
 .texture.top {
 	transform:
 		rotate3d(1, 0, 0, 90deg)
-		translate3d(0px, 0px, calc(-0.495px * var(--size)));
+		translate3d(0px, 0px, calc(-0.495px * var(--size)))
+		scale(var(--w), var(--d) );
 }
 
 .texture.front {
 	transform:
 		rotate3d(0, 0, 0, 0deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * calc(var(--size) * var(--d) )))
+		scaleX(var(--w));
 }
 
 .texture.back {
 	transform:
 		rotate3d(0, 1, 0, 180deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * calc(var(--size) * var(--d) )))
+		scaleX(var(--w));
 }
 
 .texture.left {
 	transform:
+		scaleX(var(--w))
 		rotate3d(0, 1, 0, 90deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * var(--size)))
+		scaleX(var(--d) );
 }
 
 .texture.right {
 	transform:
+		scaleX(var(--w))
 		rotate3d(0, -1, 0, 90deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * var(--size)))
+		scaleX( var(--d) );
 }
 
 .texture.bottom {
 	transform:
 		rotate3d(-1, 0, 0, 90deg)
-		translate3d(0px, 0px, calc(-0.499px * var(--size)));
+		translate3d(0px, 0px, calc(-0.499px * var(--size)))
+		scale(var(--w), var(--d) );
 }
 
 .main .texture.direction::before {
@@ -1029,6 +1077,23 @@ input[type=range] {
 	right: 0;
 	padding: 0.25rem;
 	font-size: 1em;
+}
+
+[data-exterior=true] {
+	background-image: none;
+	background-color: black !important;
+}
+
+[data-exterior=true] :not([data-interior=true]):not(.main) > .texture {
+	opacity: 0;
+	transition: opacity 1s 2s !important;
+}
+
+[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture .panel,
+[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture .collision-zone,
+[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture::before {
+	filter: brightness(0) !important;
+	transition: filter 1s 0.25s ease-out !important;
 }
 
 .image-viewer {
