@@ -2,8 +2,8 @@
 	cv-ref = "result"
 	cv-on  = "load:frameLoaded(event)"
 	srcdoc = '
-<meta http-equiv="Content-Security-Policy" content="default-src [[location.origin]]/curvature.js ws://[[location.hostname]]:9485
-[[location.origin]]/vendor.js &apos;unsafe-inline&apos; connect-src: https://api.dictionaryapi.dev">
+<meta http-equiv="Content-Security-Policy" content="default-src [[origin]]/curvature.js ws://[[hostname]]:9485
+[[origin]]/vendor.js &apos;unsafe-inline&apos; connect-src: &apos;self&apos; img-src: &apos;self&apos; data:;">
 <style>
 	iframe {
 		position: absolute;

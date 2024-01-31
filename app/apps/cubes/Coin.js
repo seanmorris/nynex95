@@ -10,18 +10,6 @@ export class Coin extends Cube
 
 		this.args.size  = 64;
 		this.args.css   = 'coin';
-
-		this.coinCollect1 = new Audio('/coin1.wav');
-		this.coinCollect2 = new Audio('/coin2.wav');
-		this.coinCollect3 = new Audio('/coin3.wav');
-
-		this.coinCollect1.currentTime = 0;
-		this.coinCollect2.currentTime = 0;
-		this.coinCollect3.currentTime = 0;
-
-		this.coinCollect1.volume = 0.40;
-		this.coinCollect2.volume = 0.30;
-		this.coinCollect3.volume = 0.25;
 	}
 
 	collide(other)

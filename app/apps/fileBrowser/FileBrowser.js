@@ -10,6 +10,8 @@ import { FileDatabase } from '../../files/FileDatabase';
 import { MimeModel } from '../../files/MimeModel';
 import { MimeDatabase } from '../../files/MimeDatabase';
 
+import { EventTargetMixin } from 'curvature/mixin/EventTargetMixin';
+
 export class FileBrowser extends Task
 {
 	static helpText = 'Browse the file system.';
@@ -25,9 +27,11 @@ export class FileBrowser extends Task
 
 		console.log({args, prev, term, taskList, taskCmd, taskPath});
 
-		this.window.args.iconList = new IconControl({}, this);
+		this.window.args.iconList = new IconControl({});
 
-		this.window.args.directory = taskPath[0] || '~/desktop/';
+		console.log(taskPath);
+
+		this.window.args.directory = taskPath[0] || '~/desktop';
 		this.window.args._id = this.window._id;
 
 		this.selector = IDBKeyRange.only(this.window.args.directory);
@@ -59,7 +63,6 @@ export class FileBrowser extends Task
 
 			for(const file of event.dataTransfer.files)
 			{
-
 				const buffer = file.arrayBuffer();
 				const fileDb = this.fileDb;
 
@@ -73,7 +76,6 @@ export class FileBrowser extends Task
 						, range: directory + file.name
 						, type:  FileModel
 					};
-
 
 					const values = {
 						name: file.name
@@ -128,7 +130,7 @@ export class FileBrowser extends Task
 		const fetchTypes = fetch('/static/mime-types.json').then(r => r.json());
 
 		Promise.all([openDb, fetchExtensions]).then(([db, mimes]) => {
-			for(const [extension, mimeInfo] of Object.entries(mimes))
+			for(let [extension, mimeInfo] of Object.entries(mimes))
 			{
 				let type = mimeInfo;
 
@@ -154,6 +156,10 @@ export class FileBrowser extends Task
 					}
 					else
 					{
+						result.result.actions = result.result.actions || {};
+						mimeInfo.actions      = mimeInfo.actions || {};
+						Object.assign(result.result.actions, mimeInfo.actions);
+
 						result.result.consume(mimeInfo);
 						db.update('mime-types', result.result);
 					}
@@ -188,9 +194,14 @@ export class FileBrowser extends Task
 						const mime = MimeModel.from(mimeInfo);
 						db.insert('mime-types', mime);
 					}
-					else
+					else if(mimeInfo)
 					{
+						result.result.actions = result.result.actions || {};
+						mimeInfo.actions      = mimeInfo.actions || {};
+						Object.assign(result.result.actions, mimeInfo.actions);
+
 						result.result.consume(mimeInfo);
+
 						db.update('mime-types', result.result);
 					}
 				});
@@ -205,20 +216,13 @@ export class FileBrowser extends Task
 			const newDirectory = new FileModel;
 			const name = "New Directory @ " + Date.now();
 
-			const path = String(this.window.args.directory)
-				.split('/')
-				.filter(p => p)
-				.join('/');
-
 			newDirectory.consume({
 				directory: this.window.args.directory
 				, type: "file-folder/directory"
 				, name
-				, path
-				, name
 			});
 
-			fileDb.insert('files', newDirectory);
+			fileDb.insert('files', [newDirectory]);
 		});
 	}
 
@@ -273,7 +277,7 @@ export class FileBrowser extends Task
 		if(file.type === 'file-folder/directory')
 		{
 			const icon = new Icon({
-				action: () => Home.instance().run(`file-browser`, [file.path+file.name])
+				action: () => Home.instance().run(`file-browser`, [file.path])
 				, name: file.name
 				, path: 'w95'
 				, icon: 4

@@ -325,7 +325,6 @@ export class Folder extends View
 				this.args.browser.window.args.download = files.download_url;
 			}
 
-
 			this.dir = false;
 
 		});

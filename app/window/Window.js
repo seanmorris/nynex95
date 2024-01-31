@@ -17,8 +17,8 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 {
 	static idInc = 0;
 
-	outlineSpeed = 350;
-	outlineDelay = 50;
+	outlineSpeed = 300;
+	outlineDelay = 150;
 
 	constructor(args = {}, parent = null)
 	{
@@ -62,6 +62,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 			}
 		});
 
+		this.classes.resizing = false;
 		this.classes.resize = true;
 		this.classes.pane   = true;
 	}
@@ -94,6 +95,16 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 			element.style.zIndex = v;
 			this.args.z = v;
 		});
+
+		this.args.bindTo('minWidth', (v,k) => {
+			element.style.minWidth = v;
+			this.args.minWidth = v;
+		});
+
+		this.args.bindTo('minHeight', (v,k) => {
+			element.style.minHeight = v;
+			this.args.minHeight = v;
+		});
 	}
 
 	popout()
@@ -114,10 +125,14 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 			, y: window.outerHeight - window.innerHeight
 		};
 
-		const features = `screenX=${Math.floor(rect.x) + -trimSize.x + window.screenX}`
-			+ `,screenY=${Math.floor(rect.y) + (trimSize.y * 0.6) + window.screenY}`
-			+ `,width=${Math.floor(rect.width + trimSize.x * 2)}`
-			+ `,height=${Math.floor(rect.height)}`;
+		console.log(rect.width, trimSize);
+
+		const features = `screenX=${Math.floor(rect.x + -trimSize.x + window.screenX)}`
+			+ `,screenY=${Math.floor(rect.y)  + (trimSize.y * 0.5) + window.screenY}`
+			+ `,width=${Math.floor(rect.width + (trimSize.x * 2))}`
+			+ `,height=${Math.floor(rect.height + (trimSize.y * 0.5))}`
+
+		console.log(features);
 
 		// const popupSource = '<html><head></head><body>Hello, world!</body></html>';
 		// const popupBlob   = new Blob([popupSource], {type: 'text/html'});
@@ -271,20 +286,23 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 	{
 		const home = Home.instance();
 
+		this.wasMaximized = false;
+
 		if(this.classes.maximized)
 		{
 			home.moveOutline(0, 0, '100%', '100%', true);
+			this.wasMaximized = true;
 		}
-		else if(this.tags.window.element)
+		else if(this.tags.window.node)
 		{
 			home.moveOutline(
 				`${this.pos.x}px`
 				, `${this.pos.y}px`
 				, this.tags.window
-					? (this.tags.window.element.style.width  || `${this.args.width}`)
+					? (this.tags.window.node.style.width  || `${this.args.width}`)
 					: `${this.args.width}`
 				, this.tags.window
-					? (this.tags.window.element.style.height || `${this.args.height}`)
+					? (this.tags.window.node.style.height || `${this.args.height}`)
 					: `${this.args.height}`
 				, true
 			);
@@ -313,19 +331,20 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 				return;
 			}
 
-			this.classes.minimized = true;
-			this.classes.maximized = false;
+			// this.classes.minimized = true;
+			// this.classes.maximized = false;
 
-			this.onTimeout(this.outlineSpeed, ()=>{
-
-				home.hideOutline();
-
+			this.onTimeout(this.outlineSpeed / 2, ()=>{
 				this.classes.minimized = true;
 				this.classes.maximized = false;
 
 				this.dispatchEvent(new CustomEvent(
 					'minimized', {detail:{ target:this }}
 				));
+			});
+
+			this.onTimeout(this.outlineSpeed, () => {
+				home.hideOutline();
 			});
 		});
 	}
@@ -344,6 +363,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 		if(this.classes.maximized)
 		{
 			home.moveOutline(0, 0, '100%', '100%', true);
+			this.wasMaximized = false;
 		}
 		else if(this.classes.minimized && this.args.taskButton)
 		{
@@ -354,6 +374,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 				, taskRect.y + 'px'
 				, taskRect.width + 'px'
 				, taskRect.height + 'px'
+				, true
 			);
 		}
 		else if(this.classes.minimized && !this.args.taskButton)
@@ -368,32 +389,43 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 		this.onTimeout(this.outlineDelay, ()=>{
 			if(this.tags.window.element)
 			{
-				home.moveOutline(
-					`${this.pos.x}px`
-					, `${this.pos.y}px`
-					, this.tags.window
-						? (this.tags.window.element.style.width  || `${this.args.width}`)
-						: `${this.args.width}`
-					, this.tags.window
-						? (this.tags.window.element.style.height || `${this.args.height}`)
-						: `${this.args.height}`
-				);
+				if(this.classes.minimized && this.wasMaximized)
+				{
+					home.moveOutline(0,0,'100%','100%');
+				}
+				else
+				{
+					home.moveOutline(
+						`${this.pos.x}px`
+						, `${this.pos.y}px`
+						, this.tags.window
+							? `max(${this.tags.window.node.style.width}, ${this.tags.window.node.style.minWidth || '0px'})`
+							: `${this.args.width}`
+						, this.tags.window
+							? `max(${this.tags.window.node.style.height}, ${this.tags.window.node.style.minHeight || '0px'})`
+							: `${this.args.height}`
+					);
+				}
 			}
 
-			this.onTimeout(this.outlineSpeed, ()=>{
-				home.hideOutline();
+			this.onTimeout(this.outlineSpeed / 2, () => {
+				this.classes.maximized = this.classes.minimized
+					? this.wasMaximized
+					: false;
+
 				this.classes.minimized = false;
-				this.classes.maximized = false;
 
-				const event = new CustomEvent(
+				this.dispatchEvent(new CustomEvent(
 					'restored', {detail:{ target:this }}
-				);
-
-				this.dispatchEvent(event);
+				));
 
 				this.dispatchEvent(new CustomEvent(
 					'resized', {detail:{ target:this, original:event }}
 				));
+			});
+
+			this.onTimeout(this.outlineSpeed, () => {
+				home.hideOutline();
 			});
 		});
 	}
@@ -408,10 +440,10 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 				`${this.pos.x}px`
 				, `${this.pos.y}px`
 				, this.tags.window
-					? (this.tags.window.node.style.width  || `${this.args.width}`)
+					? `max(${this.tags.window.node.style.width}, ${this.tags.window.node.style.minWidth || '0px'})`
 					: `${this.args.width}`
 				, this.tags.window
-					? (this.tags.window.node.style.height || `${this.args.height}`)
+					? `max(${this.tags.window.node.style.height}, ${this.tags.window.node.style.minHeight || '0px'})`
 					: `${this.args.height}`
 				, true
 			);
@@ -419,15 +451,11 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 			home.showOutline();
 		}
 
-
 		this.onTimeout(this.outlineDelay, () => {
 
 			home.moveOutline(0,0,'100%','100%');
 
-			this.onTimeout(this.outlineSpeed, ()=>{
-
-				home.hideOutline();
-
+			this.onTimeout(this.outlineSpeed / 2, ()=>{
 				this.classes.minimized = false;
 				this.classes.maximized = true;
 
@@ -447,11 +475,17 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 				));
 			});
 
+			this.onTimeout(this.outlineSpeed, ()=>{
+				home.hideOutline();
+			});
+
 		});
 	}
 
 	close()
 	{
+		const windows = this.windows.items();
+
 		if(!this.dispatchEvent(new CustomEvent('closing', {detail:{ target:this }})))
 		{
 			return;
@@ -466,12 +500,23 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 		this.dispatchEvent(new CustomEvent(
 			'closed', {detail:{ target:this }}
-		));
+			));
+
+		const prevZ = this.pos.z;
 
 		this.windows.remove(Bindable.make(this));
 		this.windows.remove(this);
 
 		this.remove();
+
+		for(const i in windows)
+		{
+			if(windows[i].pos.z >= prevZ)
+			{
+				windows[i].pos.z--;
+				windows[i].classes.focused = false;
+			}
+		}
 	}
 
 	focus()
@@ -495,7 +540,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 			const home = Home.instance();
 
-			if(this.tags.window.node)
+			if(this.tags.window.node && !this.classes.minimized)
 			{
 				home.moveOutline(
 					`${this.pos.x}px`
@@ -517,7 +562,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 		for(const i in windows)
 		{
-			if(windows[i].pos.z > prevZ)
+			if(windows[i].pos.z >= prevZ)
 			{
 				windows[i].pos.z--;
 				windows[i].classes.focused = false;
@@ -555,8 +600,15 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 	grabTitleBar(event)
 	{
+		if(!(event.buttons & 0x1))
+		{
+			return;
+		}
+
 		const start = { x: this.pos.x, y: this.pos.y};
 		const click = { x: event.clientX, y: event.clientY };
+
+		this.classes.moving = true;
 
 		const moved = (event) => {
 
@@ -577,6 +629,7 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 		const options = {once: true};
 
 		const drop = (event) => {
+			this.classes.moving = false;
 
 			if(this.pos.y < 0)
 			{
@@ -605,10 +658,17 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 	horizontalResizeGrabbed(event)
 	{
+		if(!(event.buttons & 0x1))
+		{
+			return;
+		}
+
 		const start = event.clientY;
 		let before  = event.target.previousSibling;
 		let after   = event.target.nextSibling;
 		let parent  = event.target.parentNode;
+
+		const maxHeight = parent.getBoundingClientRect().height;
 
 		[...parent.childNodes].map(child=>{
 
@@ -622,25 +682,31 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 				return;
 			}
 
-			child.style.maxHeight = `${child.clientHeight}px`;
+			if(child.matches('[data-vertical-resize]'))
+			{
+				return;
+			}
+
+			const height = child.getBoundingClientRect().height;
+
+			child.style.minHeight = `${height / maxHeight * 100}%`;
 		});
 
-		while(before.nodeType !== Node.ELEMENT_NODE && before.previousSibling)
+		while((before.nodeType !== Node.ELEMENT_NODE || !before.offsetParent) && before.previousSibling)
 		{
 			before = before.previousSibling;
 		}
 
-		while(after.nodeType !== Node.ELEMENT_NODE && after.nextSibling)
+		while((after.nodeType !== Node.ELEMENT_NODE || !after.offsetParent) && after.nextSibling)
 		{
 			after = after.nextSibling;
 		}
 
-		const beforeHeight = before.clientHeight;
-		const afterHeight  = after.clientHeight;
+		const beforeHeight = before.getBoundingClientRect().height / maxHeight * 100;
+		const afterHeight  = after.getBoundingClientRect().height / maxHeight * 100;
 
 		const onMove = (event) => {
-
-			const delta = start - event.clientY;
+			const delta = (start - event.clientY) / maxHeight * 100;
 
 			if(beforeHeight - delta < 0)
 			{
@@ -652,17 +718,23 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 				return;
 			}
 
-			before.style.maxHeight = `${-1 + beforeHeight - delta}px`;
-			after.style.maxHeight  = `${-1 + afterHeight  + delta}px`;
+			before.style.minHeight = `${(beforeHeight) - delta}%`;
+			after.style.minHeight  = `${(afterHeight) + delta}%`;
+
+			before.style.flex = 1;
+			after.style.flex = 1;
 		};
 
 		const localDoc = event.target.getRootNode();
 
 		localDoc.addEventListener('mousemove', onMove);
 
+		this.classes.resizing = true;
+
 		const onDrop = () => {
 			localDoc.removeEventListener('mousemove', onMove);
 			localDoc.removeEventListener('mouseup', onDrop);
+			this.classes.resizing = false;
 		};
 
 		localDoc.addEventListener('mouseup', onDrop);
@@ -670,52 +742,94 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 	verticalResizeGrabbed(event)
 	{
+		if(!(event.buttons & 0x1))
+		{
+			return;
+		}
+
 		const start = event.clientX;
 		let before  = event.target.previousSibling;
 		let after   = event.target.nextSibling;
+		let parent  = event.target.parentNode;
 
-		while(before.nodeType !== Node.ELEMENT_NODE && before.previousSibling)
+		const maxWidth = parent.getBoundingClientRect().width;
+
+		[...parent.childNodes].map(child=>{
+
+			if(child.nodeType !== Node.ELEMENT_NODE)
+			{
+				return;
+			}
+
+			if(child.matches('[data-horizontal-resize]'))
+			{
+				return;
+			}
+
+			if(child.matches('[data-vertical-resize]'))
+			{
+				return;
+			}
+
+			const width = child.getBoundingClientRect().width;
+			const borderWidth = width - child.clientWidth;
+
+			child.style.minWidth = `${width / maxWidth * 100 }%`;
+		});
+
+		while((before.nodeType !== Node.ELEMENT_NODE || !before.offsetParent) && before.previousSibling)
 		{
 			before = before.previousSibling;
 		}
 
-		while(after.nodeType !== Node.ELEMENT_NODE && after.nextSibling)
+		while((after.nodeType !== Node.ELEMENT_NODE || !after.offsetParent) && after.nextSibling)
 		{
 			after = after.nextSibling;
 		}
 
-		const beforeWidth = before.clientWidth;
-		const afterWidth  = after.clientWidth;
+		const beforeWidth = (before.getBoundingClientRect().width  / maxWidth * 100);
+		const afterWidth  = (after.getBoundingClientRect().width / maxWidth * 100);
 
-		before.style.minWidth = `${beforeWidth}px`;
-		after.style.minWidth  = `${afterWidth}px`;
+		const beforeBorder = Math.round(before.getBoundingClientRect().width - before.clientWidth);
+		const afterBorder  = Math.round(after.getBoundingClientRect().width - after.clientWidth);
+
+		before.style.minWidth = `${beforeWidth}%`;
+		after.style.minWidth  = `${afterWidth}%`;
 
 		const onMove = (event) => {
-			const delta = start - event.clientX;
+			const delta = (start - event.clientX) / maxWidth * 100;
 
-			if(beforeWidth - delta < 0)
+			if(beforeWidth - delta < 1)
 			{
 				before.style.minWidth = 0;
+				after.style.minWidth = `calc(${beforeWidth + afterWidth}% - ${beforeBorder}px)`;
 				return;
 			}
 
-			if(afterWidth + delta < 0)
+			if(afterWidth + delta < 1)
 			{
 				after.style.minWidth = 0;
+				before.style.minWidth = `calc(${beforeWidth + afterWidth}% - ${afterBorder}px)`;
 				return;
 			}
 
-			before.style.minWidth = `${beforeWidth - delta}px`;
-			after.style.minWidth  = `${afterWidth  + delta}px`;
+			before.style.minWidth = `${beforeWidth - delta}%`;
+			after.style.minWidth  = `${afterWidth  + delta}%`;
+
+			before.style.flex = 1;
+			after.style.flex = 1;
 		};
 
 		const localDoc = event.target.getRootNode();
 
 		localDoc.addEventListener('mousemove', onMove);
 
+		this.classes.resizing = true;
+
 		const onDrop = () => {
 			localDoc.removeEventListener('mousemove', onMove);
 			localDoc.removeEventListener('mouseup', onDrop);
+			this.classes.resizing = false;
 		};
 
 		localDoc.addEventListener('mouseup', onDrop);

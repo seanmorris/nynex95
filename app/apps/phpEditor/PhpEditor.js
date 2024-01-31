@@ -37,11 +37,12 @@ export class PhpEditor extends Task
 
 		this.window.classes['mode-script'] = true;
 
-		this.window.args.width  = `640px`;
-		this.window.args.height = `720px`;
+		this.window.args.width  = this.window.args.minWidth  = `720px`;
+		this.window.args.height = this.window.args.minHeight = `800px`;
 
 		this.modes = ['script', 'iffe', 'term'];
 		this.mode  = 'script';
+
 
 		this.returnConsole = new Terminal;
 		// this.inputConsole  = new Terminal({path:{php: PhpTask}});
@@ -92,9 +93,9 @@ export class PhpEditor extends Task
 	return 'Ran @' . (new DateTime)->format('Y-m-d h:i:s.v') . ' UTC';
 
 })();`;
-		const Php = require('php-wasm/PhpWeb').PhpWeb;
+		const Php = require('php-wasm/PhpWebDrupal').PhpWebDrupal;
 
-		const php = new Php();
+		const php = new Php({persist: {mountPath: '/persist'}});
 
 		this.window.listen(php, 'ready', () => {
 			this.window.classes.loading = false;
@@ -125,12 +126,10 @@ export class PhpEditor extends Task
 
 		this.window.runCode = (event) => {
 
-			// this.returnConsole.args.output.splice(0);
-			// this.outputConsole.args.output.splice(0);
-			// this.errorConsole.args.output.splice(0);
-
 			this.window.classes.loading = true;
 			this.window.args.status = 'PHP Running...';
+
+			this.window.tags.runButton.disabled = true;
 
 			this.window.args.output = '';
 
@@ -143,11 +142,17 @@ export class PhpEditor extends Task
 				.replace(/^<\?php/,'')
 				.replace(/;$/,'');
 
-			php.exec(code).then(retVal => {
+			navigator.locks.request("php-persist", async (lock) => {
 
-				this.returnConsole.args.output.push(retVal);
+				php.exec(code).then(retVal => {
 
-				// php.refresh();
+					this.window.classes.loading = false;
+					this.window.args.status = 'PHP Ready!';
+					this.window.tags.runButton.disabled = false;
+
+					this.returnConsole.args.output.push(retVal);
+
+				});
 
 			});
 
@@ -155,9 +160,6 @@ export class PhpEditor extends Task
 		};
 
 		this.window.listen(php, 'output', event => {
-
-			this.window.classes.loading = false;
-			this.window.args.status = 'PHP Ready!';
 
 			const detail   = event.detail.join("\n").trim();
 
@@ -173,9 +175,6 @@ export class PhpEditor extends Task
 			{
 				return;
 			}
-
-			this.window.args.status = 'PHP Ready!';
-			this.window.classes.loading = false;
 
 			this.errorConsole.args.output.push(detail);
 		});

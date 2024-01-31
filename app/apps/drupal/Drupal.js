@@ -19,9 +19,9 @@ export class Drupal extends Task
 
 		this.init = Date.now();
 
-		const Php = require('php-wasm/PhpWeb').PhpWeb;
+		const Php = require('php-wasm/PhpWebDrupal').PhpWebDrupal;
 
-		this.php = new Php({locateFile: (x) => `/${x}`});
+		this.php = new Php({persist:{mountPoint: '/persist'}});
 
 		this.window.classes.loading = true;
 
@@ -32,12 +32,12 @@ export class Drupal extends Task
 
 			this.php.run(require('./init.tmp.php'));
 
-			if(navigator.serviceWorker)
-			{
-				navigator.serviceWorker.addEventListener(
-					'message', event => this.navigate(event.data)
-				);
-			}
+			// if(navigator.serviceWorker)
+			// {
+			// 	navigator.serviceWorker.addEventListener(
+			// 		'message', event => this.navigate(event.data)
+			// 	);
+			// }
 		});
 
 		this.php.addEventListener('output', event => {
@@ -100,7 +100,7 @@ parse_str(substr($request->_GET, 1), $_GET);
 $_POST = $request->_POST;
 
 $origin  = 'http://localhost:3333';
-$docroot = '/preload/drupal-7.59';
+$docroot = '/persist/drupal-7.95';
 $script  = 'index.php';
 
 $path = $request->path;
@@ -132,6 +132,8 @@ user_login_submit(array(), $account);
 menu_execute_active_handler();
 `;
 
-		this.php.run(code).finally(() => this.php.refresh());
+		navigator.locks.request("php-persist", async (lock) => {
+			this.php.run(code).finally(() => this.php.refresh());
+		});
 	};
 }

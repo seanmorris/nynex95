@@ -30,4 +30,3 @@ export const ViewProcessor = {
 		return list.length || 0;
 	}
 }
-

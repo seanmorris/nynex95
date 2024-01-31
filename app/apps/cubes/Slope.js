@@ -16,6 +16,12 @@ export class Slope extends Cube
 		const zaSlope = 1;
 		const zbSlope = 1;
 
-		return Math.max(0, Math.min(1, 0.5 + (this.args.z - z) / (this.args.size / 32)));
+		this.args.z
+
+		const tilesize = (this.args.size / 32) * this.args.d;
+
+		return Math.max(
+			0, Math.min(1, (0.5 + (this.args.z - z) / tilesize))
+		);
 	}
 }

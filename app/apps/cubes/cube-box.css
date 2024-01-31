@@ -22,7 +22,11 @@
 	background-repeat: no-repeat;
 }
 
-.cube.box .texture.top::before {
+[data-interior=true] .texture::before {
+	filter: invert(100%);
+}
+
+.cube.box:not([data-interior=true]) .texture.top::before {
 	opacity: 0.75;
 }
 

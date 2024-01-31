@@ -64,6 +64,10 @@ p, h1 {
 	flex-basis: 100%;
 }
 
+.stretch-children {
+	flex-basis: 100%;
+}
+
 .frame .frame {
 	/*border: 1px solid #808080;*/
 }
@@ -102,7 +106,7 @@ p, h1 {
 
 .liquid {
 	display: flex;
-	flex: 1;
+	flex: 1 1 100%;
 }
 
 .resize {
@@ -125,6 +129,12 @@ p, h1 {
 .resize-hor {
 	resize: horizontal;
 	overflow-x: hidden;
+}
+
+[data-no-click]:not([data-no-click=false]):not([data-no-click="0"]),
+.moving iframe,
+.resizing iframe {
+	pointer-events: none;
 }
 
 .scroll {
@@ -237,6 +247,17 @@ button {
 	min-width: 24px;
 	height: 28px;
 	padding: 2px 4px 2px 4px;
+	align-items: center;
+	flex-direction: row;
+}
+
+h1.tight,
+h2.tight,
+h3.tight,
+h4.tight,
+h5.tight,
+h6.tight{
+	margin: 0;
 }
 
 input.tight,
@@ -372,6 +393,10 @@ label.icon-frame label {
 .repo-browser pre.main-content {
 	padding: 0.25em 1em;
 	display: inline-block;
+}
+
+.block {
+	display: block;
 }
 
 .repo-browser textarea.main-content {
@@ -532,6 +557,10 @@ button.dropdown {
 .left-align {
 	text-align: left;
 	align-items: flex-start;
+}
+
+.normal-align {
+	align-items: normal;
 }
 
 .flat {
@@ -704,16 +733,21 @@ button {
 	flex: 1;
 }
 
+.vertical-separator,
 [data-vertical-resize] {
 	flex-shrink: 0;
 	background-color: #c0c0c0;
 	cursor: col-resize;
 	width: 7px;
-	margin-left: -2px;
-	margin-right: -2px;
 	z-index: 1;
 }
 
+[data-vertical-resize] {
+	margin-left: -2px;
+	margin-right: -2px;
+}
+
+.horizontal-separator,
 [data-horizontal-resize] {
 	flex-shrink: 0;
 	background-color: #c0c0c0;
@@ -746,8 +780,7 @@ button {
 
 [data-tint]::before {
 	display: block;
-	background-color: red;
-	opacity: 0.5;
+	opacity: 0.25;
 	mix-blend-mode: color-burn;
 	position: absolute;
 	z-index: 3;
@@ -757,6 +790,15 @@ button {
 	height: calc(100% + 4px);
 	content: ' ';
 	padding: 0px;
+}
+
+[data-tint="red"]::before {
+	background-color: red;
+}
+
+[data-tint="green"]::before {
+	background-color: #1dff0094;
+	opacity: 1;
 }
 
 [data-center-col] {
@@ -800,4 +842,17 @@ pre {
 	font-family: 'fixedsys';
 	margin-top: 0.5rem;
 	margin-bottom: 0.5rem;
+}
+
+button img,
+button input[type=checkbox] {
+	margin: auto 0.125rem;
+}
+
+button input[type=checkbox] {
+	margin-right: 0.25rem;
+}
+
+.nowrap {
+	white-space: nowrap;
 }

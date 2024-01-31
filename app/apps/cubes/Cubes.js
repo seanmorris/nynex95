@@ -34,55 +34,64 @@ export class Cubes extends Task
 	width  = "840px";
 	height = "740px";
 
-	mainCube = new Player({css:'sean main', main: true, x: -12, y: 512, z: 12}, this);
+	mainCube = new Player({css:'sean main', main: true, x: -8, y: 2*512, z: 0}, this);
+
+	dropWalls = [
+		new Wall({css:'box', solid: true, size: 512, x: 14, y: 0, z: 34, w: 0.001, d: 2}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: 14, y: 512, z: 34, w: 0.001, d: 2}, this)
+	];
 
 	cubes = [
 		this.mainCube
-		, new Barrel({css:'barrel', x:  1, y: 512*4, z:  16}, this)
-		, new BarrelHole({css:'barrel-hole', x: -4, y: 0, z: 12}, this)
+		, new Barrel({css:'barrel', x:  -1.5, y: 512*4, z:  16}, this)
+		, new BarrelHole({css:'barrel-hole', x: -8, y: 0, z: 12, targets: [...this.dropWalls]}, this)
 
-		, new Coin({css:'coin', x: -20, y: 4096, z: -16}, this)
-		, new Coin({css:'coin', x: -20, y: 4096, z: -12}, this)
-		, new Coin({css:'coin', x: -20, y: 4096, z: -8}, this)
+		, new Coin({css:'coin', x: -14, y: 4096, z: -16}, this)
+		, new Coin({css:'coin', x: -14, y: 4096, z: -12}, this)
+		, new Coin({css:'coin', x: -14, y: 4096, z: -8}, this)
 
-		, new Coin({css:'coin', x: -16, y: 4096, z: -16}, this)
-		, new Coin({css:'coin', x: -16, y: 4096, z: -12}, this)
-		, new Coin({css:'coin', x: -16, y: 4096, z: -8}, this)
+		, new Coin({css:'coin', x: -10, y: 4096, z: -16}, this)
+		, new Coin({css:'coin', x: -10, y: 4096, z: -12}, this)
+		, new Coin({css:'coin', x: -10, y: 4096, z: -8}, this)
 
-		, new Coin({css:'coin', x: -12, y: 4096, z: -16}, this)
-		, new Coin({css:'coin', x: -12, y: 4096, z: -12}, this)
-		, new Coin({css:'coin', x: -12, y: 4096, z: -8}, this)
+		, new Coin({css:'coin', x: -6, y: 4096, z: -16}, this)
+		, new Coin({css:'coin', x: -6, y: 4096, z: -12}, this)
+		, new Coin({css:'coin', x: -6, y: 4096, z: -8}, this)
 
-		, new Coin({css:'coin', x: -36, y: 4096, z: 24}, this)
-		, new Coin({css:'coin', x: -36, y: 4096, z: 28}, this)
-		, new Coin({css:'coin', x: -36, y: 4096, z: 32}, this)
+		, new Coin({css:'coin', x: -42, y: 4096, z: 0}, this)
+		, new Coin({css:'coin', x: -42, y: 4096, z: 6}, this)
+		, new Coin({css:'coin', x: -42, y: 4096, z: 12}, this)
+		, new Coin({css:'coin', x: -42, y: 4096, z: 18}, this)
 
-		, new Wall({css:'box', solid: true, size: 512, x: -24, y: 512, z: -20, w: 4, billboard: 'MIDDLE CLICK to\ntoggle mouselook'}, this)
-		, new Wall({css:'box', solid: true, size: 512, x: -8, y: 0, z: -4, w: 2, billboard: 'Move with WASD'}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: -34, y: 512, z: -20, w: 2, billboard: 'Press SPACE to jump'}, this)
+		, new Wall({css:'box', solid: true, size: 512, x:  -2, y: 512, z: -20, w: 2, billboard: 'MIDDLE CLICK to toggle mouselook'}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: -10, y: 0, z: -4, w: 1, billboard: 'Move with WASD'}, this)
 
-		, new Wall({css:'box', solid: true, size: 512, x: -40, y: 0, z: -20, billboard: 'Press SPACE to jump'}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: -34, y: 0, z: -20}, this)
 		, new Wall({css:'box', solid: true, size: 512, x: 26, y: 0, z: -40, w: 3}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: 26, y: 512, z: -40, w: 3}, this)
 
-		, new Wall({css:'box', solid: true, size: 512, x: 16, y: 0, z: -16, w: 0.001, d: 3}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: 14, y: 0, z: -14, w: 0.001, d: 4}, this)
+		, new Wall({css:'box', solid: true, size: 512, x: 14, y: 512, z: -14, w: 0.001, d: 4, billboard: 'Push the barrel into the hole to proceed'}, this)
 
-		, new Wall({css:'box', solid: true, size: 512, x: 16, y: 0, z: 34, w: 0.001, d: 2}, this)
+		, ...this.dropWalls
 
-		, new Wall({css:'box', solid: true, size: 512, x: 50, y: 0, z: -8, w: 0.001, d: 4}, this)
+		, new Wall({css:'box', solid: true, size: 512, x:  50, y: 0, z: -8, w: 0.001, d: 4}, this)
 		, new Wall({css:'box', solid: true, size: 512, x: -50, y: 0, z: -8, w: 0.001, d: 4}, this)
 
-		, new Box({css:'box', solid: true, size: 512, x:  8, y: 0, z:  12}, this)
-		, new Box({css:'box', solid: true, size: 512, x:  0, y: 0, z: -12}, this)
-		, new Box({css:'box', solid: true, size: 512, x:-16, y: 0, z: -12}, this)
+		, new Box({css:'box', solid: true, size: 512, x:   6, y: 0, z:  12}, this)
+		, new Box({css:'box', solid: true, size: 512, x:   6, y: 0, z: -12}, this)
+		, new Box({css:'box', solid: true, size: 512, x: -10, y: 0, z: -12}, this)
 
 		, new Box({css:'box', solid: true, size: 256, x:-20, y: 0, z:  4}, this)
 
-		, new Box({css:'box', solid: false, interior: true, size: 512, x:30, y: 0, z: -30}, this)
+		, new Box({css:'box', solid: false, interior: true, size: 512, x:30, y: 0, z: -16}, this)
 
-		, new Slope({css:'box', solid: true, size: 512, x:-36, y: 0, z: 28}, this)
-		, new Box({css:'box landing', solid: true, size: 512, x:-36, y: 0, z: 4}, this)
+		, new Slope({css:'box', solid: true, size: 512, x:-42, y: 0, z: 8, d: 2}, this)
+		, new Box({css:'box landing', solid: true, size: 512, x:-42, y: 0, z: -16}, this)
 
-		, new Cube({css:'mushroom', size: 256, x:44, y: 4096*2, z: -28}, this)
-		, new Chicken({x:-0, y: 512*5, z: -12, rot: 50}, this)
+		, new Cube({css:'mushroom', size: 256, x:36, y: 4096*2, z: -34}, this)
+		// , new Chicken({x:-0, y: 512*5, z: -12, rot: 50}, this)
 		// , this.otherCube
 		// , this.mushroom
 	];
@@ -101,13 +110,13 @@ export class Cubes extends Task
 
 	xCam3dInput = 0;
 	yCam3dInput = -64;
-	zCam3dInput = 320;
+	zCam3dInput = 220;
 
-	xCamTilt3d = -25;
+	xCamTilt3d = -5;
 	yCamTilt3d = 75;
 	zCamTilt3d = 0;
 
-	xCamTilt3dInput = -35;
+	xCamTilt3dInput = -25;
 	yCamTilt3dInput = -75;
 	zCamTilt3dInput = 0;
 
@@ -121,7 +130,8 @@ export class Cubes extends Task
 
 	lockThrottle = 0;
 
-	octCell = new OctCell({x:0, y: 0, z: 0}, {x:100, y:3200, z:100});
+	// octCell = new OctCell({x:0, y: 0, z: 0}, {x:100, y:32 * 100, z:100});
+	octCell = new OctCell({x:0, y: 0, z: 0}, {x: 250, y:32 * 100, z: 100});
 
 	constructor(...a)
 	{
@@ -132,6 +142,9 @@ export class Cubes extends Task
 		// window.octCell = this.octCell;
 
 		// this.mainCube.args.bindTo('z', v => console.trace(v));
+
+		this.xBound = this.octCell.box.size.x;
+		this.zBound = this.octCell.box.size.z;
 
 		this.window.controller = this;
 
@@ -192,15 +205,15 @@ export class Cubes extends Task
 			this.gamepad = pad;
 		});
 
-		for(let i = 0; i < 6; i += 1)
-		{
-			for(let j = 0; j < 6; j += 1)
-			{
-				const position = {x: 26 + j * 4, y: 0, z: 10 + i * 4}
-				const coin = new Coin(position);
-				this.cubes.push(coin);
-			}
-		}
+		// for(let i = 0; i < 6; i += 1)
+		// {
+		// 	for(let j = 0; j < 6; j += 1)
+		// 	{
+		// 		const position = {x: 26 + j * 4, y: 0, z: 10 + i * 4}
+		// 		const coin = new Coin(position);
+		// 		this.cubes.push(coin);
+		// 	}
+		// }
 
 		for(const cube of this.cubes)
 		{
@@ -313,6 +326,26 @@ export class Cubes extends Task
 
 			cube.update();
 
+			if(cube.args.x > this.octCell.box.size.x * 0.5)
+			{
+				cube.args.x = this.octCell.box.size.x * 0.5;
+			}
+
+			if(cube.args.z > this.octCell.box.size.z * 0.5)
+			{
+				cube.args.z = this.octCell.box.size.z * 0.5;
+			}
+
+			if(cube.args.x < -this.octCell.box.size.x * 0.5)
+			{
+				cube.args.x = -this.octCell.box.size.x * 0.5;
+			}
+
+			if(cube.args.z < -this.octCell.box.size.z * 0.5)
+			{
+				cube.args.z = -this.octCell.box.size.z * 0.5;
+			}
+
 			cube.setFace(this.yCamTilt3d)
 		}
 
@@ -345,8 +378,6 @@ export class Cubes extends Task
 
 	takeInput()
 	{
-		this.keyboard.update();
-
 		if(this.keyboard.keys.o === -2 && !this.pauseThrottle)
 		{
 			this.paused = this.paused ? 2 : -1;
@@ -382,10 +413,7 @@ export class Cubes extends Task
 			input.xAxis = 1;
 		}
 
-		if(this.keyboard.keys[' '] > 0)
-		{
-			input.b[0] = 1;
-		}
+		input.b[0] = this.keyboard.keys[' '];
 
 		if(this.gamepad)
 		{
@@ -399,21 +427,26 @@ export class Cubes extends Task
 
 			for(const i in this.gamepad.buttons)
 			{
-				input.b[i] = this.gamepad.buttons[i].delta;
+				input.b[i] = input.b[i] || this.gamepad.buttons[i].delta;
 			}
 		}
 
 		this.tiltCamera(input);
 
-		this.mainCube.takeInput(this.yCamTilt3d, input);
+		if(!this.paused)
+		{
+			this.mainCube.takeInput(this.yCamTilt3d, input);
 
-		this.mainCube.rotateSprite(this.yCamTilt3d, input.xAxis, input.yAxis);
+			this.mainCube.rotateSprite(this.yCamTilt3d, input.xAxis, input.yAxis);
+		}
+
+		this.keyboard.update();
 	}
 
 	tiltCamera(input)
 	{
-		this.xCamTilt3dInput = Number(this.xCamTilt3dInput) + input.aAxis;
-		this.yCamTilt3dInput = Number(this.yCamTilt3dInput) + input.bAxis;
+		this.yCamTilt3dInput = Number(this.yCamTilt3dInput) + input.aAxis * 1.75;
+		this.xCamTilt3dInput = Number(this.xCamTilt3dInput) + input.bAxis * 1.25;
 
 		this.xCamTilt3dInput = Math.max(this.zCam3d < -150 ? -25 : -50, this.xCamTilt3dInput);
 		this.xCamTilt3dInput = Math.min(this.zCam3d < -150 ? 25 : 0, this.xCamTilt3dInput);
@@ -446,7 +479,10 @@ export class Cubes extends Task
 
 	lockMouse(event)
 	{
-		console.log(event);
+		if(event.which !== 2)
+		{
+			return;
+		}
 
 		event.preventDefault();
 		event.stopPropagation();
@@ -458,11 +494,6 @@ export class Cubes extends Task
 		}
 
 		this.lockThrottle = Date.now();
-
-		if(event.which !== 2)
-		{
-			return;
-		}
 
 		if(document.pointerLockElement)
 		{
@@ -476,8 +507,8 @@ export class Cubes extends Task
 
 	mouseMoveLocked(event)
 	{
-		let xMaxSpeed = 4.0;
-		let yMaxSpeed = 2.5;
+		let xMaxSpeed = 5.0;
+		let yMaxSpeed = 3.5;
 
 		if(this.zCam3d < -150)
 		{

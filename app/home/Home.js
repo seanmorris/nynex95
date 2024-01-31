@@ -122,7 +122,7 @@ export class Home extends View
 
 		if(!taskType)
 		{
-			alert(`${taskName}: Bad command or filename.`);
+			alert(`${taskName}: Bad command or filename: "${taskName}".`);
 			return false;
 		}
 
@@ -147,23 +147,27 @@ export class Home extends View
 	moveOutline(l, t, w, h, now = false)
 	{
 		requestAnimationFrame(()=>{
+
 			const orig = this.args.hideOutline;
+
 			if(now)
 			{
 				this.args.hideOutline = 'hide teleport';
 			}
+
 			this.args.outlineTop    = t;
 			this.args.outlineLeft   = l;
 			this.args.outlineWidth  = w;
 			this.args.outlineHeight = h;
+
 			requestAnimationFrame(()=>{
 				if(now)
 				{
 					this.args.hideOutline = orig;
 				}
 			});
-		});
 
+		});
 	}
 
 	hideOutline()

@@ -1,4 +1,5 @@
 .gridview {
+	flex-direction: column;
 }
 
 .gridview th {

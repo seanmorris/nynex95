@@ -14,6 +14,8 @@ export class BarrelHole extends Cube
 		this.eating = null;
 
 		this.started = false;
+
+		this.dropping = false;
 	}
 
 	update(frame)
@@ -42,6 +44,21 @@ export class BarrelHole extends Cube
 			this.eating.sleeping = true;
 
 			this.eating = null;
+
+			this.dropping = true;
+		}
+
+		if(this.dropping && this.args.targets)
+		{
+			this.args.targets.forEach(t => {
+				if(t.args.y < -1024)
+				{
+					this.dropping = false;
+					return;
+				}
+				t.noClip = true;
+				t.args.y -= 5;
+			})
 		}
 	}
 

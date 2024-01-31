@@ -96,3 +96,36 @@
 .phpEditor .main[data-layout=quad] [data-horizontal-resize] {
 	display: none;
 }
+
+.phpEditor .main:not([data-layout=vertical]) .terms .rows {
+	max-height: initial !important;
+}
+
+.phpEditor .main:not([data-layout=vertical]) > * {
+	max-width: initial !important;
+}
+
+.phpEditor .main:not([data-layout=horizontal]) .terms .rows {
+	max-width: initial !important;
+}
+
+.phpEditor .main:not([data-layout=horizontal]) > * {
+	max-height: initial !important;
+}
+
+
+.phpEditor .main[data-layout=vertical] > [data-horizontal-resize] {
+	display: none;
+}
+
+.phpEditor .main[data-layout=horizontal] > [data-vertical-resize] {
+	display: none;
+}
+
+.phpEditor .main[data-layout=vertical] .terms [data-vertical-resize] {
+	display: none;
+}
+
+.phpEditor .main[data-layout=horizontal] .terms [data-horizontal-resize] {
+	display: none;
+}

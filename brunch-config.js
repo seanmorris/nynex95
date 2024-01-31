@@ -2,7 +2,13 @@ const { exec } = require('child_process');
 
 module.exports = {
 	files: {
-		javascripts: {joinTo: 'app.js'}
+		javascripts: {
+			entryPoints: {
+				'app/apps/cgiWorker/DrupalWorker.js': 'DrupalWorker.js'
+				, 'app/initialize.js': 'app.js'
+			}
+		}
+		, templates: {joinTo: 'templates.js'}
 		, stylesheets: {joinTo: 'app.css'}
 	}
 	, plugins: {
@@ -33,7 +39,15 @@ module.exports = {
 		}
 	}
 	, paths: { public: './docs'	}
-	, watcher: { awaitWriteFinish: true }
+	, modules: {
+		autoRequire: {
+			'DrupalWorker.js': ['apps/cgiWorker/DrupalWorker']
+		}
+	}
+	, watcher: {
+		awaitWriteFinish: true,
+		usePolling: true
+	}
 };
 
 module.exports.hooks = {

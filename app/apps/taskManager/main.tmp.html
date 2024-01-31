@@ -2,29 +2,29 @@
 <!-- 	<button cv-expand = "cycler" cv-on = ":click()">cycle [[cycler.at]]</button>
 	<span cv-attr = "cyat:cycler.at">[[cycler.at]]</span>
 	<button cv-expand = "cycler" cv-on = "click:recycle()">cycle</button> -->
-	<div class = "liquid inset gridview scroll"  style = "max-height: auto;">
+	<div class = "liquid inset gridview scroll">
 		<table class = "white">
 			<thead>
 				<tr>
-					<th>id</th>
-					<th class = "wide">title</th>
+					<th cv-on = "click:sortByColumn(event, 'id')">id</th>
+					<th cv-on = "click:sortByColumn(event, 'title')" class = "wide">title</th>
 					<th cv-if = "focusAttrs.disabled">!</th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody cv-each = "tasks:task:t">
-				<tr>
-					<td>[[task.wid]]</td>
-					<td>[[task.title]]</td>
+				<tr cv-with = "task" cv-carry = "task">
+					<td>[[wid]]</td>
+					<td>[[title]]</td>
 
 					<td>
-						<button cv-expand = "focusAttrs" cv-on = "click:focusTask(event, task);">
+						<button cv-expand = "focusAttrs" cv-on = "click:focusTask(event, task, t);">
 							focus
 						</button>
 					</td>
 
 					<td>
-						<button cv-on = "click:endTask(event, task);">close</button>
+						<button cv-on = "click:endTask(event, task, t);">close</button>
 					</td>
 				</tr>
 			</tbody>

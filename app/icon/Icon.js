@@ -19,20 +19,27 @@ export class Icon extends View
 		this.args.bits = args.bits || `4`;
 		this.args.icon = args.icon || '3';
 
+		this.args.draggable = true;
+
 		this.args.bindTo((v,k) => {
 
-			if(undefined === ['path', 'size', 'bits', 'icon'].find(el => el === k))
+			if(!['path', 'size', 'bits', 'icon'].includes(k))
 			{
 				return;
 			}
 
-			const path = `/${this.args.path}/${this.args.icon}-${this.args.size}-${this.args.bits}bit.png`
-
+			const path = this.constructor.getPath(this.args.path, this.args.icon, this.args.size, this.args.bits);
+			// const path = `/${this.args.path}/${this.args.icon}-${this.args.size}-${this.args.bits}bit.png`
 			this.args.src = path;
 
-		}, {idle: 1});
+		}, {idle:0});
 
 		this.args.blinking = '';
+	}
+
+	static getPath(path, icon, size, bits)
+	{
+		return `/${path}/${icon}-${size}-${bits}bit.png`
 	}
 
 	onAttach()

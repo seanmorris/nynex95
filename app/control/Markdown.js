@@ -1,5 +1,5 @@
 import { View } from 'curvature/base/View';
-import { View as CvMarkdown } from 'cv-markdown/View'
+import { Markdown as CvMarkdown} from 'cv-markdown/Markdown'
 
 export class Markdown extends View
 {

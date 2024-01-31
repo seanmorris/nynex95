@@ -36,6 +36,12 @@ export class Task extends BaseTask
 
 		this.list.add(Bindable.make(this));
 
+		this.thread.finally(() => {
+			taskList.remove(Bindable.make(this));
+			taskList.remove(this);
+			this.window.close()
+		});
+
 		this.window = new Window(this);
 
 		this.subWindows = new Set;
@@ -68,12 +74,6 @@ export class Task extends BaseTask
 		{
 			retVal = Promise.resolve(retVal);
 		}
-
-		this.thread.finally(() => {
-			taskList.remove(Bindable.make(this));
-			// taskList.remove(this);
-			this.window.close()
-		});
 
 		retVal.then(r => this[Accept](r)).catch(e => this[Reject](e));
 
@@ -240,11 +240,6 @@ export class Task extends BaseTask
 	verticalResizeGrabbed(...argList)
 	{
 		this.window.verticalResizeGrabbed(...argList);
-	}
-
-	doubleClickTitle(...argList)
-	{
-		this.window.doubleClickTitle(...argList);
 	}
 
 	attached(){}

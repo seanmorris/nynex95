@@ -75,9 +75,9 @@ export class Smim extends Task
 			Object.entries(response.rooms.join).forEach(([room, state]) => {
 
 				console.log({room, state});
-				console.log({room, unread: state['org.matrix.msc2654.unread_count']});
-
-				card.records.add({room, unread: state['org.matrix.msc2654.unread_count']});
+				// console.log({room, unread: state['org.matrix.msc2654.unread_count']});
+				// card.records.add({room, unread: state['org.matrix.msc2654.unread_count']});
+				card.records.add({room, unread: state.unread_notifications.notification_count});
 
 				if(!state || !state.timeline)
 				{

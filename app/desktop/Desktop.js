@@ -160,13 +160,20 @@ export class Desktop extends View
 				, path: 'apps'
 				, bits: 24
 			})
-			// , new Icon({
-			// 	action: 'drupal'
-			// 	, name: 'Drupal 7'
-			// 	, icon: 'drupal'
-			// 	, path: 'apps'
-			// 	, bits: 24
-			// })
+			, new Icon({
+				action: 'cgi-worker'
+				, name: 'php cgi service worker'
+				, icon: 'php'
+				, path: 'apps'
+				, bits: 24
+			})
+			, new Icon({
+				action: 'drupal'
+				, name: 'Drupal 7'
+				, icon: 'drupal'
+				, path: 'apps'
+				, bits: 24
+			})
 			// , new Icon({
 			// 	action: 'dos'
 			// 	, name: 'Doom'
@@ -229,7 +236,7 @@ export class Desktop extends View
 			const onWrite = event => {
 				const file = event.detail.record;
 
-				if(file.directory === '~/desktop/')
+				if(file.directory === '~/desktop')
 				{
 					this.listFile(file);
 				}
@@ -242,7 +249,7 @@ export class Desktop extends View
 			const query = {
 				store: 'files'
 				, index: 'directory'
-				, range: '~/desktop/'
+				, range: '~/desktop'
 				, type:  FileModel
 			};
 

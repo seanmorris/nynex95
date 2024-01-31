@@ -13,6 +13,7 @@ export class TaskManager extends Task
 	icon      = '/w98/computer_taskmgr-16-4bit.png';
 	template  = require('./main.tmp');
 	willFocus = null;
+	sortSwaps = {};
 
 	constructor(args = [], prev = null, term = null, taskList, taskCmd = '', taskPath = [])
 	{
@@ -173,28 +174,12 @@ export class TaskManager extends Task
 				context.putImageData(image, 0, 0);
 			}
 		});
+
+		this.window.controller = this;
 	}
 
 	attached(event)
 	{
-		this.window.endTask = (event, task) => {
-
-			const bindableThis = Bindable.make(this);
-
-			if(task === bindableThis && this.window.outWindow)
-			{
-				const oldWindow = this.window.outWindow;
-
-				this.window.popBackIn();
-
-				oldWindow.close();
-			}
-			else
-			{
-				task.window.close();
-			}
-		}
-
 		this.window.focusTask = (event, task) => {
 
 			if(task.window.outWindow && event.view !== window)
@@ -209,8 +194,72 @@ export class TaskManager extends Task
 			task.window.focus();
 		}
 
-		this.window.args.tasks = Home.instance().tasks.list;
+		this.window.args.tasks = [...Home.instance().tasks.list].filter(x=>x);
 
-		// this.window.args.menuBar  = new MenuBar(this.args, this.window);
+		Home.instance().tasks.list.bindTo((v,k,t,d,p) => {
+			if(!d)
+			{
+				const index = this.window.args.tasks.indexOf(v);
+
+				if(index < 0)
+				{
+					this.window.args.tasks.push(v);
+				}
+			}
+			else
+			{
+				const index = this.window.args.tasks.indexOf(p);
+
+				if(index >= 0)
+				{
+					this.window.args.tasks.splice(index, 1);
+				}
+			}
+		});
+	}
+
+	endTask(event, task, t)
+	{
+		const bindableThis = Bindable.make(this);
+
+		if(task === bindableThis && this.window.outWindow)
+		{
+			const oldWindow = this.window.outWindow;
+
+			this.window.popBackIn();
+
+			oldWindow.close();
+		}
+		else
+		{
+			task.window.close();
+		}
+
+		this.window.onTimeout(100, () => this.window.focus());
+	}
+
+	sortByColumn(event, columnName)
+	{
+		this.sortSwaps[columnName] = this.sortSwaps[columnName] || false;
+
+		const tasks = this.window.args.tasks;
+
+		// Number.is
+
+		tasks.sort((a,b) => {
+			if(Number(a[columnName]) == a[columnName] && Number(b[columnName]) == b[columnName])
+			{
+				return this.sortSwaps[columnName] ? (a[columnName]-b[columnName]) : (b[columnName]-a[columnName]);
+			}
+
+			return this.sortSwaps[columnName]
+				? String(a[columnName]).localeCompare(b[columnName])
+				: String(b[columnName]).localeCompare(a[columnName]);
+		});
+
+		this.args.sortBy  = columnName;
+		this.args.sortDir = !this.sortSwaps[columnName] ? 'asc' : 'desc';
+
+		this.sortSwaps[columnName] = !this.sortSwaps[columnName];
 	}
 }

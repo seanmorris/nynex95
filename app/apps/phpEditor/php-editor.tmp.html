@@ -30,31 +30,39 @@
 				&nbsp;
 			</span>
 
-			<button cv-on = "click:refresh(event)" class = "square" title = "refresh">
-				<span cv-if = "persist" class = "contents">
-					Refresh Memory&nbsp;<img src = "/arrow-circle.png" />
-				</span>
-				<span cv-if = "!persist" class = "contents">
-					Refresh Memory&nbsp;<img src = "/arrow-circle.png" class = "desat" />
-				</span>
-			</button>
+			<span cv-if = "persist" class = "contents">
+				<button cv-on = "click:refresh(event)" class = "square" title = "refresh">
+					<span cv-if = "persist" class = "contents">
+						<img src = "/arrow-circle.png" />
+						<span>Refresh Memory</span>
+					</span>
+					<span cv-if = "!persist" class = "contents">
+						<img src = "/arrow-circle.png" class = "desat" />
+						<span>Refresh Memory</span>
+					</span>
+				</button>
+			</span>
 
 			<button cv-on = "click:toggle('persist')" class = "square" title = "toggle persistent memory">
 				<span cv-if = "persist" class = "contents">
-					Persist Memory&nbsp;<img src = "/w98/memory-16-4bit.png" />
+					<img src = "/w98/memory-16-4bit.png" />
+					<span>Persist Memory</span>
 				</span>
 				<span cv-if = "!persist" class = "contents ghost">
-					Persist Memory&nbsp;<img src = "/w98/memory-16-4bit.png" class = "desat" />
+					<img src = "/w98/memory-16-4bit.png" class = "desat" />
+					<span>Persist Memory</span>
 				</span>
+				<input type = "checkbox" cv-bind = "persist" data-no-click>
 			</button>
 
-			<button cv-on = "click:runCode(event)" class = "square" title = "Execute PHP">
+			<button cv-on = "click:runCode(event)" class = "square" title = "Execute PHP" cv-ref = "runButton" data-tint = "green">
 				<span class = "contents">
-					Execute PHP&nbsp;<img src = "/w98/chip_ramdrive-16-8bit.png" class = "desat" />
+					<img src = "/w98/chip_ramdrive-16-8bit.png" class = "desat" style = "position: relative; top: -1px;" />
+					<span>Execute PHP</span>
 				</span>
 			</button>
-
-			<!-- <button class = "square"  title = "help">
+<!--
+			<button class = "square"  title = "help">
 				<img class = "icon16" src = "/w98/help_book_small-16-4bit.png" />
 			</button> -->
 
@@ -81,17 +89,9 @@
 	</div>
 
 	<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
+	<div data-section-right data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event)"></div>
 
 	<div class = "terms tight liquid resize-container" data-readonly>
-
-		<div class = "rows inset wide zfront">
-			<div class = "cols tight">
-				<label class = "pane wide">StdErr</label>
-			</div>
-			[[errorConsole]]
-		</div>
-
-		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
 
 		<div class = "rows inset wide zfront">
 			<div class = "cols tight">
@@ -110,6 +110,17 @@
 			</span>
 		</div>
 
+		<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
+		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
+
+		<div class = "rows inset wide zfront">
+			<div class = "cols tight">
+				<label class = "pane wide">StdErr</label>
+			</div>
+			[[errorConsole]]
+		</div>
+
+		<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
 		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
 
 		<div class = "rows inset wide zfront">
@@ -123,7 +134,7 @@
 	</div>
 </div>
 
-
+<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
 <div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
 
 <div class = "frame cols liquid inset" data-mode-term>

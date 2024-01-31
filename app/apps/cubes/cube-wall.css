@@ -26,14 +26,27 @@
 	transform-style: preserve-3d;
 }
 
+.cube.wall .texture {
+	/*transform-style: flat;*/
+}
+
 .cube.wall .texture .billboard {;
-	transform: translate3d(0, 0, -1px) scaleX(calc(-2 / var(--w)));
-	font-size: 3rem;
+	transform:
+		scaleX(calc(-1 / max(var(--w), var(--d))))
+		translateZ(-2px);
+	font-size: 4rem;
 	text-align: right;
 	background-color: rgba(0,0,0,0.5);
-	position: absolute;
-	top: 4rem;
-	left: 0rem;
 	box-sizing: border-box;
-	max-width: 50%;
+	margin: auto;
+	margin-top: 2rem;
+	text-align: center;
+}
+
+.cube.wall[style*="--w: 0"] .texture .billboard {
+	transform:
+		translate3d(0, 0, -1px)
+		scaleX(calc(-2 / var(--w)))
+		rotate3d(0, 1, 0, 90deg)
+		translate3d(-50%, 0, -1px);
 }

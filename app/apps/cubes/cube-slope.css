@@ -1,12 +1,14 @@
 .cube.slope .texture.front {
+	overflow: visible;
 	transform:
+		scaleZ(var(--d))
 		rotate3d(1, 0, 0, -45deg);
 }
 
 .cube.slope .texture.front::before {
 	background-image: url(/chaosean.png), url(/sm/floor-tile-64.png);
 	background-position: center, 0 0;
-	background-size: 75% 60%, 50% 33%;
+	background-size: 75% calc(75% / var(--d)), 50% calc(33.333% / var(--d));
 	background-repeat: no-repeat, repeat;
 	transform: scaleX(-1) scaleY(1.41421);
 }

@@ -21,6 +21,8 @@ export class TaskBar extends View
 
 			{ icon:'/w95/21-16-4bit.png', name:'Office', menu:[] },
 
+			{ icon:'/w95/21-16-4bit.png', name:'Desktop', folder: "~/desktop", menu:[] },
+
 			{ icon:'/w95/21-16-4bit.png', name:'Games', menu:[
 				{ icon: '/apps/console-16-24bit.png', name: 'Sonic the Hedgehog 3000', path: 'sonic3000' },
 			] },
@@ -50,17 +52,17 @@ export class TaskBar extends View
 		{
 			if(task.window.outWindow)
 			{
-				task.window.focus();
+				task.window.focus(event);
 
 				return;
 			}
 
 			if(task.window.classes.minimized)
 			{
-				task.window.restore();
+				task.window.restore(event);
 			}
 
-			task.focus();
+			task.focus(event);
 		}
 	}
 

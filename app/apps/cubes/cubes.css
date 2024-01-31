@@ -128,7 +128,7 @@
 }
 
 .texture.ground .panel {
-	--size: calc(1024 * 2);
+	--size: calc(512 * 4);
 
 	background-image: url(/sm/floor-tile-64.png);
 	background-size: 256px;
@@ -152,8 +152,8 @@
 }
 
 .texture.ground .collision-zone {
-	width: calc(1px * 3200);
-	height: calc(1px * 3200);
+	width: calc(32px * var(--xBound));
+	height: calc(32px * var(--zBound));
 	background-image: none;
 	border: 3px solid green;
 	transform: translate3d(0px, 0px, 0px);
@@ -229,6 +229,10 @@
 [data-colliding=true] .texture.indicator {
 	background-image: none;
 	background-color: rgba(255,0,0,0.125);
+}
+
+[data-colliding=true][data-interior] .texture.indicator {
+	/*display: none;*/
 }
 
 .texture:hover {
@@ -351,19 +355,81 @@ input[type=range] {
 	font-size: 1em;
 }
 
+.cube .texture:not(.flat) {
+	overflow: hidden;
+}
+
+.cube .texture .spray {
+	position: absolute;
+	height: 275px;
+	/*transform: translate(-50%, -50%);*/
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	pointer-events: none;
+}
+
+.cube .texture.front .spray,
+.cube .texture.back  .spray {
+	width: 275px;
+	transform: translate(-50%, -50%) scaleX(calc(-1 / var(--w)));
+}
+
+.cube .texture.left  .spray,
+.cube .texture.right .spray {
+	width: 275px;
+	transform: translate3d(-50%, -50%, 0) scaleX(calc(-1 / var(--d)));
+}
+
 [data-exterior=true] {
-	background-image: none;
-	background-color: black !important;
+	background-image: url(/stars.png);
+	animation:
+		stars-stretch ease-in 1 6s forwards,
+		stars-ascend 0.25s linear infinite;
+	background-size: 300% 100%;
+
 }
 
 [data-exterior=true] :not([data-interior=true]):not(.main) > .texture {
 	opacity: 0;
-	transition: opacity 1s 2s !important;
+	transition: opacity 1s 0.5s !important;
 }
 
-[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture .panel,
-[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture .collision-zone,
-[data-exterior=true] :not([data-interior][data-colliding=true]):not(.main) > .texture::before {
+[data-exterior=true] :not([data-interior=true][data-colliding=true]):not(.main) > .texture *,
+[data-exterior=true] :not([data-interior=true][data-colliding=true]):not(.main) > .texture .panel,
+[data-exterior=true] :not([data-interior=true][data-colliding=true]):not(.main) > .texture .collision-zone,
+[data-exterior=true] :not([data-interior=true][data-colliding=true]):not(.main) > .texture::before {
 	filter: brightness(0) !important;
-	transition: filter 1s 0.25s ease-out !important;
+	transition: filter 1s ease-out !important;
+}
+
+@keyframes stars-stretch {
+	0% {
+		background-size: 300% 100%;
+	}
+	100% {
+		background-size: 200% 800%;
+	}
+}
+
+@keyframes stars-ascend {
+	0% {
+		background-position-y: 0%;
+	}
+	100% {
+		background-position-y: -400%;
+	}
+}
+
+@keyframes stars-descend {
+	0% {
+		background-position-y: 0%;
+	}
+	100% {
+		background-position-y: 400%;
+	}
+}
+
+.player .texture {
+	pointer-events: none;
 }

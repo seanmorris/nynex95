@@ -1,3 +1,4 @@
+import { Tag } from 'curvature/base/Tag';
 import { View } from 'curvature/base/View';
 import { Bindable } from 'curvature/base/Bindable';
 
@@ -71,20 +72,19 @@ export class Cube extends View
 		const cos = Math.cos(rad * Math.PI);
 		const sin = Math.sin(rad * Math.PI);
 
-		this.xSpeed += -(cos * xAxis) * 0.125;
-		this.zSpeed += -(sin * xAxis) * 0.125;
-		this.zSpeed += -(cos * yAxis) * 0.125;
-		this.xSpeed += +(sin * yAxis) * 0.125;
+		this.xSpeed += -(cos * xAxis) * (yAxis ? 0.1 : 0.2);
+		this.zSpeed += -(sin * xAxis) * (yAxis ? 0.1 : 0.2);
 
-		if(input.b[0])
-		{
-			// console.log(this.ySpeed);
-		}
+		this.xSpeed += +(sin * yAxis) * (xAxis ? 0.1 : 0.2);
+		this.zSpeed += -(cos * yAxis) * (xAxis ? 0.1 : 0.2);
 
-		if(input.b[0] && this.grounded)
+		if(input.b[0] === 1 && this.grounded)
 		{
-			// this.ySpeed = 35;
 			this.ySpeed = 34;
+		}
+		else if(input.b[0] === -1 && this.ySpeed > 0)
+		{
+			this.ySpeed *= 0.5;
 		}
 	}
 
@@ -120,6 +120,11 @@ export class Cube extends View
 		else
 		{
 			this.ySpeed -= this.gravity;
+		}
+
+		if(this.ySpeed < -40)
+		{
+			this.ySpeed = -40;
 		}
 
 		for(const cube of this.collisions)
@@ -196,9 +201,9 @@ export class Cube extends View
 		{
 			const top = a.args.size * zaSlope;
 
-			if(-(a.args.size/2) + yDist < -top
-				&& Math.abs(xDist) + wiggleRoom < xMin
-				&& Math.abs(zDist) + wiggleRoom < zMin
+			if(-40 + yDist < -top
+				&& Math.abs(xDist) - wiggleRoom < xMin
+				&& Math.abs(zDist) - wiggleRoom < zMin
 			){
 				b.args.y = a.args.y + top;
 
@@ -211,19 +216,23 @@ export class Cube extends View
 					b.grounded = true;
 				}
 			}
-			else if(Math.abs(xDist / this.args.w) > Math.abs(zDist / this.args.d))
+
+			if(b.args.y < a.args.y + top)
 			{
-				b.args.x = a.args.x - xMin * Math.sign(xDist);
-				b.xSpeed = Math.sign(b.xSpeed) !== Math.sign(xDist)
-					? b.xSpeed
-					: 0;
-			}
-			else
-			{
-				b.args.z = a.args.z - zMin * Math.sign(zDist);
-				b.zSpeed = Math.sign(b.zSpeed) !== Math.sign(zDist)
-					? b.zSpeed
-					: 0;
+				if(Math.abs(xDist / this.args.w) > Math.abs(zDist / this.args.d))
+				{
+					b.args.x = a.args.x - xMin * Math.sign(xDist);
+					b.xSpeed = Math.sign(b.xSpeed) !== Math.sign(xDist)
+						? b.xSpeed
+						: 0;
+				}
+				else
+				{
+					b.args.z = a.args.z - zMin * Math.sign(zDist);
+					b.zSpeed = Math.sign(b.zSpeed) !== Math.sign(zDist)
+						? b.zSpeed
+						: 0;
+				}
 			}
 		}
 
@@ -312,5 +321,39 @@ export class Cube extends View
 		}
 
 		this.args.face = face;
+	}
+
+	spray(event)
+	{
+		const sprayTag = new Tag('<div class = "spray">');
+
+		event.target.appendChild(sprayTag.node);
+
+		sprayTag.style({
+			left: event.offsetX + 'px'
+			, top: event.offsetY + 'px'
+		});
+
+
+		console.log(event, event.target);
+
+		const pickerOpts = {
+			types: [{
+				description: 'Images'
+				, accept: {
+					'image/*': ['.png', '.gif', '.jpeg', '.jpg']
+				}
+			}]
+			, excludeAcceptAllOption: true
+			, multiple: false
+		};
+
+		window.showOpenFilePicker(pickerOpts)
+		.then(handle => handle[0].getFile())
+		.then(file   => URL.createObjectURL(file))
+		.then(src    => {
+			console.log(src);
+			sprayTag.style({'backgroundImage':`url(${src})`})
+		});
 	}
 }
