@@ -81,9 +81,9 @@
 
 <hr />
 
-<div class = "frame cols liquid">
+<div class = "frame cols liquid collapse">
 
-	<div data-section-left class = "rows tight" style = "min-width: 200px;">
+	<div data-section-left class = "rows tight" style = "max-width: 25%;">
 		<div class = "row tight tabs">
 
 			<div class = "tab" tabindex="0">
@@ -116,22 +116,17 @@
 
 	<div data-section-left data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
 
-	<div data-center-col class = "content rows">
+	<div data-center-col class = "collapse rows">
 
 		<div class = "row">
 			<div class = "cols wide">
-				<div class = "row inset lower wide white tight">
+				<div class = "row inset lower wide white nowrap">
 
 					<button cv-on = "click:selectParent(event);" class = "flat tight white">
 						<img src = "/ui/dir-up.png" />
 					</button>
 
-					<input
-						type  = "text"
-						class = "inset white wide flat tight"
-						value = "File: [[filename]]"
-						readonly = "true"
-					/>
+					File: [[filename]]
 				</div>
 			</div>
 			<div class = "row tight [[viewRaw]]">
@@ -139,7 +134,7 @@
 					<div class = "tab" tabindex="0" cv-on = "click:viewControl('rendered')">
 						<img class = "icon16" src = "/w98/xml_gear-16-8bit.png" />
 					</div>
-					<span class = "content" cv-if = "hasSource">
+					<span class = "contents" cv-if = "hasSource">
 						<div class = "tab" tabindex="0"  cv-on = "click:viewControl('plain')">
 							<img class = "icon16" src = "/w98/file_lines-16-4bit.png" />
 						</div>
@@ -148,12 +143,12 @@
 			</div>
 		</div>
 
-		<div data-control-sector class = "white inset scroll">
+		<div data-control-sector class = "white inset scroll" style = "min-height: 75%;">
 			<div class = "liquid abs-holder [[viewRaw]]">
 				<div class = "abs-fill plain">
 					[[plain]]
 				</div>
-				<div class = "abs-fill control">
+				<div class = "abs-fill control scroll">
 					[[control]]
 				</div>
 			</div>
@@ -161,7 +156,7 @@
 
 		<div data-horizontal-resize cv-on = "mousedown:horizontalResizeGrabbed(event);"></div>
 
-		<div data-terminal-sector class = "liquid inset term" style = "min-height: 5em;">
+		<div data-terminal-sector class = "liquid inset term">
 			<div class = "terminal black liquid abs-holder" cv-ref = "termscroll::">
 				<div class = "abs-fill" data-readonly>
 					[[terminal]]
@@ -172,7 +167,7 @@
 
 	<div data-section-right data-vertical-resize cv-on = "mousedown:verticalResizeGrabbed(event)"></div>
 
-	<div data-section-right class = "rows tight">
+	<div data-section-right class = "collapse rows">
 		<div class = "row tight right tabs">
 
 			<div class = "tab" tabindex="0">

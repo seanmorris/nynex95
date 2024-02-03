@@ -173,7 +173,8 @@ export class FileModel extends Model
 
 		console.log(query);
 
-		return MimeDatabase.open('mime-types', 1)
+		return MimeDatabase
+		.open('mime-types', 1)
 		.then(mimeDb => mimeDb.select(query).one().then(result => {
 
 			console.log(result);

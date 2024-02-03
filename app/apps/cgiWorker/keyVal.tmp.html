@@ -1,0 +1,28 @@
+<h2>ENV Variables:</h2>
+
+<div class = "property-list">
+
+	<div class = "header">
+		<span class = "property">Name</span>
+		<span class = "property right">Value</span>
+	</div>
+
+	<div class = "contents" cv-each = "props:value:key">
+		<label cv-on = "click:selectProperty($event, key)">
+			<span class = "property">[[key]]</span><span class = "value"><input placeholder = "Property Value" cv-bind = "value" /><button class = "remove tight" cv-on = "click:removeProperty($event, key, p)">x</button></span>
+		</label>
+	</div>
+
+	<label cv-if = "adding">
+		<span class = "property"><input placeholder = "New Property Name" cv-bind = "newName" cv-ref = "newName" /></span>
+		<span>
+			<button class = "" cv-on = "click:confirmAddProperty($event, $parent, p)">confirm</button>
+			<button class = "" cv-on = "click:cancelAddProperty($event, $parent, p)">cancel</button>
+		</span>
+	</label>
+	<label cv-if = "!adding">
+		<span class = "property"></span>
+		<span><button class = "" cv-on = "click:addProperty($event, $parent)">Add ENV Var</button></span>
+	</label>
+
+</div>

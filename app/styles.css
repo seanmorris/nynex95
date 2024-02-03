@@ -64,6 +64,10 @@ p, h1 {
 	flex-basis: 100%;
 }
 
+.stretch {
+	align-self: stretch;
+}
+
 .stretch-children {
 	flex-basis: 100%;
 }
@@ -195,6 +199,12 @@ p, h1 {
 	box-sizing: border-box;
 }
 
+.inset-flush {
+	border: 1px solid;
+	border-color: transparent;
+	box-sizing: border-box;
+}
+
 img.inset {
 	object-fit: contain;
 	object-position: top center;
@@ -202,6 +212,18 @@ img.inset {
 
 .inset:not(.scroll){
 	overflow: hidden;
+}
+
+.pre {
+	white-space: pre;
+}
+
+.collapse {
+	overflow: hidden;
+}
+
+[data-center-col] {
+	/* max-width: initial !important; */
 }
 
 .window .editor-toolbar{
@@ -268,7 +290,10 @@ button.tight {
 
 .lower {
 	align-self: flex-end;
-	align-items: stretch;
+}
+
+.spread {
+	justify-content: space-between;
 }
 
 .tight > button.square {
@@ -308,6 +333,14 @@ label {
 	align-items: center;
 }
 
+.left {
+	align-self: flex-start;
+}
+
+.right {
+	align-self: flex-end;
+}
+
 input[type="checkbox"],
 input[type="radio"] {
 	margin: 0.5em;
@@ -318,7 +351,9 @@ hr {
 }
 
 textarea {
+	font-family: 'fixedsys';
 	resize: none;
+	padding: 0;
 }
 
 progress {
@@ -513,9 +548,16 @@ label.icon-frame label {
 	color: white;
 }
 
-.wide:not(td):not(th) {
+.wide:not(td):not(th):not(table):not(tbody):not(thead) {
 	display: flex;
 	flex-grow: 1;
+}
+
+table.wide,
+tbody.wide,
+td.wide,
+th.wide {
+	width: 100%;
 }
 
 .tall {

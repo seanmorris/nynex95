@@ -1,4 +1,4 @@
-<div class = "rows padded wide">
+<div class = "rows wide cgi-dialog">
 
 	<div class = "cols wide">
 
@@ -21,21 +21,30 @@
 				</div>
 			</div>
 
-			<div class = "stretch-children cols">
-
+			<div class = "stretch-children cols padded">
 				<div class = "inset scroll abs-holder tall wide padded col rows">
-					<div class ="abs-fill scroll status-log" cv-each = "log:line">
-						<div  cv-with = "line"><div data-status-code = "[[status]]">[[text]]</div></div>
+					<div class ="abs-fill scroll status-log" cv-ref = "log">
+						<div class = "contents" cv-each = "log:line">
+							<div data-status-code = "[[line.status]]">[[line.text]]</div>
+						</div>
 					</div>
 				</div>
 
 				<div class = "vertical-separator"></div>
 
-				<div class = "rows tight lower">
-					<button class = "padded" cv-on = "click:startService">Start</button>
-					<button class = "padded" cv-on = "click:stopService">Stop</button>
-					<button class = "padded" cv-on = "click:about">About</button>
-					<button class = "padded">Donate</button>
+				<div class = "rows tight inset-flush spread" style = "max-height: 220px;">
+					<button class = "padded" cv-on = "click:startService">
+						<span class = "play icon"></span>Start
+					</button>
+					<button class = "padded" cv-on = "click:stopService">
+						<span class = "stop icon"></span>Stop
+					</button>
+					<button class = "padded" cv-on = "click:about">
+						<span class = "help icon"></span>About
+					</button>
+					<button class = "padded" cv-on = "click:sponsor">
+						<span class = "cash icon"></span>Donate
+					</button>
 				</div>
 
 			</div>

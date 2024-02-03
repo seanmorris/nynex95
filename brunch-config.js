@@ -7,6 +7,9 @@ module.exports = {
 				'app/apps/cgiWorker/DrupalWorker.js': 'DrupalWorker.js'
 				, 'app/initialize.js': 'app.js'
 			}
+			, joinTo: {
+				// 'reload.js': /^node_modules/auto-reload-brunch/,
+			}
 		}
 		, templates: {joinTo: 'templates.js'}
 		, stylesheets: {joinTo: 'app.css'}
@@ -50,18 +53,18 @@ module.exports = {
 	}
 };
 
-module.exports.hooks = {
-	preCompile: () => {
-		console.log('About to compile...');
-		exec(
-			`npm link curvature subspace-console cv-markdown php-wasm matrix-api`
-			, (err, stdout, stderr)=>{
-				console.log(err);
-				console.log(stdout);
-				console.log(stderr);
+// module.exports.hooks = {
+// 	preCompile: () => {
+// 		console.log('About to compile...');
+// 		exec(
+// 			`npm link curvature subspace-console cv-markdown php-wasm matrix-api`
+// 			, (err, stdout, stderr)=>{
+// 				console.log(err);
+// 				console.log(stdout);
+// 				console.log(stderr);
 
-				return Promise.resolve();
-			}
-		)
-	}
-};
+// 				return Promise.resolve();
+// 			}
+// 		)
+// 	}
+// };

@@ -16,6 +16,7 @@ import { Image as ImageControl } from '../../control/Image';
 import { Plaintext as PlaintextControl } from '../../control/Plaintext';
 
 import { Console as Terminal } from 'subspace-console/Console';
+import { GitHubBackend } from './GitHubBackend';
 
 export class RepoBrowser extends Task
 {
@@ -30,9 +31,12 @@ export class RepoBrowser extends Task
 	{
 		super(args, prev, term, taskList, taskCmd, taskPath);
 
-		this.username = taskPath.shift()   || 'seanmorris';
-		this.reponame = taskPath.shift()   || 'nynex95';
-		this.filepath = taskPath.join('/');
+		const inputPath = (taskPath[0] || 'seanmorris/nynex95').split('/');
+		this.username = inputPath.shift()   || 'seanmorris';
+		this.reponame = inputPath.shift()   || 'nynex95';
+		this.filepath = inputPath.join('/');
+
+		console.log(inputPath);
 
 		this.current = null;
 
@@ -134,32 +138,16 @@ export class RepoBrowser extends Task
 		}
 
 		this.window.toggleSection = (section) => {
-
 			const clas = 'hide-' + section;
-
 			this.window.classes[clas] = !!!this.window.classes[clas];
 
 			const center   = this.window.findTag('[data-center-col]');
-			const control  = this.window.findTag('[data-control-sector]')
-			const terminal = this.window.findTag('[data-terminal-sector]');
 
 			if(center)
 			{
-				center.style.minWidth = null;
-				center.style.height   = null;
+				center.style.maxWidth = null;
 			}
 
-			if(control)
-			{
-				control.style.maxHeight = null;
-				control.style.height    = null;
-			}
-
-			if(terminal)
-			{
-				terminal.style.maxHeight = terminal.style.minHeight || '5em';
-				terminal.style.height    = null;
-			}
 		}
 
 		const home = Home.instance();
@@ -209,6 +197,8 @@ export class RepoBrowser extends Task
 				{
 					return;
 				}
+
+				console.log(v);
 
 				const folder = new Folder({
 					expanded:   true
@@ -383,6 +373,8 @@ export class RepoBrowser extends Task
 		this.endpointRepos = `${this.endpoint}repos`
 		this.startingRepo  = `${this.username || 'seanmorris'}/${this.reponame || 'nynex95'}`;
 
+		console.log(this.username, this.reponame);
+
 		this.window.args.repoUrl   = `${this.endpointRepos}/${this.startingRepo}`;
 		this.window.args.repoName  = this.startingRepo;
 		this.window.args.repoIcons = false;
@@ -413,46 +405,12 @@ export class RepoBrowser extends Task
 			+ '/contents/'
 			+ filepath;
 
-		fetch(fileUrl, {headers}).then(r=>r.json()).then(file=>{
+		const githubBackend = new GitHubBackend;
 
-			if(!file || !file.name)
-			{
-				this.window.args.url      = '';
-				this.window.args.sha      = '';
-				this.window.args.content  = '';
-				this.window.args.filename = '';
-				this.window.args.filepath = '';
-
-				return;
-			}
-
-			const type = file.name.split('.').pop();
-
-			const renderable = (type === 'md' || type === 'html');
-
-			const url = file.download_url
-				? file.download_url
-				: file.url;
-
-			this.window.args.url      = file.url;
-			this.window.args.download = url;
-			this.window.args.sha      = file.sha;
-
-			this.window.args.filepath = filepath;
-
-			if(file.content)
-			{
-				try
-				{
-					this.window.args.content = decodeURIComponent(escape(atob(file.content)));
-				}
-				catch(error)
-				{
-					console.warn(error);
-				}
-			}
-
-			this.window.args.filename = file.name;
+		githubBackend.loadFile({
+			browser: this
+			, uri: fileUrl
+			, filepath
 		});
 	}
 

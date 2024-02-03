@@ -14,3 +14,39 @@
 .status-log > * {
 	white-space: pre;
 }
+
+.cgi-dialog button {
+	position: relative;
+}
+
+.cgi-dialog button .icon {
+	display: inline-block;
+	position: relative;
+	top: 3px;
+	width: 16px;
+	height:16px;
+}
+
+.cgi-dialog button .icon.play {
+	background-image: url(/ui/play-icon.png);
+}
+
+.cgi-dialog button .icon.stop {
+	background-image: url(/ui/stop-icon.png);
+}
+
+.cgi-dialog button .icon.help {
+	background-image: url(/ui/help-icon.png);
+}
+
+.cgi-dialog button .icon.cash{
+	background-image: url(/ui/cash-icon.png);
+}
+
+span.property:empty {
+	opacity: 0;
+}
+
+.property-list span.property {
+	min-width: 12rem;
+}

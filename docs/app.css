@@ -383,6 +383,42 @@ input.dud {
 	white-space: pre;
 }
 
+.cgi-dialog button {
+	position: relative;
+}
+
+.cgi-dialog button .icon {
+	display: inline-block;
+	position: relative;
+	top: 3px;
+	width: 16px;
+	height:16px;
+}
+
+.cgi-dialog button .icon.play {
+	background-image: url(/ui/play-icon.png);
+}
+
+.cgi-dialog button .icon.stop {
+	background-image: url(/ui/stop-icon.png);
+}
+
+.cgi-dialog button .icon.help {
+	background-image: url(/ui/help-icon.png);
+}
+
+.cgi-dialog button .icon.cash{
+	background-image: url(/ui/cash-icon.png);
+}
+
+span.property:empty {
+	opacity: 0;
+}
+
+.property-list span.property {
+	min-width: 12rem;
+}
+
 .clippy-win:not(.minimized) .clippy {
 	width:  128px;
 	height: 96px;
@@ -2055,6 +2091,7 @@ label > img {
 ul.menu {
 	max-width: 22em;
 	min-width: 12em;
+	box-shadow: 0rem 0.25rem 0.25rem rgba(0,0,0,0.5);
 }
 
 ul.menu, .menu-bar * > ul {
@@ -2221,6 +2258,10 @@ p, h1 {
 	flex-basis: 100%;
 }
 
+.stretch {
+	align-self: stretch;
+}
+
 .stretch-children {
 	flex-basis: 100%;
 }
@@ -2352,6 +2393,12 @@ p, h1 {
 	box-sizing: border-box;
 }
 
+.inset-flush {
+	border: 1px solid;
+	border-color: transparent;
+	box-sizing: border-box;
+}
+
 img.inset {
 	object-fit: contain;
 	object-position: top center;
@@ -2359,6 +2406,18 @@ img.inset {
 
 .inset:not(.scroll){
 	overflow: hidden;
+}
+
+.pre {
+	white-space: pre;
+}
+
+.collapse {
+	overflow: hidden;
+}
+
+[data-center-col] {
+	/* max-width: initial !important; */
 }
 
 .window .editor-toolbar{
@@ -2425,7 +2484,10 @@ button.tight {
 
 .lower {
 	align-self: flex-end;
-	align-items: stretch;
+}
+
+.spread {
+	justify-content: space-between;
 }
 
 .tight > button.square {
@@ -2465,6 +2527,14 @@ label {
 	align-items: center;
 }
 
+.left {
+	align-self: flex-start;
+}
+
+.right {
+	align-self: flex-end;
+}
+
 input[type="checkbox"],
 input[type="radio"] {
 	margin: 0.5em;
@@ -2475,7 +2545,9 @@ hr {
 }
 
 textarea {
+	font-family: 'fixedsys';
 	resize: none;
+	padding: 0;
 }
 
 progress {
@@ -2670,9 +2742,16 @@ label.icon-frame label {
 	color: white;
 }
 
-.wide:not(td):not(th) {
+.wide:not(td):not(th):not(table):not(tbody):not(thead) {
 	display: flex;
 	flex-grow: 1;
+}
+
+table.wide,
+tbody.wide,
+td.wide,
+th.wide {
+	width: 100%;
 }
 
 .tall {
@@ -3637,6 +3716,10 @@ div.diskette:not(:active) .spark:nth-child(5) {
 	min-height: 20px;
 	outline-offset: -3px;
 }
+body {
+	overflow: hidden;
+}
+
 [data-role="window-host"] {
 	width: 100%;
 	height: 100%;
@@ -3655,6 +3738,7 @@ div.diskette:not(:active) .spark:nth-child(5) {
 	height: 520px;
 	width: 690px;
 	overflow: hidden;
+	box-shadow: 0rem 0rem 0.25rem rgba(0,0,0,1);
 }
 
 .shiny-outline {

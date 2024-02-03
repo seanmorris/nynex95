@@ -1,0 +1,45 @@
+<div class = "rows tall">
+
+	<div class = "rows">
+
+		<label class = "padded rows">
+			<div class = "left inset-flush">Document Root:</div>
+			<div class = "row stretch">
+				<input type = "text" class = "inset white wide" cv-bind = "docroot">
+			</div>
+			<small class = "left padded">The directory to serve php & static assets from.</small>
+		</label>
+
+		<label class = "padded rows">
+			<div class = "left inset-flush">Static Cache Expiry Time (ms):</div>
+			<div class = "row stretch">
+				<input type = "text" class = "inset white wide" cv-bind = "staticCacheTime">
+			</div>
+			<small class = "left padded">How long to cache static assets before consulting the emscripten FS.</small>
+		</label>
+
+		<label class = "padded rows">
+			<div class = "left inset-flush">Dynamic Cache Expiry Time (ms):</div>
+			<div class = "row stretch">
+				<input type = "text" class = "inset white wide" cv-bind = "dynamicCacheTime">
+			</div>
+			<small class = "left padded">How long to cache dynamic GET responses before re-running PHP.</small>
+		</label>
+
+		<label class = "padded rows">
+			<div class = "left inset-flush">Max Request Age (ms):</div>
+			<div class = "row stretch">
+				<input type = "text" class = "inset white wide" cv-bind = "maxRequestAge">
+			</div>
+			<small class = "left padded">How long to hold on to queued requests before discarding.</small>
+		</label>
+
+	</div>
+
+	<div class = "rows wide right lower">
+		<div class = "buttons padded">
+			<button cv-on = "click:cancel" class = "padded margin">Cancel</button>
+			<button cv-on = "click:save" class = "padded margin">Save</button>
+		</div>
+	</div>
+</div>

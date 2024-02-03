@@ -1,6 +1,8 @@
 import { PhpCgi } from "./PhpCgi";
 
-const php = new PhpCgi({ docroot: '/persist/drupal-7.95', rewrite: path => {
+const cookies = new Map;
+
+const php = new PhpCgi({ cookies, docroot: '/persist/drupal-7.95', rewrite: path => {
 	const _path = path.split('/');
 
 	if(_path[0] === '')
@@ -46,8 +48,10 @@ self.addEventListener('fetch', event => event.respondWith(new Promise(accept => 
 	const path     = pathname.split('/');
 	const _path    = path.slice(0);
 
-	if(self.location.hostname === url.hostname && ((_path[0] === 'php-wasm' && _path[1] === 'drupal')))
-	{
+	if(self.location.hostname === url.hostname && (
+		((_path[0] === 'php-wasm' && _path[1] === 'drupal'))
+		|| ((_path[0] === 'persist' && _path[1] === 'drupal-7.95'))
+	)){
 		let getPost = Promise.resolve();
 
 		if(request.body)
@@ -77,7 +81,7 @@ self.addEventListener('fetch', event => event.respondWith(new Promise(accept => 
 
 		return getPost.then(post => {
 			return php.request({
-				signal : event.request.signal
+				event
 				, url
 				, method: request.method
 				, path: _path.join('/')
@@ -139,20 +143,20 @@ self.addEventListener('message', async event => {
 
 	switch(action)
 	{
+		case 'analyzePath':
 		case 'readdir':
-			source.postMessage({re: token, result: await php.readdir(...params)});
-		break;
-
-		case 'mkdir':
-			source.postMessage({re: token, result: await php.mkdir(...params)});
-		break;
-
 		case 'readFile':
-			source.postMessage({re: token, result: await php.readFile(...params)});
-		break;
-
+		case 'mkdir':
+		case 'rmdir':
 		case 'writeFile':
-			source.postMessage({re: token, result: await php.writeFile(...params)});
+		case 'unlink':
+		case 'putEnv':
+		case 'refresh':
+		case 'getSettings':
+		case 'setSettings':
+		case 'getEnvs':
+		case 'setEnvs':
+			source.postMessage({re: token, result: await php[action](...params)});
 		break;
 	}
 });

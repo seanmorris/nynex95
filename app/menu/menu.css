@@ -1,6 +1,7 @@
 ul.menu {
 	max-width: 22em;
 	min-width: 12em;
+	box-shadow: 0rem 0.25rem 0.25rem rgba(0,0,0,0.5);
 }
 
 ul.menu, .menu-bar * > ul {

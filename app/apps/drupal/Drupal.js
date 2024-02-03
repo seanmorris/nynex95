@@ -5,6 +5,18 @@ import { Home } from '../../home/Home';
 import { MenuBar  } from '../../window/MenuBar';
 import { Bindable } from 'curvature/base/Bindable';
 
+const reloadPhp = () => {
+	navigator
+	.serviceWorker
+	.getRegistration(`${location.origin}/DrupalWorker.js`)
+	.then(registration => {
+		const action = 'refresh';
+		const params = [];
+		const token  = crypto.randomUUID();
+		registration.active.postMessage({action, params, token});
+	});
+}
+
 export class Drupal extends Task
 {
 	static helpText = 'Run Drupal 7';
@@ -17,6 +29,9 @@ export class Drupal extends Task
 	{
 		super(args, prev, term, taskList, taskCmd, taskPath);
 
+		this.window.args.width  = this.window.args.minWidth  = `320px`;
+		this.window.args.height = this.window.args.minHeight = `480px`;
+
 		this.init = Date.now();
 
 		const Php = require('php-wasm/PhpWebDrupal').PhpWebDrupal;
@@ -27,18 +42,7 @@ export class Drupal extends Task
 
 		this.window.args.content = '';
 
-		this.php.addEventListener('ready', () => {
-			this.window.classes.loading = false;
 
-			this.php.run(require('./init.tmp.php'));
-
-			// if(navigator.serviceWorker)
-			// {
-			// 	navigator.serviceWorker.addEventListener(
-			// 		'message', event => this.navigate(event.data)
-			// 	);
-			// }
-		});
 
 		this.php.addEventListener('output', event => {
 			if(!event.detail)
@@ -51,89 +55,48 @@ export class Drupal extends Task
 			this.window.args.content += html;
 		});
 
+		this.window.initFilesystem  = event => this.initFilesystem(event);
+		this.window.clearFilesystem = event => this.clearFilesystem(event);
+		this.window.startServer     = event => this.startServer(event);
+		this.window.openSite        = event => this.openSite(event);
+
 		return Bindable.make(this);
 	}
 
-	attached()
+	async initFilesystem()
 	{
-		// this.window.args.menuBar  = new MenuBar(this.args, this.window);
+		await this.php;
 
-		this.window.args.bindTo('document', (v,k,t,d) => {
-
-			this.window.args.charCount = v ? v.length : 0;
-
+		navigator.locks.request("php-persist", async (lock) => {
+			this.php.run(require('./init.tmp.php')).then(() => {
+				reloadPhp();
+			});
 		});
 	}
 
-	navigate({path, method, _GET, _POST})
+	async clearFilesystem()
 	{
-		this.window.args.content = '';
-		const code = `
-<?php
-ini_set('session.save_path', '/home/web_user');
-session_id('fake-cookie');
-session_start();
-
-$stdErr = fopen('php://stderr', 'w');
-$errors = [];
-
-fwrite($stdErr, json_encode(['session' => $_SESSION]) . "\n");
-
-register_shutdown_function(function() use($stdErr){
-	fwrite($stdErr, json_encode(['session_id' => session_id()]) . "\n");
-	fwrite($stdErr, json_encode(['headers'=>headers_list()]) . "\n");
-	fwrite($stdErr, json_encode(['errors' => error_get_last()]) . "\n");
-	fwrite($stdErr, json_encode(['session' => $_SESSION]) . "\n");
-});
-
-set_error_handler(function(...$args) use($stdErr, &$errors){
-	fwrite($stdErr, json_encode($args, JSON_PRETTY_PRINT) . "\n" );
-});
-
-$request = (object) json_decode(
-	'${ JSON.stringify({path, method, _GET, _POST}) }'
-	, JSON_OBJECT_AS_ARRAY
-);
-
-parse_str(substr($request->_GET, 1), $_GET);
-
-$_POST = $request->_POST;
-
-$origin  = 'http://localhost:3333';
-$docroot = '/persist/drupal-7.95';
-$script  = 'index.php';
-
-$path = $request->path;
-$path = preg_replace('/^\\/php-wasm/', '', $path);
-
-$_SERVER['REQUEST_URI']     = $path;
-$_SERVER['REMOTE_ADDR']     = '127.0.0.1';
-$_SERVER['SERVER_NAME']     = $origin;
-$_SERVER['SERVER_PORT']     = 3333;
-$_SERVER['REQUEST_METHOD']  = $request->method;
-$_SERVER['SCRIPT_FILENAME'] = $docroot . '/' . $script;
-$_SERVER['SCRIPT_NAME']     = $docroot . '/' . $script;
-$_SERVER['PHP_SELF']        = $docroot . '/' . $script;
-$_SERVER['DOCUMENT_ROOT']   = '/';
-$_SERVER['HTTPS']           = '';
-
-chdir($docroot);
-
-define('DRUPAL_ROOT', getcwd());
-
-require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
-drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-
-$uid     = 1;
-$user    = user_load($uid);
-$account = array('uid' => $user->uid);
-user_login_submit(array(), $account);
-
-menu_execute_active_handler();
-`;
-
 		navigator.locks.request("php-persist", async (lock) => {
-			this.php.run(code).finally(() => this.php.refresh());
+			const openDb = indexedDB.open("/persist", 21);
+
+			openDb.onsuccess = event => {
+				const db = openDb.result;
+				const transaction = db.transaction(["FILE_DATA"], "readwrite");
+				const objectStore = transaction.objectStore("FILE_DATA");
+				const objectStoreRequest = objectStore.clear();
+
+				objectStoreRequest.onsuccess = reloadPhp;
+			};
 		});
-	};
+	}
+
+	startServer()
+	{
+		Home.instance().run('cgi-worker')
+	}
+
+	openSite()
+	{
+		window.open('/php-wasm/drupal/');
+	}
 }

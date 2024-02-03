@@ -1,10 +1,10 @@
 import { Router } from 'curvature/base/Router';
 import { View } from 'curvature/base/View';
 import { Bindable } from 'curvature/base/Bindable';
-import { GitHub } from '../gitHub/GitHub';
 
 import { Icon } from '../../icon/Icon';
 import { Icons as IconControl } from '../../control/Icons';
+import { GitHubBackend } from './GitHubBackend';
 
 export class Folder extends View
 {
@@ -36,9 +36,7 @@ export class Folder extends View
 		this.args.name = args.name || '.';
 		this.args.url  = args.url  || '';
 		this.args.file = args.file || null;
-		// this.args.url  = args.url  || 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now();
-		// this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
-		// this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
+
 		this.template  = require('./folder.tmp');
 	}
 
@@ -148,6 +146,8 @@ export class Folder extends View
 
 		this.expanding = new Promise((accept) => {
 
+			console.log(this.args.file);
+
 			if(this.args.file && this.args.file.type === 'dir')
 			{
 				if(open === true)
@@ -172,7 +172,7 @@ export class Folder extends View
 				}
 			}
 
-			this.populate(this.args.url).then((files)=>{
+			this.populate(this.args.url).then(() => {
 
 				if(event)
 				{
@@ -194,60 +194,9 @@ export class Folder extends View
 
 	showControl(file, dir)
 	{
-		const name = file.name;
-		const type = name.split('.').pop();
+		const githubBackend = new GitHubBackend;
 
-		if(file.type === 'file')
-		{
-			this.args.browser.window.args.content  = '';
-			this.args.browser.window.args.url      = '';
-			this.args.browser.window.args.filename = '';
-		}
-
-		const gitHubToken = GitHub.getToken();
-
-		const headers = {};
-
-		const renderable = (type === 'md' || type === 'html');
-
-		headers.Accept = 'application/vnd.github.v3.raw';
-
-		if(gitHubToken && gitHubToken.access_token)
-		{
-			headers.Authorization = `token ${gitHubToken.access_token}`;
-		}
-
-		const url = (file.download_url
-			? file.download_url
-			: file.url
-		) + `?t_=${Date.now()}`;
-
-		if(file.path)
-		{
-			const path = `/${this.args.browser.repoName}/${file.path}`;
-			Router.go(`/${this.args.browser.cmd}${path}`, 2);
-		}
-
-		this.args.browser.window.args.url = url;
-		this.args.browser.window.args.sha = file.sha;
-
-		if(file.content)
-		{
-			this.args.browser.window.args.content  = decodeURIComponent(escape(atob(file.content)));
-			this.args.browser.window.args.filename = file.name;
-		}
-		else
-		{
-			const credentials = 'omit';
-			const mode = 'cors';
-			fetch(url).then(r => r.text()).then(body => {
-				this.args.browser.window.args.content  = body;
-				this.args.browser.window.args.filename = file.name;
-				this.args.browser.parent               = dir;
-			});
-		}
-
-
+		githubBackend.displayFile({file, dir, browser: this.args.browser});
 	}
 
 	populate(url)
@@ -257,76 +206,25 @@ export class Folder extends View
 			return this.populating;
 		}
 
-		const gitHubToken = GitHub.getToken();
+		const githubBackend = new GitHubBackend;
+		console.log({url});
+		// const uri = '';
 
-		const headers = {
-			Accept: 'application/vnd.github.v3.json'
-		};
-
-		if(gitHubToken && gitHubToken.access_token)
-		{
-			headers.Authorization = `token ${gitHubToken.access_token}`;
-		}
-
-		this.args.files = [];
-
-		return this.populating = fetch(url, {headers}).then(r => r.json()).then(files => {
-
-			if(Array.isArray(files))
-			{
-				this.dir = true;
-
-				files.sort((a, b) => {
-
-					if(a.type !== 'dir' && b.type !== 'dir')
-					{
-						return 0;
-					}
-
-					if(a.type !== 'dir')
-					{
-						return 1;
-					}
-
-					if(b.type !== 'dir')
-					{
-						return -1;
-					}
-				});
-
-				files.map((file, key) => {
-					const name = file.name;
-
-					const img  = file.type === 'dir'
-						? '/w95/4-16-4bit.png'
-						: '/w95/60-16-4bit.png';
-
-					const folder = new Folder({
-						browser: this.args.browser
-						, url: file.url
-						, name
-						, icon: img
-						, file
-						, pathOpen: this.args.pathOpen
-					}, this);
-
-					this.files[name] = folder;
-
-					this.onTimeout(key * 16, () => this.args.files.push(folder));
-
-				});
-
-				return new Promise(accept => {
-					this.onTimeout(files.length*20, () => accept(files));
-				});
-			}
-			else
-			{
-				this.args.browser.window.args.download = files.download_url;
-			}
-
-			this.dir = false;
-
+		return this.populating = githubBackend.populate({
+			uri: url
+			, folder: this
+			, pathOpen : this.args.pathOpen
+			, browser: this.args.browser
 		});
 	}
 }
+
+
+
+// this.args.name = args.name || '.';
+// this.args.url  = args.url  || '';
+// this.args.file = args.file || null;
+// // this.args.url  = args.url  || 'https://nynex.unholysh.it/github-proxy/repos/seanmorris/nynex95/contents?ref=master&t=' + Date.now();
+// // this.args.url  = args.url  || 'https://red-cherry-cb88.unholyshit.workers.dev/repos/seanmorris/nynex95/contents?ref=master';
+// // this.args.url  = args.url  || 'https://api.github.com/repos/seanmorris/nynex95/contents?ref=master';
+// this.template  = require('./folder.tmp');

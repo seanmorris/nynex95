@@ -754,27 +754,25 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 
 		const maxWidth = parent.getBoundingClientRect().width;
 
-		[...parent.childNodes].map(child=>{
+		[...parent.childNodes].map(child => {
 
 			if(child.nodeType !== Node.ELEMENT_NODE)
 			{
 				return;
 			}
 
-			if(child.matches('[data-horizontal-resize]'))
+			if(child.matches('[data-horizontal-resize],[data-vertical-resize]'))
 			{
 				return;
 			}
 
-			if(child.matches('[data-vertical-resize]'))
+			if(!child.offsetParent)
 			{
 				return;
 			}
 
 			const width = child.getBoundingClientRect().width;
-			const borderWidth = width - child.clientWidth;
-
-			child.style.minWidth = `${width / maxWidth * 100 }%`;
+			child.style.maxWidth = `${width / maxWidth * 100 }%`;
 		});
 
 		while((before.nodeType !== Node.ELEMENT_NODE || !before.offsetParent) && before.previousSibling)
@@ -790,31 +788,31 @@ export class Window extends Mixin.from(View, ViewProcessor, CssSwitch)
 		const beforeWidth = (before.getBoundingClientRect().width  / maxWidth * 100);
 		const afterWidth  = (after.getBoundingClientRect().width / maxWidth * 100);
 
-		const beforeBorder = Math.round(before.getBoundingClientRect().width - before.clientWidth);
-		const afterBorder  = Math.round(after.getBoundingClientRect().width - after.clientWidth);
+		const beforeBorder = Math.ceil(before.getBoundingClientRect().width - before.clientWidth);
+		const afterBorder  = Math.ceil(after.getBoundingClientRect().width - after.clientWidth);
 
-		before.style.minWidth = `${beforeWidth}%`;
-		after.style.minWidth  = `${afterWidth}%`;
+		before.style.maxWidth = `${beforeWidth}%`;
+		after.style.maxWidth  = `${afterWidth}%`;
 
 		const onMove = (event) => {
 			const delta = (start - event.clientX) / maxWidth * 100;
 
 			if(beforeWidth - delta < 1)
 			{
-				before.style.minWidth = 0;
-				after.style.minWidth = `calc(${beforeWidth + afterWidth}% - ${beforeBorder}px)`;
+				before.style.maxWidth = 0;
+				after.style.maxWidth = `calc(${beforeWidth + afterWidth}% - ${beforeBorder}px)`;
 				return;
 			}
 
 			if(afterWidth + delta < 1)
 			{
-				after.style.minWidth = 0;
-				before.style.minWidth = `calc(${beforeWidth + afterWidth}% - ${afterBorder}px)`;
+				after.style.maxWidth = 0;
+				before.style.maxWidth = `calc(${beforeWidth + afterWidth}% - ${afterBorder}px)`;
 				return;
 			}
 
-			before.style.minWidth = `${beforeWidth - delta}%`;
-			after.style.minWidth  = `${afterWidth  + delta}%`;
+			before.style.maxWidth = `${beforeWidth - delta}%`;
+			after.style.maxWidth  = `${afterWidth  + delta}%`;
 
 			before.style.flex = 1;
 			after.style.flex = 1;
